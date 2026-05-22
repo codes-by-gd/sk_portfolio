@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use App\Models\Feedback;
+use App\Models\FeedbackImage;
+use Illuminate\Support\Str;
+
+class FeedbackController extends Controller
+{
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'mobile_number' => 'required|string|max:15',
+            'area' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'message' => 'required|string',
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        $feedback = Feedback::create($validated);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => __('messages.form.success'),
+            ]);
+        }
+
+        return back()->with('success', __('messages.form.success'));
+    }
+
+    public function createDetailed()
+    {
+        return view('detailed-feedback');
+    }
+
+    public function storeDetailed(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'mobile_number' => 'required|string|max:15',
+            'area' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'message' => 'required|string',
+            'rating' => 'required|integer|min:1|max:5',
+            'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'camera_photo' => 'nullable|string',
+        ]);
+
+        $feedback = Feedback::create([
+            'name' => $validated['name'],
+            'mobile_number' => $validated['mobile_number'],
+            'area' => $validated['area'],
+            'title' => $validated['title'],
+            'message' => $validated['message'],
+            'rating' => $validated['rating'],
+            'status' => 'pending',
+            'is_featured' => false,
+        ]);
+
+        $uploadPath = public_path('uploads/feedbacks');
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        // Handle uploaded files
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                $filename = time() . '_' . Str::random(10) . '.' . $photo->getClientOriginalExtension();
+                $photo->move($uploadPath, $filename);
+
+                FeedbackImage::create([
+                    'feedback_id' => $feedback->id,
+                    'image_path' => 'uploads/feedbacks/' . $filename,
+                ]);
+            }
+        }
+
+        // Handle camera photo (Base64 data URL)
+        if (!empty($validated['camera_photo'])) {
+            $base64Image = $validated['camera_photo'];
+
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
+                $data = substr($base64Image, strpos($base64Image, ',') + 1);
+                $type = strtolower($type[1]); // png, jpeg, etc.
+
+                if (in_array($type, ['jpg', 'jpeg', 'gif', 'png'])) {
+                    $data = base64_decode($data);
+                    if ($data !== false) {
+                        $filename = time() . '_camera_' . Str::random(10) . '.' . $type;
+                        file_put_contents($uploadPath . '/' . $filename, $data);
+
+                        FeedbackImage::create([
+                            'feedback_id' => $feedback->id,
+                            'image_path' => 'uploads/feedbacks/' . $filename,
+                        ]);
+                    }
+                }
+            }
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => __('messages.form.success'),
+            ]);
+        }
+
+        return redirect()->route('feedback.detailed')->with('success', __('messages.form.success'));
+    }
+}

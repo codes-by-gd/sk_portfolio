@@ -1,0 +1,38 @@
+@import 'tailwindcss';
+@plugin 'daisyui';
+
+@plugin 'daisyui/theme' {
+  name: 'patriotic-theme';
+  default: true;
+  color-scheme: 'light';
+  
+  /* Candy Patriotic Color Palette */
+  --color-primary: #FF8A3D; /* Primary Saffron */
+  --color-primary-content: #FFFDF8;
+  --color-secondary: #3D5AFE; /* Ashoka Blue */
+  --color-secondary-content: #FFFDF8;
+  --color-accent: #53C58B; /* Soft Green */
+  --color-accent-content: #FFFDF8;
+  --color-neutral: #1E1E1E; /* Soft Black */
+  --color-neutral-content: #FFFDF8;
+  
+  /* Cream base background hierarchy */
+  --color-base-100: #FFFDF8; /* Cream White base (70%) */
+  --color-base-200: #F6F3EB; /* Card backgrounds, input borders */
+  --color-base-300: #EAE6DB; /* Separator lines, deep borders */
+  --color-base-content: #1E1E1E; /* Soft Black text */
+  
+  --radius-selector: 1rem;
+  --radius-field: 0.75rem;
+  --radius-box: 1.25rem;
+}
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-heading: 'Poppins', sans-serif;
+}
