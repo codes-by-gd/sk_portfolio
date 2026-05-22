@@ -66,14 +66,14 @@
                         <!-- Actions -->
                         <td class="py-4 text-center">
                             <div class="flex gap-1.5 justify-center">
-                                <a href="{{ route('admin.development.edit', $work) }}" class="btn btn-xs btn-outline btn-primary rounded-lg px-2.5 font-bold">
-                                    <i class="fa-solid fa-pen-to-square"></i>
+                                <a href="{{ route('admin.development.edit', $work) }}" class="btn btn-sm btn-square btn-soft btn-info tooltip tooltip-top" data-tip="Edit Project">
+                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
                                 </a>
                                 <form action="{{ route('admin.development.destroy', $work) }}" method="POST" class="inline" onsubmit="return confirm('Delete this project?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-xs btn-outline btn-error rounded-lg px-2.5">
-                                        <i class="fa-solid fa-trash-can"></i>
+                                    <button type="submit" class="btn btn-sm btn-square btn-soft btn-error tooltip tooltip-top" data-tip="Delete Project">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
                                     </button>
                                 </form>
                             </div>

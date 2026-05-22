@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Feedback;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class DashboardController extends Controller
+class FeedbackController extends Controller
 {
     public function index(Request $request)
     {
@@ -32,7 +32,7 @@ class DashboardController extends Controller
             }
         }
 
-        $feedbacks = $query->latest()->paginate(10)->withQueryString();
+        $feedbacks = $query->latest()->paginate(5)->withQueryString();
 
         if ($request->ajax()) {
             return response()->json([
@@ -49,6 +49,23 @@ class DashboardController extends Controller
         ];
 
         return view('admin.dashboard', compact('feedbacks', 'counts'));
+    }
+
+    public function update(Request $request, Feedback $feedback)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'mobile_number' => 'required|string|max:20',
+            'area' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'message' => 'required|string',
+            'rating' => 'required|integer|min:1|max:5',
+            'status' => 'required|in:pending,approved,rejected',
+        ]);
+
+        $feedback->update($validated);
+
+        return back()->with('success', 'Feedback updated successfully.');
     }
 
     public function updateStatus(Request $request, Feedback $feedback)

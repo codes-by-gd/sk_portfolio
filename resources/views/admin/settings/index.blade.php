@@ -37,22 +37,42 @@
         </h2>
         <div class="space-y-4">
             <div class="form-control">
-                <label class="label"><span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider">Office Address</span></label>
-                <textarea name="office_address" rows="2" class="textarea textarea-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content" placeholder="Enter full office address">{{ $settings['office_address']->value ?? '' }}</textarea>
+                <label class="floating-label w-full block">
+                    <span>Office Address</span>
+                    <textarea 
+                        name="office_address" 
+                        id="office_address" 
+                        rows="2" 
+                        placeholder="Office Address"
+                        class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-20"
+                    >{{ $settings['office_address']->value ?? '' }}</textarea>
+                </label>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-control">
-                    <label class="label"><span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider">Phone Number(s)</span></label>
-                    <input type="text" name="office_phone" value="{{ $settings['office_phone']->value ?? '' }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content" placeholder="+91 XXXXX XXXXX">
+                    <x-float-input 
+                        type="text" 
+                        name="office_phone" 
+                        label="Phone Number(s)" 
+                        value="{{ $settings['office_phone']->value ?? '' }}"
+                    />
                 </div>
                 <div class="form-control">
-                    <label class="label"><span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider">Email Address</span></label>
-                    <input type="email" name="office_email" value="{{ $settings['office_email']->value ?? '' }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content" placeholder="office@example.com">
+                    <x-float-input 
+                        type="email" 
+                        name="office_email" 
+                        label="Email Address" 
+                        value="{{ $settings['office_email']->value ?? '' }}"
+                    />
                 </div>
             </div>
             <div class="form-control">
-                <label class="label"><span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider">Office Timings</span></label>
-                <input type="text" name="office_timings" value="{{ $settings['office_timings']->value ?? '' }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content" placeholder="e.g. Mon–Sat: 10:00 AM – 6:00 PM">
+                <x-float-input 
+                    type="text" 
+                    name="office_timings" 
+                    label="Office Timings" 
+                    value="{{ $settings['office_timings']->value ?? '' }}"
+                />
             </div>
         </div>
     </div>
@@ -64,36 +84,36 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="form-control">
-                <label class="label">
-                    <span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-brands fa-facebook text-blue-600"></i> Facebook URL
-                    </span>
-                </label>
-                <input type="url" name="facebook_url" value="{{ $settings['facebook_url']->value ?? '' }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content" placeholder="https://facebook.com/...">
+                <x-float-input 
+                    type="url" 
+                    name="facebook_url" 
+                    label="Facebook URL" 
+                    value="{{ $settings['facebook_url']->value ?? '' }}"
+                />
             </div>
             <div class="form-control">
-                <label class="label">
-                    <span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-brands fa-twitter text-sky-500"></i> Twitter/X URL
-                    </span>
-                </label>
-                <input type="url" name="twitter_url" value="{{ $settings['twitter_url']->value ?? '' }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content" placeholder="https://twitter.com/...">
+                <x-float-input 
+                    type="url" 
+                    name="twitter_url" 
+                    label="Twitter/X URL" 
+                    value="{{ $settings['twitter_url']->value ?? '' }}"
+                />
             </div>
             <div class="form-control">
-                <label class="label">
-                    <span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-brands fa-instagram text-pink-600"></i> Instagram URL
-                    </span>
-                </label>
-                <input type="url" name="instagram_url" value="{{ $settings['instagram_url']->value ?? '' }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content" placeholder="https://instagram.com/...">
+                <x-float-input 
+                    type="url" 
+                    name="instagram_url" 
+                    label="Instagram URL" 
+                    value="{{ $settings['instagram_url']->value ?? '' }}"
+                />
             </div>
             <div class="form-control">
-                <label class="label">
-                    <span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-brands fa-youtube text-red-600"></i> YouTube URL
-                    </span>
-                </label>
-                <input type="url" name="youtube_url" value="{{ $settings['youtube_url']->value ?? '' }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content" placeholder="https://youtube.com/@...">
+                <x-float-input 
+                    type="url" 
+                    name="youtube_url" 
+                    label="YouTube URL" 
+                    value="{{ $settings['youtube_url']->value ?? '' }}"
+                />
             </div>
         </div>
     </div>

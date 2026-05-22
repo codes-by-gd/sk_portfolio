@@ -42,28 +42,49 @@
             </div>
             <!-- Category -->
             <div class="form-control w-full">
-                <label class="label"><span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider">Category *</span></label>
-                <select name="category" required class="select select-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content">
-                    <option value="">Select Category</option>
-                    <option value="visits">Ward Visits</option>
-                    <option value="events">BJP Events</option>
-                    <option value="works">Development Works</option>
-                    <option value="community">Community Programs</option>
-                </select>
+                <label class="floating-label w-full block relative">
+                    <span>
+                        Category
+                        <span class="text-error font-extrabold">*</span>
+                    </span>
+                    <select 
+                        name="category" 
+                        required 
+                        class="select select-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all appearance-none pr-10"
+                    >
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="visits">Ward Visits</option>
+                        <option value="events">BJP Events</option>
+                        <option value="works">Development Works</option>
+                        <option value="community">Community Programs</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </div>
+                </label>
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="form-control">
-                <label class="label"><span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider">Caption (English)</span></label>
-                <input type="text" name="caption_en" placeholder="English caption" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content" />
+                <x-float-input 
+                    type="text" 
+                    name="caption_en" 
+                    label="Caption (English)" 
+                />
             </div>
             <div class="form-control">
-                <label class="label"><span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider">Caption (ગુજરાતી)</span></label>
-                <input type="text" name="caption_gu" placeholder="Gujarati caption" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content" />
+                <x-float-input 
+                    type="text" 
+                    name="caption_gu" 
+                    label="Caption (ગુજરાતી)" 
+                />
             </div>
             <div class="form-control">
-                <label class="label"><span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider">Caption (हिंदी)</span></label>
-                <input type="text" name="caption_hi" placeholder="Hindi caption" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-base-content" />
+                <x-float-input 
+                    type="text" 
+                    name="caption_hi" 
+                    label="Caption (हिंदी)" 
+                />
             </div>
         </div>
         <button type="submit" class="btn btn-primary text-white font-bold rounded-xl gap-2">
@@ -94,8 +115,8 @@
                         <form action="{{ route('admin.gallery.destroy', $img) }}" method="POST" onsubmit="return confirm('Delete this image?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-xs btn-error text-white rounded-lg mt-1">
-                                <i class="fa-solid fa-trash-can"></i> Delete
+                            <button type="submit" class="btn btn-sm btn-square btn-soft btn-error tooltip tooltip-top mt-1" data-tip="Delete Image">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
                         </form>
                     </div>

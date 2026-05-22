@@ -111,7 +111,10 @@
                                         @endif
                                     </div>
                                 </div>
-                                <span class="text-sm font-semibold truncate">{{ Auth::user()->name }}</span>
+                                <div class="flex flex-col min-w-0">
+                                    <span class="text-sm font-bold truncate leading-tight">{{ Auth::user()->first_name }}</span>
+                                    <span class="text-xs font-semibold opacity-75 truncate leading-tight mt-0.5">{{ Auth::user()->last_name }}</span>
+                                </div>
                             </div>
                             <i class="fa-solid fa-pen-to-square text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-primary {{ request()->routeIs('admin.profile*') ? 'text-white' : '' }}"></i>
                         </a>

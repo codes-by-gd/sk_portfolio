@@ -178,6 +178,58 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        Feedback::updateOrCreate(
+            ['mobile_number' => '9111111111'],
+            [
+                'name' => 'Vikram Rathore',
+                'area' => 'Gorwa',
+                'title' => 'Garbage Collection Feedback',
+                'message' => 'Regular garbage collection van arrives on time every morning. Excellent hygienic initiative.',
+                'rating' => 5,
+                'status' => 'approved',
+                'is_featured' => false,
+            ]
+        );
+
+        Feedback::updateOrCreate(
+            ['mobile_number' => '9222222222'],
+            [
+                'name' => 'Sanjay Mehta',
+                'area' => 'Subhanpura',
+                'title' => 'Tree Plantation Drive',
+                'message' => 'Loved the new green canopy initiative in our area. Makes the environment fresh and clean.',
+                'rating' => 5,
+                'status' => 'pending',
+                'is_featured' => false,
+            ]
+        );
+
+        Feedback::updateOrCreate(
+            ['mobile_number' => '9333333333'],
+            [
+                'name' => 'Kirti Patel',
+                'area' => 'VIP Road',
+                'title' => 'Pothole repairs needed',
+                'message' => 'A small pothole is developing near the main junction. Requesting prompt repairs before monsoons.',
+                'rating' => 3,
+                'status' => 'pending',
+                'is_featured' => false,
+            ]
+        );
+
+        Feedback::updateOrCreate(
+            ['mobile_number' => '9444444444'],
+            [
+                'name' => 'Harish Shah',
+                'area' => 'Gorwa',
+                'title' => 'Public Parks Maintenance',
+                'message' => 'The local park is beautifully maintained with kids play area. Great place for morning walks.',
+                'rating' => 4,
+                'status' => 'approved',
+                'is_featured' => false,
+            ]
+        );
+
         // 5. Settings Seeder
         Setting::updateOrCreate(
             ['key' => 'office_address'],

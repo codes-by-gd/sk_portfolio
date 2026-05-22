@@ -27,28 +27,72 @@
                 @csrf
                 @method('PUT')
                 <div class="form-control">
-                    <label class="label"><span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider">English *</span></label>
                     @if(strlen($page->content_en) > 100)
-                        <textarea name="content_en" required rows="3" class="textarea textarea-bordered rounded-xl bg-transparent border-base-300 w-full text-sm text-base-content">{{ $page->content_en }}</textarea>
+                        <label class="floating-label w-full block">
+                            <span>English Content <span class="text-error font-extrabold">*</span></span>
+                            <textarea 
+                                name="content_en" 
+                                id="content_en_{{ $page->id }}" 
+                                required 
+                                rows="3" 
+                                placeholder="English Content"
+                                class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-24"
+                            >{{ $page->content_en }}</textarea>
+                        </label>
                     @else
-                        <input type="text" name="content_en" required value="{{ $page->content_en }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-sm text-base-content">
+                        <x-float-input 
+                            type="text" 
+                            name="content_en" 
+                            id="content_en_{{ $page->id }}" 
+                            label="English Content" 
+                            value="{{ $page->content_en }}" 
+                            required="true"
+                        />
                     @endif
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="form-control">
-                        <label class="label"><span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider">ગુજરાતી</span></label>
                         @if(strlen($page->content_en) > 100)
-                            <textarea name="content_gu" rows="3" class="textarea textarea-bordered rounded-xl bg-transparent border-base-300 w-full text-sm text-base-content">{{ $page->content_gu }}</textarea>
+                            <label class="floating-label w-full block">
+                                <span>ગુજરાતી Content</span>
+                                <textarea 
+                                    name="content_gu" 
+                                    id="content_gu_{{ $page->id }}" 
+                                    rows="3" 
+                                    placeholder="ગુજરાતી Content"
+                                    class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-24"
+                                >{{ $page->content_gu }}</textarea>
+                            </label>
                         @else
-                            <input type="text" name="content_gu" value="{{ $page->content_gu }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-sm text-base-content">
+                            <x-float-input 
+                                type="text" 
+                                name="content_gu" 
+                                id="content_gu_{{ $page->id }}" 
+                                label="ગુજરાતી Content" 
+                                value="{{ $page->content_gu }}"
+                            />
                         @endif
                     </div>
                     <div class="form-control">
-                        <label class="label"><span class="label-text font-bold text-xs text-base-content/75 uppercase tracking-wider">हिंदी</span></label>
                         @if(strlen($page->content_en) > 100)
-                            <textarea name="content_hi" rows="3" class="textarea textarea-bordered rounded-xl bg-transparent border-base-300 w-full text-sm text-base-content">{{ $page->content_hi }}</textarea>
+                            <label class="floating-label w-full block">
+                                <span>हिंदी Content</span>
+                                <textarea 
+                                    name="content_hi" 
+                                    id="content_hi_{{ $page->id }}" 
+                                    rows="3" 
+                                    placeholder="हिंदी Content"
+                                    class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-24"
+                                >{{ $page->content_hi }}</textarea>
+                            </label>
                         @else
-                            <input type="text" name="content_hi" value="{{ $page->content_hi }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full text-sm text-base-content">
+                            <x-float-input 
+                                type="text" 
+                                name="content_hi" 
+                                id="content_hi_{{ $page->id }}" 
+                                label="हिंदी Content" 
+                                value="{{ $page->content_hi }}"
+                            />
                         @endif
                     </div>
                 </div>

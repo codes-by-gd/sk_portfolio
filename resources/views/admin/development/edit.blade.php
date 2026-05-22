@@ -34,25 +34,43 @@
                 <i class="fa-solid fa-heading text-primary mr-1.5"></i> Project Title
             </h3>
             <div class="form-control">
-                <label class="label"><span class="label-text font-bold text-xs text-neutral/70 uppercase tracking-wider">Title (English) *</span></label>
-                <input type="text" name="title_en" required value="{{ old('title_en', $development->title_en) }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full">
+                <x-float-input 
+                    type="text" 
+                    name="title_en" 
+                    label="Title (English)" 
+                    value="{{ old('title_en', $development->title_en) }}" 
+                    required="true"
+                />
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-control">
-                    <label class="label"><span class="label-text font-bold text-xs text-neutral/70 uppercase tracking-wider">Title (ગુજરાતી)</span></label>
-                    <input type="text" name="title_gu" value="{{ old('title_gu', $development->title_gu) }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full">
+                    <x-float-input 
+                        type="text" 
+                        name="title_gu" 
+                        label="Title (ગુજરાતી)" 
+                        value="{{ old('title_gu', $development->title_gu) }}"
+                    />
                 </div>
                 <div class="form-control">
-                    <label class="label"><span class="label-text font-bold text-xs text-neutral/70 uppercase tracking-wider">Title (हिंदी)</span></label>
-                    <input type="text" name="title_hi" value="{{ old('title_hi', $development->title_hi) }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full">
+                    <x-float-input 
+                        type="text" 
+                        name="title_hi" 
+                        label="Title (हिंदी)" 
+                        value="{{ old('title_hi', $development->title_hi) }}"
+                    />
                 </div>
             </div>
         </div>
 
         <!-- Location -->
         <div class="form-control">
-            <label class="label"><span class="label-text font-bold text-xs text-neutral/70 uppercase tracking-wider">Location / Area *</span></label>
-            <input type="text" name="location" required value="{{ old('location', $development->location) }}" class="input input-bordered rounded-xl bg-transparent border-base-300 w-full">
+            <x-float-input 
+                type="text" 
+                name="location" 
+                label="Location / Area" 
+                value="{{ old('location', $development->location) }}" 
+                required="true"
+            />
         </div>
 
         <!-- Description Fields -->
@@ -61,17 +79,42 @@
                 <i class="fa-solid fa-align-left text-primary mr-1.5"></i> Description
             </h3>
             <div class="form-control">
-                <label class="label"><span class="label-text font-bold text-xs text-neutral/70 uppercase tracking-wider">Description (English) *</span></label>
-                <textarea name="description_en" required rows="3" class="textarea textarea-bordered rounded-xl bg-transparent border-base-300 w-full">{{ old('description_en', $development->description_en) }}</textarea>
+                <label class="floating-label w-full block">
+                    <span>Description (English) <span class="text-error font-extrabold">*</span></span>
+                    <textarea 
+                        name="description_en" 
+                        id="description_en" 
+                        required 
+                        rows="3" 
+                        placeholder="Description (English)"
+                        class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-24"
+                    >{{ old('description_en', $development->description_en) }}</textarea>
+                </label>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-control">
-                    <label class="label"><span class="label-text font-bold text-xs text-neutral/70 uppercase tracking-wider">Description (ગુજરાતી)</span></label>
-                    <textarea name="description_gu" rows="3" class="textarea textarea-bordered rounded-xl bg-transparent border-base-300 w-full">{{ old('description_gu', $development->description_gu) }}</textarea>
+                    <label class="floating-label w-full block">
+                        <span>Description (ગુજરાતી)</span>
+                        <textarea 
+                            name="description_gu" 
+                            id="description_gu" 
+                            rows="3" 
+                            placeholder="Description (ગુજરાતી)"
+                            class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-24"
+                        >{{ old('description_gu', $development->description_gu) }}</textarea>
+                    </label>
                 </div>
                 <div class="form-control">
-                    <label class="label"><span class="label-text font-bold text-xs text-neutral/70 uppercase tracking-wider">Description (हिंदी)</span></label>
-                    <textarea name="description_hi" rows="3" class="textarea textarea-bordered rounded-xl bg-transparent border-base-300 w-full">{{ old('description_hi', $development->description_hi) }}</textarea>
+                    <label class="floating-label w-full block">
+                        <span>Description (हिंदी)</span>
+                        <textarea 
+                            name="description_hi" 
+                            id="description_hi" 
+                            rows="3" 
+                            placeholder="Description (हिंदी)"
+                            class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-24"
+                        >{{ old('description_hi', $development->description_hi) }}</textarea>
+                    </label>
                 </div>
             </div>
         </div>

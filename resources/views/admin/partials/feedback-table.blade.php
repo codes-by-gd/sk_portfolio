@@ -76,77 +76,90 @@
                     <td class="py-4 vertical-align-top">
                         <div class="flex flex-col gap-1.5 items-start">
                             @if($feedback->status === 'approved')
-                                <span class="badge badge-success text-white font-bold text-xs gap-1 py-2.5">
-                                    <i class="fa-solid fa-circle-check text-[9px]"></i> Approved
-                                </span>
+                                <div class="badge badge-success badge-outline font-extrabold text-[11px] gap-1.5 py-3 px-3 shadow-sm select-none">
+                                    <i class="fa-solid fa-circle-check text-xs"></i> Approved
+                                </div>
                             @elseif($feedback->status === 'rejected')
-                                <span class="badge badge-error text-white font-bold text-xs gap-1 py-2.5">
-                                    <i class="fa-solid fa-circle-xmark text-[9px]"></i> Rejected
-                                </span>
+                                <div class="badge badge-error badge-outline font-extrabold text-[11px] gap-1.5 py-3 px-3 shadow-sm select-none">
+                                    <i class="fa-solid fa-circle-xmark text-xs"></i> Rejected
+                                </div>
                             @else
-                                <span class="badge badge-warning text-white font-bold text-xs gap-1 py-2.5">
-                                    <i class="fa-solid fa-clock text-[9px]"></i> Pending
-                                </span>
+                                <div class="badge badge-warning badge-outline font-extrabold text-[11px] gap-1.5 py-3 px-3 shadow-sm select-none">
+                                    <i class="fa-solid fa-circle-notch fa-spin text-xs"></i> Pending
+                                </div>
                             @endif
                             @if($feedback->is_featured)
-                                <span class="badge badge-primary text-white text-[10px] uppercase font-bold tracking-wider gap-1 py-2.5">
-                                    <i class="fa-solid fa-star text-[9px]"></i> Featured
-                                </span>
+                                <div class="badge badge-primary badge-outline font-extrabold text-[10px] uppercase tracking-wider gap-1.5 py-2.5 px-2.5 shadow-sm select-none">
+                                    <i class="fa-solid fa-star text-xs text-primary"></i> Featured
+                                </div>
                             @endif
                         </div>
                     </td>
 
                     <!-- Actions row buttons -->
-                    <td class="py-4 vertical-align-top text-center min-w-[160px]">
-                        <div class="flex flex-col gap-1.5 items-center">
-                            <!-- Approve / Reject row -->
-                            <div class="flex gap-1.5">
-                                @if($feedback->status !== 'approved')
-                                    <form action="{{ route('admin.feedback.status', $feedback) }}" method="POST" class="inline">
-                                        @csrf
-                                        <input type="hidden" name="status" value="approved">
-                                        <button type="submit" class="btn btn-xs btn-success text-white rounded-lg font-bold gap-1" title="Approve">
-                                            <i class="fa-solid fa-check"></i> Approve
-                                        </button>
-                                    </form>
-                                @endif
-
-                                @if($feedback->status !== 'rejected')
-                                    <form action="{{ route('admin.feedback.status', $feedback) }}" method="POST" class="inline">
-                                        @csrf
-                                        <input type="hidden" name="status" value="rejected">
-                                        <button type="submit" class="btn btn-xs btn-error text-white rounded-lg font-bold gap-1" title="Reject">
-                                            <i class="fa-solid fa-xmark"></i> Reject
-                                        </button>
-                                    </form>
-                                @endif
-                            </div>
-
-                            <!-- Feature / Delete row -->
-                            <div class="flex gap-1.5">
-                                @if($feedback->status === 'approved')
-                                    <form action="{{ route('admin.feedback.featured', $feedback) }}" method="POST" class="inline">
-                                        @csrf
-                                        @if($feedback->is_featured)
-                                            <button type="submit" class="btn btn-xs btn-ghost border border-base-300 rounded-lg font-bold gap-1" title="Remove from featured">
-                                                <i class="fa-solid fa-star-half-stroke text-warning"></i> Unfeature
-                                            </button>
-                                        @else
-                                            <button type="submit" class="btn btn-xs btn-primary text-white rounded-lg font-bold gap-1" title="Mark as featured">
-                                                <i class="fa-solid fa-star"></i> Feature
-                                            </button>
-                                        @endif
-                                    </form>
-                                @endif
-
-                                <form action="{{ route('admin.feedback.destroy', $feedback) }}" method="POST" class="inline" onsubmit="return confirm('Delete this feedback permanently?')">
+                    <td class="py-4 vertical-align-top text-center min-w-[200px]">
+                        <div class="flex items-center justify-center gap-2">
+                            <!-- Approve Action -->
+                            @if($feedback->status !== 'approved')
+                                <form action="{{ route('admin.feedback.status', $feedback) }}" method="POST" class="inline">
                                     @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-xs btn-ghost text-error rounded-lg" title="Delete permanently">
-                                        <i class="fa-solid fa-trash-can"></i>
+                                    <input type="hidden" name="status" value="approved">
+                                    <button type="submit" class="btn btn-sm btn-square btn-soft btn-success tooltip tooltip-top" data-tip="Approve Feedback">
+                                        <i class="fa-solid fa-check text-xs"></i>
                                     </button>
                                 </form>
-                            </div>
+                            @endif
+
+                            <!-- Reject Action -->
+                            @if($feedback->status !== 'rejected')
+                                <form action="{{ route('admin.feedback.status', $feedback) }}" method="POST" class="inline">
+                                    @csrf
+                                    <input type="hidden" name="status" value="rejected">
+                                    <button type="submit" class="btn btn-sm btn-square btn-soft btn-error tooltip tooltip-top" data-tip="Reject Feedback">
+                                        <i class="fa-solid fa-xmark text-xs"></i>
+                                    </button>
+                                </form>
+                            @endif
+
+                            <!-- Edit Action -->
+                            <button type="button" 
+                                class="btn btn-sm btn-square btn-soft btn-info tooltip tooltip-top edit-feedback-btn"
+                                data-tip="Edit Feedback"
+                                data-id="{{ $feedback->id }}"
+                                data-name="{{ $feedback->name }}"
+                                data-mobile="{{ $feedback->mobile_number }}"
+                                data-area="{{ $feedback->area }}"
+                                data-title="{{ $feedback->title }}"
+                                data-message="{{ $feedback->message }}"
+                                data-rating="{{ $feedback->rating }}"
+                                data-status="{{ $feedback->status }}">
+                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                            </button>
+
+                            <!-- Feature Action -->
+                            @if($feedback->status === 'approved')
+                                <form action="{{ route('admin.feedback.featured', $feedback) }}" method="POST" class="inline">
+                                    @csrf
+                                    @if($feedback->is_featured)
+                                        <button type="submit" class="btn btn-sm btn-square btn-warning tooltip tooltip-top" data-tip="Unfeature Feedback">
+                                            <i class="fa-solid fa-star text-xs"></i>
+                                        </button>
+                                    @else
+                                        <button type="submit" class="btn btn-sm btn-square btn-soft btn-warning tooltip tooltip-top" data-tip="Feature Feedback">
+                                            <i class="fa-regular fa-star text-xs"></i>
+                                        </button>
+                                    @endif
+                                </form>
+                            @endif
+
+                            <!-- Delete Action -->
+                            <form action="{{ route('admin.feedback.destroy', $feedback) }}" method="POST" class="inline" onsubmit="return confirm('Delete this feedback permanently?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-square btn-soft btn-error tooltip tooltip-top" data-tip="Delete Permanently">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </form>
                         </div>
                     </td>
                 </tr>
@@ -161,9 +174,44 @@
     </table>
 </div>
 
-<!-- Pagination block -->
+<!-- Proper Pagination block -->
 @if($feedbacks->hasPages())
-    <div class="p-4 border-t border-base-300 flex justify-center">
-        {{ $feedbacks->links() }}
+    <div class="p-4 border-t border-base-300 flex justify-center items-center">
+        <div class="join shadow-sm">
+            {{-- Previous Page Link --}}
+            @if ($feedbacks->onFirstPage())
+                <button class="join-item btn btn-xs sm:btn-sm btn-outline border-base-300 text-base-content/40 cursor-not-allowed" disabled>
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                </button>
+            @else
+                <a href="{{ $feedbacks->previousPageUrl() }}" class="join-item btn btn-xs sm:btn-sm btn-outline border-base-300 text-base-content hover:bg-primary hover:text-white hover:border-primary transition-all">
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                </a>
+            @endif
+
+            {{-- Pagination Elements --}}
+            @foreach ($feedbacks->getUrlRange(1, $feedbacks->lastPage()) as $page => $url)
+                @if ($page == $feedbacks->currentPage())
+                    <button class="join-item btn btn-xs sm:btn-sm btn-primary text-white font-extrabold">
+                        {{ $page }}
+                    </button>
+                @else
+                    <a href="{{ $url }}" class="join-item btn btn-xs sm:btn-sm btn-outline border-base-300 text-base-content hover:bg-primary hover:text-white hover:border-primary transition-all">
+                        {{ $page }}
+                    </a>
+                @endif
+            @endforeach
+
+            {{-- Next Page Link --}}
+            @if ($feedbacks->hasMorePages())
+                <a href="{{ $feedbacks->nextPageUrl() }}" class="join-item btn btn-xs sm:btn-sm btn-outline border-base-300 text-base-content hover:bg-primary hover:text-white hover:border-primary transition-all">
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </a>
+            @else
+                <button class="join-item btn btn-xs sm:btn-sm btn-outline border-base-300 text-base-content/40 cursor-not-allowed" disabled>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+            @endif
+        </div>
     </div>
 @endif

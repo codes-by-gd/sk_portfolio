@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FeedbackController as AdminFeedbackController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\DevelopmentWorkController;
 use App\Http\Controllers\Admin\CmsController;
@@ -29,12 +29,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
     // Feedback Management
-    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::post('/admin/feedback/{feedback}/status', [DashboardController::class, 'updateStatus'])->name('admin.feedback.status');
-    Route::post('/admin/feedback/{feedback}/featured', [DashboardController::class, 'toggleFeatured'])->name('admin.feedback.featured');
-    Route::post('/admin/feedback/{feedback}/avatar', [DashboardController::class, 'updateAvatar'])->name('admin.feedback.avatar');
-    Route::delete('/admin/feedback/{feedback}', [DashboardController::class, 'destroy'])->name('admin.feedback.destroy');
-    Route::get('/admin/feedback/export', [DashboardController::class, 'export'])->name('admin.feedback.export');
+    Route::get('/admin/dashboard', [AdminFeedbackController::class, 'index'])->name('admin.dashboard');
+    Route::put('/admin/feedback/{feedback}', [AdminFeedbackController::class, 'update'])->name('admin.feedback.update');
+    Route::post('/admin/feedback/{feedback}/status', [AdminFeedbackController::class, 'updateStatus'])->name('admin.feedback.status');
+    Route::post('/admin/feedback/{feedback}/featured', [AdminFeedbackController::class, 'toggleFeatured'])->name('admin.feedback.featured');
+    Route::post('/admin/feedback/{feedback}/avatar', [AdminFeedbackController::class, 'updateAvatar'])->name('admin.feedback.avatar');
+    Route::delete('/admin/feedback/{feedback}', [AdminFeedbackController::class, 'destroy'])->name('admin.feedback.destroy');
+    Route::get('/admin/feedback/export', [AdminFeedbackController::class, 'export'])->name('admin.feedback.export');
 
     // Gallery Management
     Route::get('/admin/gallery', [GalleryController::class, 'index'])->name('admin.gallery.index');
