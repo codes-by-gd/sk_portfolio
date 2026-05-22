@@ -6,10 +6,10 @@
 <!-- Dashboard Header -->
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
     <div>
-        <h1 class="font-heading font-extrabold text-3xl text-neutral">
+        <h1 class="font-heading font-extrabold text-3xl text-base-content">
             {{ __('messages.admin.feedback_mgmt') }}
         </h1>
-        <p class="text-xs text-neutral/50 font-bold uppercase tracking-wider mt-1">Review and manage citizen submissions</p>
+        <p class="text-xs text-base-content/50 font-bold uppercase tracking-wider mt-1">Review and manage citizen submissions</p>
     </div>
     
     <!-- Export Approved Reviews to CSV -->
@@ -29,39 +29,39 @@
 <!-- Metric Summary Cards -->
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
     <!-- Metric 1: Total -->
-    <div class="bg-[#FFFDF8] border border-base-300 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
-        <span class="text-xs font-bold text-neutral/45 uppercase tracking-wider">{{ __('messages.admin.total_feedbacks') }}</span>
-        <span class="font-heading font-extrabold text-2xl text-neutral mt-2">{{ $counts['total'] }}</span>
+    <div class="bg-base-100 card-base border border-base-300 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+        <span class="text-xs font-bold text-base-content/60 uppercase tracking-wider">{{ __('messages.admin.total_feedbacks') }}</span>
+        <span class="font-heading font-extrabold text-2xl text-base-content mt-2">{{ $counts['total'] }}</span>
     </div>
     <!-- Metric 2: Pending -->
-    <div class="bg-[#FFFDF8] border border-base-300 p-5 rounded-2xl shadow-sm flex flex-col justify-between border-l-4 border-l-warning">
-        <span class="text-xs font-bold text-neutral/45 uppercase tracking-wider">{{ __('messages.admin.pending') }}</span>
+    <div class="bg-base-100 card-base border border-base-300 p-5 rounded-2xl shadow-sm flex flex-col justify-between border-l-4 border-l-warning">
+        <span class="text-xs font-bold text-base-content/60 uppercase tracking-wider">{{ __('messages.admin.pending') }}</span>
         <span class="font-heading font-extrabold text-2xl text-warning mt-2">{{ $counts['pending'] }}</span>
     </div>
     <!-- Metric 3: Approved -->
-    <div class="bg-[#FFFDF8] border border-base-300 p-5 rounded-2xl shadow-sm flex flex-col justify-between border-l-4 border-l-success">
-        <span class="text-xs font-bold text-neutral/45 uppercase tracking-wider">{{ __('messages.admin.approved') }}</span>
+    <div class="bg-base-100 card-base border border-base-300 p-5 rounded-2xl shadow-sm flex flex-col justify-between border-l-4 border-l-success">
+        <span class="text-xs font-bold text-base-content/60 uppercase tracking-wider">{{ __('messages.admin.approved') }}</span>
         <span class="font-heading font-extrabold text-2xl text-success mt-2">{{ $counts['approved'] }}</span>
     </div>
     <!-- Metric 4: Rejected -->
-    <div class="bg-[#FFFDF8] border border-base-300 p-5 rounded-2xl shadow-sm flex flex-col justify-between border-l-4 border-l-error">
-        <span class="text-xs font-bold text-neutral/45 uppercase tracking-wider">{{ __('messages.admin.rejected') }}</span>
+    <div class="bg-base-100 card-base border border-base-300 p-5 rounded-2xl shadow-sm flex flex-col justify-between border-l-4 border-l-error">
+        <span class="text-xs font-bold text-base-content/60 uppercase tracking-wider">{{ __('messages.admin.rejected') }}</span>
         <span class="font-heading font-extrabold text-2xl text-error mt-2">{{ $counts['rejected'] }}</span>
     </div>
 </div>
 
 <!-- Filter and Search Row -->
-<div class="bg-[#FFFDF8] border border-base-300 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
+<div class="bg-base-100 card-base border border-base-300 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
     <form action="{{ route('admin.dashboard') }}" method="GET" class="flex flex-col sm:flex-row gap-3 w-full">
         <!-- Search input -->
         <div class="relative flex-grow">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, mobile, message..." 
-                class="input input-bordered w-full pl-10 rounded-xl bg-transparent border-base-300 focus:outline-none focus:border-primary text-sm text-neutral" />
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral/40 text-sm"></i>
+                class="input input-bordered w-full pl-10 rounded-xl bg-transparent border-base-300 focus:outline-none focus:border-primary text-sm text-base-content" />
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-base-content/40 text-sm"></i>
         </div>
 
         <!-- Status Filter -->
-        <select name="status" class="select select-bordered rounded-xl bg-transparent border-base-300 focus:outline-none focus:border-primary text-sm text-neutral min-w-[150px]">
+        <select name="status" class="select select-bordered rounded-xl bg-transparent border-base-300 focus:outline-none focus:border-primary text-sm text-base-content min-w-[150px]">
             <option value="">All Statuses</option>
             <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
             <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved</option>
@@ -83,7 +83,7 @@
 </div>
 
 <!-- Feedbacks List Table Card -->
-<div id="admin-feedback-table-container" class="bg-[#FFFDF8] border border-base-300 rounded-2xl shadow-sm overflow-hidden">
+<div id="admin-feedback-table-container" class="bg-base-100 card-base border border-base-300 rounded-2xl shadow-sm overflow-hidden">
     @include('admin.partials.feedback-table')
 </div>
 

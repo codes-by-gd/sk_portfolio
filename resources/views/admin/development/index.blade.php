@@ -5,8 +5,8 @@
 @section('content')
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
     <div>
-        <h1 class="font-heading font-extrabold text-3xl text-neutral">Development Works</h1>
-        <p class="text-xs text-neutral/50 font-bold uppercase tracking-wider mt-1">Manage ward development projects</p>
+        <h1 class="font-heading font-extrabold text-3xl text-base-content">Development Works</h1>
+        <p class="text-xs text-base-content/50 font-bold uppercase tracking-wider mt-1">Manage ward development projects</p>
     </div>
     <a href="{{ route('admin.development.create') }}" class="btn btn-primary text-white font-bold rounded-xl gap-2 shadow-md">
         <i class="fa-solid fa-plus"></i> Add New Project
@@ -21,10 +21,10 @@
 @endif
 
 <!-- Works Table -->
-<div class="bg-[#FFFDF8] border border-base-300 rounded-2xl shadow-sm overflow-hidden">
+<div class="bg-base-100 card-base border border-base-300 rounded-2xl overflow-hidden shadow-sm">
     <div class="overflow-x-auto">
         <table class="table table-md w-full text-left">
-            <thead class="bg-base-200 text-xs font-bold uppercase tracking-wider text-neutral/70 border-b border-base-300">
+            <thead class="bg-base-200 text-xs font-bold uppercase tracking-wider text-base-content/70 border-b border-base-300">
                 <tr>
                     <th class="py-4">Preview</th>
                     <th class="py-4">Title & Location</th>
@@ -32,36 +32,36 @@
                     <th class="py-4 text-center">Actions</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-base-300 text-sm text-neutral">
+            <tbody class="divide-y divide-base-300 text-sm text-base-content">
                 @forelse($works as $work)
-                    <tr class="hover:bg-base-100/50 transition-colors">
+                    <tr class="hover:bg-base-200/50 transition-colors">
                         <!-- Before/After Preview -->
                         <td class="py-4 min-w-[140px]">
                             <div class="flex gap-1.5">
                                 <div class="w-14 h-14 rounded-lg overflow-hidden border border-base-300 bg-base-200 flex items-center justify-center">
                                     @if($work->before_image)
-                                        <img src="{{ asset($work->before_image) }}" class="object-cover w-full h-full" alt="Before">
+                                        <img src="{{ asset($work->before_image) }}" class="object-cover w-full h-full" alt="Before" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=Before&backgroundColor=d1d5db&textColor=1f2937'">
                                     @else
-                                        <i class="fa-solid fa-image text-neutral/30 text-lg"></i>
+                                        <i class="fa-solid fa-image text-base-content/30 text-lg"></i>
                                     @endif
                                 </div>
                                 <div class="w-14 h-14 rounded-lg overflow-hidden border border-base-300 bg-base-200 flex items-center justify-center">
                                     @if($work->after_image)
-                                        <img src="{{ asset($work->after_image) }}" class="object-cover w-full h-full" alt="After">
+                                        <img src="{{ asset($work->after_image) }}" class="object-cover w-full h-full" alt="After" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=After&backgroundColor=53C58B&textColor=ffffff'">
                                     @else
-                                        <i class="fa-solid fa-circle-check text-[#53C58B] text-lg"></i>
+                                        <i class="fa-solid fa-circle-check text-accent text-lg"></i>
                                     @endif
                                 </div>
                             </div>
                         </td>
                         <!-- Title & Location -->
                         <td class="py-4 min-w-[200px]">
-                            <p class="font-bold text-neutral leading-tight">{{ $work->title_en }}</p>
-                            <p class="text-xs text-secondary font-semibold mt-1"><i class="fa-solid fa-location-dot mr-1 opacity-60"></i>{{ $work->location }}</p>
+                            <p class="font-bold text-base-content leading-tight">{{ $work->title_en }}</p>
+                            <p class="text-xs text-secondary font-extrabold mt-1"><i class="fa-solid fa-location-dot mr-1 opacity-60"></i>{{ $work->location }}</p>
                         </td>
                         <!-- Description -->
                         <td class="py-4 max-w-xs">
-                            <p class="text-xs text-neutral/75 line-clamp-3 leading-relaxed">{{ $work->description_en }}</p>
+                            <p class="text-xs text-base-content/75 line-clamp-3 leading-relaxed">{{ $work->description_en }}</p>
                         </td>
                         <!-- Actions -->
                         <td class="py-4 text-center">
@@ -81,8 +81,8 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center py-12 text-neutral/50 font-medium italic">
-                            No development projects found. <a href="{{ route('admin.development.create') }}" class="text-primary underline">Add your first project</a>.
+                        <td colspan="4" class="text-center py-12 text-base-content/50 font-medium italic">
+                            No development projects found. <a href="{{ route('admin.development.create') }}" class="text-primary underline font-bold">Add your first project</a>.
                         </td>
                     </tr>
                 @endforelse

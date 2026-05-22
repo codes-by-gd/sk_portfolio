@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth" data-theme="patriotic-theme">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +7,14 @@
 
     <title>@yield('title', 'Sachin Khandelwal - Vadodara Ward No. 7')</title>
     <meta name="description" content="Official website of Sachin Khandelwal, Corporator & BJP Adhyaksh for Vadodara Ward No. 7. Share feedback and view development projects.">
+
+    <!-- Anti-Flash Theme Restoration Script -->
+    <script>
+        (function() {
+            var theme = localStorage.getItem('sk-theme') || 'patriotic-theme';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,9 +27,9 @@
     <!-- Vite Styles & Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans bg-base-100 text-base-content min-h-screen flex flex-col">
+<body class="font-sans bg-base-100 text-base-content min-h-screen flex flex-col transition-colors duration-300">
     <!-- Top Patriotic Ribbon -->
-    <div class="h-1.5 w-full bg-gradient-to-r from-[#FF8A3D] via-[#FFFDF8] to-[#53C58B]"></div>
+    <div class="h-1.5 w-full ribbon-gradient"></div>
 
     <!-- Header & Sticky Navbar -->
     <header class="sticky top-0 z-50 bg-base-100/90 backdrop-blur-md border-b border-base-300">
@@ -50,8 +58,8 @@
                         SK
                     </div>
                     <div class="flex flex-col">
-                        <span class="font-heading font-extrabold text-lg sm:text-xl tracking-tight text-neutral">Sachin Khandelwal</span>
-                        <span class="text-[10px] uppercase font-bold tracking-widest text-[#FF8A3D]">Vadodara Ward 7</span>
+                        <span class="font-heading font-extrabold text-lg sm:text-xl tracking-tight text-base-content">Sachin Khandelwal</span>
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-primary">Vadodara Ward 7</span>
                     </div>
                 </a>
             </div>
@@ -88,13 +96,22 @@
                     </ul>
                 </div>
 
+                <!-- Theme Toggle Button -->
+                <label class="swap swap-rotate btn btn-sm btn-ghost border border-base-300 hover:border-primary rounded-lg p-0 w-8 h-8 shrink-0" title="Toggle Dark Mode">
+                    <input type="checkbox" class="theme-controller" value="patriotic-dark" id="theme-toggle" />
+                    <!-- Sun icon -->
+                    <i class="swap-on fa-solid fa-sun text-warning text-base"></i>
+                    <!-- Moon icon -->
+                    <i class="swap-off fa-solid fa-moon text-base-content/60 text-base"></i>
+                </label>
+
                 <!-- Give Feedback CTA Button -->
                 <a href="{{ route('feedback.detailed') }}" class="btn btn-sm btn-primary text-white font-bold rounded-lg shadow-sm gap-1.5 hidden md:inline-flex">
                     <i class="fa-solid fa-comments text-xs"></i> {{ __('messages.nav.give_feedback') }}
                 </a>
 
                 <!-- Admin Link -->
-                <a href="{{ route('admin.login') }}" class="btn btn-sm btn-circle btn-ghost text-neutral/70 hover:text-primary" title="{{ __('messages.nav.admin') }}">
+                <a href="{{ route('admin.login') }}" class="btn btn-sm btn-circle btn-ghost text-base-content/75 hover:text-primary" title="{{ __('messages.nav.admin') }}">
                     <i class="fa-solid fa-user-shield text-base"></i>
                 </a>
             </div>
@@ -151,5 +168,22 @@
             <p>Designed with patriotism and dedication.</p>
         </div>
     </footer>
+
+    <!-- Sync checkbox state & handle localStorage updates -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toggle = document.getElementById('theme-toggle');
+            if (toggle) {
+                var currentTheme = document.documentElement.getAttribute('data-theme') || 'patriotic-theme';
+                toggle.checked = (currentTheme === 'patriotic-dark');
+                
+                toggle.addEventListener('change', function () {
+                    var newTheme = this.checked ? 'patriotic-dark' : 'patriotic-theme';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('sk-theme', newTheme);
+                });
+            }
+        });
+    </script>
 </body>
 </html>

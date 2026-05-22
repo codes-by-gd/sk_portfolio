@@ -1,15 +1,20 @@
 @import 'tailwindcss';
-@plugin 'daisyui';
+@plugin 'daisyui' {
+  themes: ["patriotic-theme", "patriotic-dark"];
+}
 
 @plugin 'daisyui/theme' {
   name: 'patriotic-theme';
   default: true;
+  prefersdark: false;
   color-scheme: 'light';
+  
+  --border: 1px; /* Centralized base border width for components */
   
   /* Candy Patriotic Color Palette */
   --color-primary: #FF8A3D; /* Primary Saffron */
   --color-primary-content: #FFFDF8;
-  --color-secondary: #3D5AFE; /* Ashoka Blue */
+  --color-secondary: #3E5280; /* Premium Slate-Blue (softer, less bright blue) */
   --color-secondary-content: #FFFDF8;
   --color-accent: #53C58B; /* Soft Green */
   --color-accent-content: #FFFDF8;
@@ -22,9 +27,68 @@
   --color-base-300: #EAE6DB; /* Separator lines, deep borders */
   --color-base-content: #1E1E1E; /* Soft Black text */
   
-  --radius-selector: 1rem;
+  /* Semantic Light Mappings */
+  --color-info: #60A5FA;
+  --color-info-content: #0A1929;
+  --color-success: #53C58B;
+  --color-success-content: #0B2B1B;
+  --color-warning: #FF8A3D;
+  --color-warning-content: #2F1100;
+  --color-error: #F87171;
+  --color-error-content: #2D0000;
+  
+  --radius-selector: 0.5rem;
   --radius-field: 0.75rem;
-  --radius-box: 1.25rem;
+  --radius-box: 0.25rem;
+  
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin 'daisyui/theme' {
+  name: 'patriotic-dark';
+  default: false;
+  prefersdark: true;
+  color-scheme: 'dark';
+  
+  --border: 1px; /* Centralized base border width for components */
+  
+  /* Warm Charcoal Dark Palette */
+  --color-primary: #FF8A3D; /* Saffron Accent stays constant for brand identity */
+  --color-primary-content: #1C1A16;
+  --color-secondary: #8FA3D0; /* Muted Slate-Blue (high legibility, low saturation) */
+  --color-secondary-content: #10141D;
+  --color-accent: #53C58B; /* Soft Green */
+  --color-accent-content: #0D2618;
+  --color-neutral: #2A2620; /* Dark card neutral — not fully black, warm tone */
+  --color-neutral-content: #EDE9E1;
+  
+  /* Dark surface hierarchy */
+  --color-base-100: #1C1A16; /* Page background */
+  --color-base-200: #252320; /* Elevated surface card bg */
+  --color-base-300: #38342E; /* Borders, dividers */
+  --color-base-content: #EDE9E1; /* Warm off-white primary text */
+
+  /* Semantic Dark Mappings */
+  --color-info: #60A5FA;
+  --color-info-content: #0A1929;
+  --color-success: #4ADE80;
+  --color-success-content: #052E16;
+  --color-warning: #FBBF24;
+  --color-warning-content: #1C1000;
+  --color-error: #F87171;
+  --color-error-content: #2D0000;
+  
+  --radius-selector: 0.5rem;
+  --radius-field: 0.75rem;
+  --radius-box: 0.25rem;
+  
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --depth: 1;
+  --noise: 0;
 }
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -33,6 +97,37 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-    --font-heading: 'Poppins', sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: 'Poppins', sans-serif;
+}
+
+/* Custom visual utilities for soft saffron-tinted micro-borders and shadows */
+@utility card-base {
+  background-color: var(--color-base-100);
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-box);
+  box-shadow: 0 4px 20px -2px rgba(255, 138, 61, 0.04), 0 2px 8px -1px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@utility card-base-hover {
+  background-color: var(--color-base-100);
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-box);
+  box-shadow: 0 4px 20px -2px rgba(255, 138, 61, 0.04), 0 2px 8px -1px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-base-hover:hover {
+  border-color: rgba(255, 138, 61, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(255, 138, 61, 0.09), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+}
+
+/* Ribbon gradient classes to smoothly transition between modes */
+.ribbon-gradient {
+  background: linear-gradient(to right, #FF8A3D, #FFFDF8, #53C58B);
+}
+[data-theme="patriotic-dark"] .ribbon-gradient {
+  background: linear-gradient(to right, #FF8A3D, #252320, #53C58B);
 }

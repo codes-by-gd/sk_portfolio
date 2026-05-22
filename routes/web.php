@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\DevelopmentWorkController;
 use App\Http\Controllers\Admin\CmsController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\ProfileController;
 
 // Public Landing Page
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -55,5 +56,9 @@ Route::middleware(['auth'])->group(function () {
     // Settings Management
     Route::get('/admin/settings', [SettingsController::class, 'index'])->name('admin.settings.index');
     Route::post('/admin/settings', [SettingsController::class, 'update'])->name('admin.settings.update');
+
+    // Profile Management
+    Route::get('/admin/profile', [ProfileController::class, 'edit'])->name('admin.profile.edit');
+    Route::put('/admin/profile', [ProfileController::class, 'update'])->name('admin.profile.update');
 });
 

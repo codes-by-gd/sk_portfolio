@@ -1,6 +1,6 @@
 <div class="overflow-x-auto">
     <table class="table table-md w-full text-left">
-        <thead class="bg-base-200 text-xs font-bold uppercase tracking-wider text-neutral/70 border-b border-base-300">
+        <thead class="bg-base-200 text-xs font-bold uppercase tracking-wider text-base-content/70 border-b border-base-300">
             <tr>
                 <th class="py-4">Submitter Details</th>
                 <th class="py-4">Feedback Content</th>
@@ -10,9 +10,9 @@
                 <th class="py-4 text-center">{{ __('messages.admin.actions') }}</th>
             </tr>
         </thead>
-        <tbody class="divide-y divide-base-300 text-sm text-neutral">
+        <tbody class="divide-y divide-base-300 text-sm text-base-content">
             @forelse($feedbacks as $feedback)
-                <tr class="hover:bg-base-100/50 transition-colors">
+                <tr class="hover:bg-base-200/50 transition-colors">
                     <!-- Submitter Details -->
                     <td class="py-4 space-y-1 vertical-align-top min-w-[200px]">
                         <div class="flex items-center gap-3">
@@ -21,9 +21,9 @@
                                 @csrf
                                 <label class="cursor-pointer relative block w-11 h-11 rounded-full overflow-hidden border border-base-300 bg-base-200 shadow-sm" title="Upload Avatar">
                                     @if($feedback->avatar_path)
-                                        <img src="{{ asset($feedback->avatar_path) }}" class="object-cover w-full h-full" alt="Avatar">
+                                        <img src="{{ asset($feedback->avatar_path) }}" class="object-cover w-full h-full" alt="Avatar" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed='+encodeURIComponent('{{ $feedback->name }}')+'&backgroundColor=ff8a3d&textColor=ffffff'">
                                     @else
-                                        <div class="w-full h-full bg-neutral/10 flex items-center justify-center text-neutral/50 font-heading font-extrabold text-xs uppercase">
+                                        <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/50 font-heading font-extrabold text-xs uppercase">
                                             {{ substr($feedback->name, 0, 2) }}
                                         </div>
                                     @endif
@@ -34,18 +34,18 @@
                                 </label>
                             </form>
                             <div>
-                                <p class="font-bold text-neutral leading-tight">{{ $feedback->name }}</p>
-                                <p class="text-xs text-neutral/70 font-semibold mt-1"><i class="fa-solid fa-phone mr-1 opacity-50 text-[10px]"></i>{{ $feedback->mobile_number }}</p>
-                                <p class="text-xs text-secondary font-bold uppercase tracking-wider mt-0.5"><i class="fa-solid fa-location-dot mr-1 opacity-50 text-[10px]"></i>{{ $feedback->area }}</p>
+                                <p class="font-bold text-base-content leading-tight">{{ $feedback->name }}</p>
+                                <p class="text-xs text-base-content/70 font-semibold mt-1"><i class="fa-solid fa-phone mr-1 opacity-50 text-[10px]"></i>{{ $feedback->mobile_number }}</p>
+                                <p class="text-xs text-secondary font-extrabold uppercase tracking-wider mt-0.5"><i class="fa-solid fa-location-dot mr-1 opacity-50 text-[10px]"></i>{{ $feedback->area }}</p>
                             </div>
                         </div>
                     </td>
 
                     <!-- Feedback Content -->
                     <td class="py-4 max-w-sm vertical-align-top">
-                        <p class="font-bold text-neutral mb-1 leading-snug">{{ $feedback->title }}</p>
-                        <p class="text-xs text-neutral/80 line-clamp-3 leading-relaxed whitespace-pre-line">{{ $feedback->message }}</p>
-                        <span class="text-[10px] text-neutral/40 font-bold block mt-1">{{ $feedback->created_at->format('M d, Y h:i A') }}</span>
+                        <p class="font-bold text-base-content mb-1 leading-snug">{{ $feedback->title }}</p>
+                        <p class="text-xs text-base-content/85 line-clamp-3 leading-relaxed whitespace-pre-line">{{ $feedback->message }}</p>
+                        <span class="text-[10px] text-base-content/40 font-bold block mt-1">{{ $feedback->created_at->format('M d, Y h:i A') }}</span>
                     </td>
 
                     <!-- Rating Stars -->
@@ -63,78 +63,96 @@
                             <div class="flex gap-1.5 flex-wrap">
                                 @foreach($feedback->images as $img)
                                     <a href="{{ asset($img->image_path) }}" target="_blank" class="w-12 h-12 rounded-lg overflow-hidden border border-base-300 hover:scale-105 transition-transform duration-200 block bg-base-300">
-                                        <img src="{{ asset($img->image_path) }}" class="object-cover w-full h-full" alt="Review Media">
+                                        <img src="{{ asset($img->image_path) }}" class="object-cover w-full h-full" alt="Review Media" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=Media&backgroundColor=e2e8f0&textColor=1f2937'">
                                     </a>
                                 @endforeach
                             </div>
                         @else
-                            <span class="text-xs text-neutral/40 italic">No Media</span>
+                            <span class="text-xs text-base-content/40 italic">No Media</span>
                         @endif
                     </td>
 
                     <!-- Status Badge -->
                     <td class="py-4 vertical-align-top">
-                        @if($feedback->status === 'approved')
-                            <span class="badge badge-success text-white font-bold text-xs">Approved</span>
-                            @if($feedback->is_featured)
-                                <span class="badge badge-warning text-[10px] uppercase font-bold text-white block mt-1 tracking-wider">Featured</span>
+                        <div class="flex flex-col gap-1.5 items-start">
+                            @if($feedback->status === 'approved')
+                                <span class="badge badge-success text-white font-bold text-xs gap-1 py-2.5">
+                                    <i class="fa-solid fa-circle-check text-[9px]"></i> Approved
+                                </span>
+                            @elseif($feedback->status === 'rejected')
+                                <span class="badge badge-error text-white font-bold text-xs gap-1 py-2.5">
+                                    <i class="fa-solid fa-circle-xmark text-[9px]"></i> Rejected
+                                </span>
+                            @else
+                                <span class="badge badge-warning text-white font-bold text-xs gap-1 py-2.5">
+                                    <i class="fa-solid fa-clock text-[9px]"></i> Pending
+                                </span>
                             @endif
-                        @elseif($feedback->status === 'rejected')
-                            <span class="badge badge-error text-white font-bold text-xs">Rejected</span>
-                        @else
-                            <span class="badge badge-warning font-bold text-xs">Pending</span>
-                        @endif
+                            @if($feedback->is_featured)
+                                <span class="badge badge-primary text-white text-[10px] uppercase font-bold tracking-wider gap-1 py-2.5">
+                                    <i class="fa-solid fa-star text-[9px]"></i> Featured
+                                </span>
+                            @endif
+                        </div>
                     </td>
 
                     <!-- Actions row buttons -->
-                    <td class="py-4 vertical-align-top text-center space-y-1.5 min-w-[180px]">
-                        <div class="flex flex-wrap justify-center gap-1.5">
-                            <!-- Approval Action Form -->
-                            @if($feedback->status !== 'approved')
-                                <form action="{{ route('admin.feedback.status', $feedback) }}" method="POST" class="inline">
+                    <td class="py-4 vertical-align-top text-center min-w-[160px]">
+                        <div class="flex flex-col gap-1.5 items-center">
+                            <!-- Approve / Reject row -->
+                            <div class="flex gap-1.5">
+                                @if($feedback->status !== 'approved')
+                                    <form action="{{ route('admin.feedback.status', $feedback) }}" method="POST" class="inline">
+                                        @csrf
+                                        <input type="hidden" name="status" value="approved">
+                                        <button type="submit" class="btn btn-xs btn-success text-white rounded-lg font-bold gap-1" title="Approve">
+                                            <i class="fa-solid fa-check"></i> Approve
+                                        </button>
+                                    </form>
+                                @endif
+
+                                @if($feedback->status !== 'rejected')
+                                    <form action="{{ route('admin.feedback.status', $feedback) }}" method="POST" class="inline">
+                                        @csrf
+                                        <input type="hidden" name="status" value="rejected">
+                                        <button type="submit" class="btn btn-xs btn-error text-white rounded-lg font-bold gap-1" title="Reject">
+                                            <i class="fa-solid fa-xmark"></i> Reject
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+
+                            <!-- Feature / Delete row -->
+                            <div class="flex gap-1.5">
+                                @if($feedback->status === 'approved')
+                                    <form action="{{ route('admin.feedback.featured', $feedback) }}" method="POST" class="inline">
+                                        @csrf
+                                        @if($feedback->is_featured)
+                                            <button type="submit" class="btn btn-xs btn-ghost border border-base-300 rounded-lg font-bold gap-1" title="Remove from featured">
+                                                <i class="fa-solid fa-star-half-stroke text-warning"></i> Unfeature
+                                            </button>
+                                        @else
+                                            <button type="submit" class="btn btn-xs btn-primary text-white rounded-lg font-bold gap-1" title="Mark as featured">
+                                                <i class="fa-solid fa-star"></i> Feature
+                                            </button>
+                                        @endif
+                                    </form>
+                                @endif
+
+                                <form action="{{ route('admin.feedback.destroy', $feedback) }}" method="POST" class="inline" onsubmit="return confirm('Delete this feedback permanently?')">
                                     @csrf
-                                    <input type="hidden" name="status" value="approved">
-                                    <button type="submit" class="btn btn-xs btn-success text-white rounded-lg px-2.5 font-bold">
-                                        Approve
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-xs btn-ghost text-error rounded-lg" title="Delete permanently">
+                                        <i class="fa-solid fa-trash-can"></i>
                                     </button>
                                 </form>
-                            @endif
-
-                            <!-- Rejection Action Form -->
-                            @if($feedback->status !== 'rejected')
-                                <form action="{{ route('admin.feedback.status', $feedback) }}" method="POST" class="inline">
-                                    @csrf
-                                    <input type="hidden" name="status" value="rejected">
-                                    <button type="submit" class="btn btn-xs btn-error text-white rounded-lg px-2.5 font-bold">
-                                        Reject
-                                    </button>
-                                </form>
-                            @endif
-
-                            <!-- Feature Toggle Action Form -->
-                            @if($feedback->status === 'approved')
-                                <form action="{{ route('admin.feedback.featured', $feedback) }}" method="POST" class="inline">
-                                    @csrf
-                                    <button type="submit" class="btn btn-xs {{ $feedback->is_featured ? 'btn-neutral' : 'btn-warning text-white' }} rounded-lg px-2 font-bold">
-                                        {{ $feedback->is_featured ? 'Unfeature' : 'Feature' }}
-                                    </button>
-                                </form>
-                            @endif
-
-                            <!-- Delete Action Form -->
-                            <form action="{{ route('admin.feedback.destroy', $feedback) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this feedback permanent?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-xs btn-outline btn-neutral rounded-lg px-2.5">
-                                    <i class="fa-solid fa-trash-can text-red-500"></i>
-                                </button>
-                            </form>
+                            </div>
                         </div>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center py-12 text-neutral/50 font-medium italic">
+                    <td colspan="6" class="text-center py-12 text-base-content/50 font-medium italic">
                         No feedbacks found matching query criteria.
                     </td>
                 </tr>

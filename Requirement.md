@@ -683,6 +683,17 @@ Manage:
 
 ---
 
+# E. Profile Management Module
+
+Admin can:
+
+* view & update first name, last name, and email address
+* upload and display a profile picture / avatar in the sidebar and profile cards
+* change password securely by providing the current password
+* easily access the profile page by clicking the interactive username & avatar block in the sidebar (which displays an elegant hover background and edit icon on hover)
+
+---
+
 # 14. Authentication Module
 
 No public registration.

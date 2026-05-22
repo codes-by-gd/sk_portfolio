@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full" data-theme="patriotic-theme">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +7,14 @@
 
     <title>@yield('title', 'Admin Portal - Sachin Khandelwal')</title>
     <meta name="description" content="Admin Control Panel for Sachin Khandelwal Portal.">
+
+    <!-- Anti-Flash Theme Restoration Script -->
+    <script>
+        (function() {
+            var theme = localStorage.getItem('sk-theme') || 'patriotic-theme';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,37 +27,37 @@
     <!-- Vite Styles & Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans bg-base-200 text-base-content min-h-screen flex flex-col">
-    <!-- Top Patriotic Ribbon -->
-    <div class="h-1.5 w-full bg-gradient-to-r from-[#FF8A3D] via-[#FFFDF8] to-[#53C58B]"></div>
+<body class="font-sans bg-base-200 text-base-content h-screen overflow-hidden flex flex-col transition-colors duration-300">
+    <!-- Top Patriotic Ribbon (fixed, part of the fixed header block) -->
+    <div class="fixed top-0 left-0 right-0 z-[60] h-1.5 w-full ribbon-gradient"></div>
 
     <!-- Admin Top Navbar -->
-    <header class="sticky top-0 z-50 bg-neutral text-neutral-content border-b border-white/10 shadow-md">
+    <header class="fixed top-1.5 left-0 right-0 z-50 bg-neutral text-neutral-content border-b border-white/10 shadow-md">
         <div class="navbar w-full px-4 sm:px-6 lg:px-8">
             <div class="navbar-start">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 group">
-                    <div class="bg-[#FF8A3D] text-white p-2 rounded-xl flex items-center justify-center font-bold text-sm shadow-md">
+                    <div class="bg-primary text-white p-2 rounded-xl flex items-center justify-center font-bold text-sm shadow-md">
                         SK
                     </div>
                     <div class="flex flex-col">
                         <span class="font-heading font-extrabold text-sm sm:text-base tracking-tight text-white">Sachin Khandelwal</span>
-                        <span class="text-[9px] uppercase font-bold tracking-widest text-[#FFFDF8]/70">Admin Office Portal</span>
+                        <span class="text-[9px] uppercase font-bold tracking-widest text-neutral-content/70">Admin Office Portal</span>
                     </div>
                 </a>
             </div>
 
             <!-- Middle indicator/Title -->
             <div class="navbar-center hidden sm:flex">
-                <span class="badge badge-outline border-white/20 text-xs font-bold text-[#FF8A3D] uppercase tracking-wider px-3 py-2.5">
+                <span class="badge badge-outline border-white/20 text-xs font-bold text-primary uppercase tracking-wider px-3 py-2.5">
                     <i class="fa-solid fa-lock mr-1.5"></i> Secure Admin Panel
                 </span>
             </div>
 
             <div class="navbar-end gap-3">
-                <!-- Language Selector (For admin panel translation convenience) -->
+                <!-- Language Selector -->
                 <div class="dropdown dropdown-end">
                     <button tabindex="0" class="btn btn-xs sm:btn-sm btn-ghost border border-white/20 hover:border-white/50 gap-1 px-2.5 rounded-lg text-white">
-                        <i class="fa-solid fa-language text-base text-[#53C58B]"></i>
+                        <i class="fa-solid fa-language text-base text-accent"></i>
                         <span class="hidden sm:inline font-semibold">
                             @if(app()->getLocale() == 'gu') ગુજરાતી
                             @elseif(app()->getLocale() == 'hi') हिंदी
@@ -58,11 +66,20 @@
                         </span>
                     </button>
                     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-xl bg-neutral rounded-box w-36 border border-white/10 font-semibold mt-2 text-white">
-                        <li><a href="?lang=gu" class="{{ app()->getLocale() == 'gu' ? 'active bg-primary/20 text-[#FF8A3D]' : 'hover:bg-white/10' }}">ગુજરાતી</a></li>
-                        <li><a href="?lang=hi" class="{{ app()->getLocale() == 'hi' ? 'active bg-primary/20 text-[#FF8A3D]' : 'hover:bg-white/10' }}">हिंदी</a></li>
-                        <li><a href="?lang=en" class="{{ app()->getLocale() == 'en' ? 'active bg-primary/20 text-[#FF8A3D]' : 'hover:bg-white/10' }}">English</a></li>
+                        <li><a href="?lang=gu" class="{{ app()->getLocale() == 'gu' ? 'active bg-primary/20 text-primary' : 'hover:bg-white/10' }}">ગુજરાતી</a></li>
+                        <li><a href="?lang=hi" class="{{ app()->getLocale() == 'hi' ? 'active bg-primary/20 text-primary' : 'hover:bg-white/10' }}">हिंदी</a></li>
+                        <li><a href="?lang=en" class="{{ app()->getLocale() == 'en' ? 'active bg-primary/20 text-primary' : 'hover:bg-white/10' }}">English</a></li>
                     </ul>
                 </div>
+
+                <!-- Theme Toggle Button -->
+                <label class="swap swap-rotate btn btn-xs sm:btn-sm btn-ghost border border-white/20 hover:border-white/50 rounded-lg p-0 w-8 h-8 shrink-0 text-white" title="Toggle Dark Mode">
+                    <input type="checkbox" class="theme-controller" value="patriotic-dark" id="theme-toggle" />
+                    <!-- Sun icon -->
+                    <i class="swap-on fa-solid fa-sun text-warning text-base"></i>
+                    <!-- Moon icon -->
+                    <i class="swap-off fa-solid fa-moon text-neutral-content/60 text-base"></i>
+                </label>
 
                 <!-- Back to Public Site -->
                 <a href="{{ route('home') }}" class="btn btn-xs sm:btn-sm btn-primary text-white rounded-lg font-bold gap-1 px-3" title="View Public Website">
@@ -73,16 +90,31 @@
     </header>
 
     @auth
-        <!-- Authenticated Layout: sidebar + content column side by side -->
-        <div class="flex-grow flex flex-col lg:flex-row w-full overflow-hidden">
+        {{-- Authenticated Layout: full viewport height, fixed sidebar + scrollable content only --}}
+        {{-- Spacer to push content below the fixed ribbon (1.5) + navbar (~4rem) --}}
+        <div class="pt-[calc(0.375rem+4rem)] flex flex-row w-full" style="height: calc(100vh - 0.375rem);">
 
-            <!-- Sidebar: fixed viewport height, sticky below navbar, scrollable internally -->
-            <aside class="w-full lg:w-64 bg-neutral text-neutral-content p-6 flex flex-col border-r border-white/10 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto shrink-0">
-                <div class="space-y-6">
+            <!-- Sidebar: fixed height = full remaining viewport, no page scroll -->
+            <aside class="hidden lg:flex w-64 shrink-0 bg-neutral text-neutral-content flex-col border-r border-white/10 overflow-y-auto">
+                <div class="p-6 space-y-6 flex-grow flex flex-col">
                     <!-- User block -->
                     <div class="border-b border-white/10 pb-4">
-                        <span class="text-xs uppercase font-extrabold tracking-widest text-[#FF8A3D] block">Logged In As</span>
-                        <span class="text-sm font-semibold text-white/95 truncate block mt-0.5">{{ Auth::user()->name }}</span>
+                        <span class="text-xs uppercase font-extrabold tracking-widest text-primary block px-3 mb-1">Logged In As</span>
+                        <a href="{{ route('admin.profile.edit') }}" class="group flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.profile*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all duration-200" title="Edit Profile">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="avatar placeholder shrink-0">
+                                    <div class="bg-primary/20 text-primary group-hover:bg-primary group-hover:text-white {{ request()->routeIs('admin.profile*') ? 'bg-white text-primary' : '' }} rounded-full w-8 h-8 flex items-center justify-center font-bold font-heading text-xs ring-1 ring-primary/30 overflow-hidden transition-all duration-200">
+                                        @if(Auth::user()->avatar_path)
+                                            <img src="{{ asset(Auth::user()->avatar_path) }}" alt="{{ Auth::user()->name }}" class="object-cover w-full h-full" />
+                                        @else
+                                            {{ strtoupper(substr(Auth::user()->first_name, 0, 1) . substr(Auth::user()->last_name, 0, 1)) }}
+                                        @endif
+                                    </div>
+                                </div>
+                                <span class="text-sm font-semibold truncate">{{ Auth::user()->name }}</span>
+                            </div>
+                            <i class="fa-solid fa-pen-to-square text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-primary {{ request()->routeIs('admin.profile*') ? 'text-white' : '' }}"></i>
+                        </a>
                     </div>
 
                     <!-- Sidebar navigation -->
@@ -118,30 +150,30 @@
                             </a>
                         </li>
                     </ul>
-                </div>
 
-                <!-- Logout pinned to bottom of sidebar -->
-                <div class="mt-auto pt-6 border-t border-white/10">
-                    <form action="{{ route('admin.logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-outline btn-error btn-sm w-full rounded-lg gap-2">
-                            <i class="fa-solid fa-power-off"></i> {{ __('messages.admin.logout') }}
-                        </button>
-                    </form>
+                    <!-- Logout pinned to bottom of sidebar -->
+                    <div class="mt-auto pt-6 border-t border-white/10">
+                        <form action="{{ route('admin.logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-outline btn-error btn-sm w-full rounded-lg gap-2">
+                                <i class="fa-solid fa-power-off"></i> {{ __('messages.admin.logout') }}
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </aside>
 
-            <!-- Content column: grows to fill remaining width, footer scoped here only -->
-            <div class="flex-grow flex flex-col min-w-0">
-                <main class="flex-grow p-6 lg:p-8 space-y-6">
+            <!-- Content column: fills remaining width, ONLY this area scrolls -->
+            <div class="flex-grow flex flex-col min-w-0 overflow-hidden">
+                <main class="flex-grow overflow-y-auto p-6 lg:p-8 space-y-6">
                     @yield('content')
                 </main>
 
-                <!-- Footer inside content column — does NOT appear below sidebar -->
+                <!-- Footer: scoped to content column only, never below sidebar -->
                 <footer class="bg-neutral text-neutral-content/50 py-4 border-t border-white/10 text-xs shrink-0">
                     <div class="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
                         <p>&copy; {{ date('Y') }} Sachin Khandelwal Office Admin Portal. All Rights Reserved.</p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-[#53C58B]"></i> Secured and optimized</p>
+                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-accent"></i> Secured and optimized</p>
                     </div>
                 </footer>
             </div>
@@ -149,7 +181,7 @@
         </div>
     @else
         <!-- Guest Layout (e.g. Login page) -->
-        <main class="flex-grow flex items-center justify-center p-6 bg-gradient-to-br from-[#FFFDF8] via-[#EAE5D9] to-[#FFFDF8] min-h-[calc(100vh-8.5rem)]">
+        <main class="flex-grow flex items-center justify-center p-6 bg-gradient-to-br from-base-100 via-base-200 to-base-100 overflow-y-auto" style="padding-top: calc(0.375rem + 4rem + 1.5rem);">
             @yield('content')
         </main>
 
@@ -157,9 +189,26 @@
         <footer class="bg-neutral text-neutral-content/50 py-4 border-t border-white/10 text-xs">
             <div class="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
                 <p>&copy; {{ date('Y') }} Sachin Khandelwal Office Admin Portal. All Rights Reserved.</p>
-                <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-[#53C58B]"></i> Secured and optimized</p>
+                <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-accent"></i> Secured and optimized</p>
             </div>
         </footer>
     @endauth
+
+    <!-- Sync checkbox state & handle localStorage updates -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toggle = document.getElementById('theme-toggle');
+            if (toggle) {
+                var currentTheme = document.documentElement.getAttribute('data-theme') || 'patriotic-theme';
+                toggle.checked = (currentTheme === 'patriotic-dark');
+                
+                toggle.addEventListener('change', function () {
+                    var newTheme = this.checked ? 'patriotic-dark' : 'patriotic-theme';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('sk-theme', newTheme);
+                });
+            }
+        });
+    </script>
 </body>
 </html>

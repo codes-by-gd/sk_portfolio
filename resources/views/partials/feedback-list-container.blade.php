@@ -1,31 +1,31 @@
 @if($approvedFeedbacks->isEmpty())
-    <div class="bg-[#FFFDF8] border border-base-300 rounded-2xl p-8 text-center text-neutral/50 font-medium">
-        <i class="fa-solid fa-comments text-3xl mb-2 text-neutral/30"></i>
+    <div class="bg-base-100 card-base rounded-2xl p-8 text-center text-base-content/50 font-medium">
+        <i class="fa-solid fa-comments text-3xl mb-2 text-base-content/30"></i>
         <p class="text-sm">No testimonials approved yet. Be the first to share your feedback!</p>
     </div>
 @else
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @foreach($approvedFeedbacks as $fb)
-            <div class="bg-[#FFFDF8] border border-base-300 rounded-2xl p-6 shadow-sm flex flex-col justify-between space-y-4 hover:shadow-md transition-all duration-300">
+            <div class="bg-base-100 card-base rounded-2xl p-6 flex flex-col justify-between space-y-4">
                 <div class="space-y-3">
                     <!-- Top: Submitter Details -->
                     <div class="flex items-center justify-between gap-3">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full overflow-hidden border border-base-300 bg-base-200 shrink-0 shadow-xs">
                                 @if($fb->avatar_path)
-                                    <img src="{{ asset($fb->avatar_path) }}" class="object-cover w-full h-full" alt="{{ $fb->name }}">
+                                    <img src="{{ asset($fb->avatar_path) }}" class="object-cover w-full h-full" alt="{{ $fb->name }}" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed='+encodeURIComponent('{{ $fb->name }}')+'&backgroundColor=ff8a3d&textColor=ffffff'">
                                 @else
-                                    <div class="w-full h-full bg-neutral/10 flex items-center justify-center text-neutral/50 font-heading font-extrabold text-xs uppercase">
+                                    <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/50 font-heading font-extrabold text-xs uppercase">
                                         {{ substr($fb->name, 0, 2) }}
                                     </div>
                                 @endif
                             </div>
                             <div>
-                                <h4 class="font-bold text-neutral text-sm leading-snug">{{ $fb->name }}</h4>
-                                <p class="text-[10px] text-neutral/50 font-semibold uppercase tracking-wider">{{ $fb->area }}</p>
+                                <h4 class="font-bold text-base-content text-sm leading-snug">{{ $fb->name }}</h4>
+                                <p class="text-[10px] text-base-content/50 font-semibold uppercase tracking-wider">{{ $fb->area }}</p>
                             </div>
                         </div>
-                        <span class="text-[10px] text-neutral/40 font-medium">{{ $fb->created_at->diffForHumans() }}</span>
+                        <span class="text-[10px] text-base-content/40 font-medium">{{ $fb->created_at->diffForHumans() }}</span>
                     </div>
 
                     <!-- Stars Rating -->
@@ -37,8 +37,8 @@
 
                     <!-- Feedback Title and Content -->
                     <div class="space-y-1">
-                        <h5 class="font-bold text-neutral text-sm leading-snug">{{ $fb->title }}</h5>
-                        <p class="text-neutral/70 text-xs sm:text-sm leading-relaxed whitespace-pre-line">
+                        <h5 class="font-bold text-base-content text-sm leading-snug">{{ $fb->title }}</h5>
+                        <p class="text-base-content/70 text-xs sm:text-sm leading-relaxed whitespace-pre-line">
                             "{!! nl2br(e($fb->message)) !!}"
                         </p>
                     </div>
@@ -49,7 +49,7 @@
                     <div class="flex gap-2 flex-wrap pt-2 border-t border-base-200">
                         @foreach($fb->images as $img)
                             <a href="{{ asset($img->image_path) }}" target="_blank" class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl overflow-hidden border border-base-300 hover:scale-105 transition-transform duration-200 block bg-base-300">
-                                <img src="{{ asset($img->image_path) }}" class="object-cover w-full h-full" alt="Citizen Review Image">
+                                <img src="{{ asset($img->image_path) }}" class="object-cover w-full h-full" alt="Citizen Review Image" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=Media&backgroundColor=e2e8f0&textColor=1f2937'">
                             </a>
                         @endforeach
                     </div>
@@ -61,12 +61,12 @@
     <!-- Custom Premium daisyUI Pagination -->
     @if($approvedFeedbacks->hasPages())
         <div class="flex justify-center pt-8">
-            <div class="join border border-base-300 bg-[#FFFDF8] shadow-sm rounded-xl overflow-hidden">
+            <div class="join border border-base-300 bg-base-100 shadow-sm rounded-xl overflow-hidden">
                 {{-- Previous Page Link --}}
                 @if($approvedFeedbacks->onFirstPage())
-                    <button class="join-item btn btn-md btn-ghost text-neutral/30 cursor-not-allowed" disabled>«</button>
+                    <button class="join-item btn btn-md btn-ghost text-base-content/30 cursor-not-allowed" disabled>«</button>
                 @else
-                    <a href="{{ $approvedFeedbacks->previousPageUrl() }}" class="join-item btn btn-md btn-ghost text-neutral hover:bg-primary hover:text-white transition-colors">«</a>
+                    <a href="{{ $approvedFeedbacks->previousPageUrl() }}" class="join-item btn btn-md btn-ghost text-base-content hover:bg-primary hover:text-white transition-colors">«</a>
                 @endif
 
                 {{-- Page Links --}}
@@ -74,15 +74,15 @@
                     @if($i == $approvedFeedbacks->currentPage())
                         <button class="join-item btn btn-md btn-primary text-white font-bold">{{ $i }}</button>
                     @else
-                        <a href="{{ $approvedFeedbacks->url($i) }}" class="join-item btn btn-md btn-ghost text-neutral hover:bg-primary hover:text-white transition-colors">{{ $i }}</a>
+                        <a href="{{ $approvedFeedbacks->url($i) }}" class="join-item btn btn-md btn-ghost text-base-content hover:bg-primary hover:text-white transition-colors">{{ $i }}</a>
                     @endif
                 @endforeach
 
                 {{-- Next Page Link --}}
                 @if($approvedFeedbacks->hasMorePages())
-                    <a href="{{ $approvedFeedbacks->nextPageUrl() }}" class="join-item btn btn-md btn-ghost text-neutral hover:bg-primary hover:text-white transition-colors">»</a>
+                    <a href="{{ $approvedFeedbacks->nextPageUrl() }}" class="join-item btn btn-md btn-ghost text-base-content hover:bg-primary hover:text-white transition-colors">»</a>
                 @else
-                    <button class="join-item btn btn-md btn-ghost text-neutral/30 cursor-not-allowed" disabled>»</button>
+                    <button class="join-item btn btn-md btn-ghost text-base-content/30 cursor-not-allowed" disabled>»</button>
                 @endif
             </div>
         </div>

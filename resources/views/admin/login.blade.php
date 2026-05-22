@@ -5,10 +5,10 @@
 @section('content')
 <div class="w-full max-w-[420px] bg-neutral text-white border border-white/10 rounded-3xl p-8 sm:p-10 shadow-2xl relative overflow-hidden transition-all duration-300">
     <!-- Top accent stripe -->
-    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#FF8A3D] via-[#FFFDF8]/30 to-[#53C58B]"></div>
+    <div class="absolute top-0 left-0 w-full h-1.5 ribbon-gradient"></div>
 
     <div class="text-center space-y-2 mt-2">
-        <div class="bg-[#FF8A3D] text-white w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl shadow-lg shadow-[#FF8A3D]/25 mx-auto mb-4 animate-pulse">
+        <div class="bg-primary text-white w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl shadow-lg shadow-primary/25 mx-auto mb-4 animate-pulse">
             <i class="fa-solid fa-user-shield text-white"></i>
         </div>
         <h2 class="font-heading font-extrabold text-2xl text-white tracking-tight">
@@ -33,30 +33,24 @@
         @csrf
 
         <!-- Floating Label Email -->
-        <div class="relative w-full">
-            <input type="email" id="email" name="email" required placeholder=" " 
-                class="peer input input-bordered w-full pt-4 pb-1 h-14 bg-white/5 border-white/10 focus:border-[#FF8A3D] focus:outline-none rounded-xl text-white text-sm transition-all" />
-            <label for="email" 
-                class="absolute left-4 pointer-events-none transition-all duration-200 text-white/50 font-medium
-                top-3 -translate-y-0 text-xs
-                peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm
-                peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-[#FF8A3D]">
-                {{ __('messages.admin.email') }}
-            </label>
-        </div>
+        <x-float-input 
+            type="email" 
+            name="email" 
+            label="{{ __('messages.admin.email') }}" 
+            required="true"
+            inputClass="bg-white/5 border-white/10 text-white focus:border-primary focus:ring-0"
+            labelClass="text-white/50 peer-focus:text-primary"
+        />
 
         <!-- Floating Label Password -->
-        <div class="relative w-full">
-            <input type="password" id="password" name="password" required placeholder=" " 
-                class="peer input input-bordered w-full pt-4 pb-1 h-14 bg-white/5 border-white/10 focus:border-[#FF8A3D] focus:outline-none rounded-xl text-white text-sm transition-all" />
-            <label for="password" 
-                class="absolute left-4 pointer-events-none transition-all duration-200 text-white/50 font-medium
-                top-3 -translate-y-0 text-xs
-                peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm
-                peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-[#FF8A3D]">
-                {{ __('messages.admin.password') }}
-            </label>
-        </div>
+        <x-float-input 
+            type="password" 
+            name="password" 
+            label="{{ __('messages.admin.password') }}" 
+            required="true"
+            inputClass="bg-white/5 border-white/10 text-white focus:border-primary focus:ring-0"
+            labelClass="text-white/50 peer-focus:text-primary"
+        />
 
         <!-- Remember option -->
         <div class="flex items-center justify-between text-xs font-semibold pt-1">
@@ -64,11 +58,11 @@
                 <input type="checkbox" name="remember" class="checkbox checkbox-xs checkbox-primary rounded-md border-white/20 bg-white/5" />
                 <span>Remember me</span>
             </label>
-            <a href="#" class="text-[#FF8A3D] hover:underline transition-all">Forgot password?</a>
+            <a href="#" class="text-primary hover:underline transition-all">Forgot password?</a>
         </div>
 
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary w-full text-white font-bold h-12 rounded-xl mt-4 hover:shadow-lg hover:shadow-[#FF8A3D]/25 transition-all">
+        <button type="submit" class="btn btn-primary w-full text-white font-bold h-12 rounded-xl mt-4 hover:shadow-lg hover:shadow-primary/25 transition-all">
             {{ __('messages.admin.login_btn') }}
         </button>
     </form>

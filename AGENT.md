@@ -141,6 +141,20 @@ The admin panel should be constructed using a unified Blade, Tailwind CSS, and d
 - Formats: CSV or Excel.
 - Filters: Date range, Ward area, and star rating.
 
+### F. Profile Management Module
+- **Endpoints:**
+  - `GET /admin/profile`: Renders the edit profile page.
+  - `PUT /admin/profile`: Processes details & password updates.
+- **Validation Rules:**
+  - `first_name` and `last_name` are required and must be strings.
+  - Email is required, unique to `users` (except current user).
+  - Avatar is optional, must be an image type, and max 2MB in size.
+  - If a new password is provided, `current_password` is required and must match the current password of the logged-in user. The new password must be at least 8 characters, confirmed (`confirmed` rule).
+- **Navigation Integration:**
+  - Convert sidebar "Logged In As" username element into an interactive button-like block pointing to `GET /admin/profile`. On hover, show the premium `hover:bg-white/5` background and reveal a saffron edit icon (`fa-pen-to-square`).
+  - Render an interactive circular User Avatar block inside. If no custom avatar has been uploaded, render a beautiful circular fallback displaying initials.
+  - Apply active highlights (`bg-primary` gradient and white-backed ringed avatar) when the active route is `/admin/profile`.
+
 ---
 
 ## 6. Security, Performance & SEO Guidelines
