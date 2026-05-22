@@ -32,13 +32,13 @@
     <div class="h-1.5 w-full ribbon-gradient"></div>
 
     <!-- Header & Sticky Navbar -->
-    <header class="sticky top-0 z-50 bg-base-100/90 backdrop-blur-md border-b border-base-300">
+    <header id="site-header" class="sticky top-0 z-50 transition-all duration-300 border-b border-base-300/0">
         <div class="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="navbar-start">
                 <!-- Mobile Drawer / Menu Toggle -->
                 <div class="dropdown">
                     <button tabindex="0" class="btn btn-ghost lg:hidden" aria-label="Toggle Menu">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0/0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
                         </svg>
                     </button>
@@ -66,13 +66,13 @@
 
             <!-- Desktop Menu -->
             <div class="navbar-center hidden lg:flex">
-                <ul class="menu menu-horizontal px-1 gap-1 font-medium">
-                    <li><a href="{{ route('home') }}#home" class="hover:text-primary transition-colors">{{ __('messages.nav.home') }}</a></li>
-                    <li><a href="{{ route('home') }}#about" class="hover:text-primary transition-colors">{{ __('messages.nav.about') }}</a></li>
-                    <li><a href="{{ route('home') }}#development" class="hover:text-primary transition-colors">{{ __('messages.nav.development') }}</a></li>
-                    <li><a href="{{ route('home') }}#achievements" class="hover:text-primary transition-colors">{{ __('messages.nav.achievements') }}</a></li>
-                    <li><a href="{{ route('home') }}#gallery" class="hover:text-primary transition-colors">{{ __('messages.nav.gallery') }}</a></li>
-                    <li><a href="{{ route('home') }}#contact" class="hover:text-primary transition-colors">{{ __('messages.nav.contact') }}</a></li>
+                <ul class="menu menu-horizontal px-1 gap-1 font-medium" id="desktop-nav-links">
+                    <li><a href="{{ route('home') }}#home" data-section="home" class="nav-link rounded-lg transition-all duration-200 hover:text-primary hover:bg-primary/5">{{ __('messages.nav.home') }}</a></li>
+                    <li><a href="{{ route('home') }}#about" data-section="about" class="nav-link rounded-lg transition-all duration-200 hover:text-primary hover:bg-primary/5">{{ __('messages.nav.about') }}</a></li>
+                    <li><a href="{{ route('home') }}#development" data-section="development" class="nav-link rounded-lg transition-all duration-200 hover:text-primary hover:bg-primary/5">{{ __('messages.nav.development') }}</a></li>
+                    <li><a href="{{ route('home') }}#achievements" data-section="achievements" class="nav-link rounded-lg transition-all duration-200 hover:text-primary hover:bg-primary/5">{{ __('messages.nav.achievements') }}</a></li>
+                    <li><a href="{{ route('home') }}#gallery" data-section="gallery" class="nav-link rounded-lg transition-all duration-200 hover:text-primary hover:bg-primary/5">{{ __('messages.nav.gallery') }}</a></li>
+                    <li><a href="{{ route('home') }}#contact" data-section="contact" class="nav-link rounded-lg transition-all duration-200 hover:text-primary hover:bg-primary/5">{{ __('messages.nav.contact') }}</a></li>
                 </ul>
             </div>
 
@@ -82,7 +82,7 @@
                 <div class="dropdown dropdown-end">
                     <button tabindex="0" class="btn btn-sm btn-ghost border border-base-300 hover:border-primary gap-1 px-2.5 rounded-lg">
                         <i class="fa-solid fa-language text-lg text-secondary"></i>
-                        <span class="hidden sm:inline font-semibold">
+                        <span class="hidden lg:inline font-semibold">
                             @if(app()->getLocale() == 'gu') ગુજરાતી
                             @elseif(app()->getLocale() == 'hi') हिंदी
                             @else English
@@ -110,10 +110,6 @@
                     <i class="fa-solid fa-comments text-xs"></i> {{ __('messages.nav.give_feedback') }}
                 </a>
 
-                <!-- Admin Link -->
-                <a href="{{ route('admin.login') }}" class="btn btn-sm btn-circle btn-ghost text-base-content/75 hover:text-primary" title="{{ __('messages.nav.admin') }}">
-                    <i class="fa-solid fa-user-shield text-base"></i>
-                </a>
             </div>
         </div>
     </header>
@@ -169,18 +165,61 @@
         </div>
     </footer>
 
-    <!-- Sync checkbox state & handle localStorage updates -->
+    <!-- Sync checkbox state, localStorage updates, scroll effects & scroll-spy -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+            // ── Theme toggle ─────────────────────────────────────────────────────
             var toggle = document.getElementById('theme-toggle');
             if (toggle) {
                 var currentTheme = document.documentElement.getAttribute('data-theme') || 'patriotic-theme';
                 toggle.checked = (currentTheme === 'patriotic-dark');
-                
                 toggle.addEventListener('change', function () {
                     var newTheme = this.checked ? 'patriotic-dark' : 'patriotic-theme';
                     document.documentElement.setAttribute('data-theme', newTheme);
                     localStorage.setItem('sk-theme', newTheme);
+                });
+            }
+
+            // ── Scroll-triggered navbar glass effect ─────────────────────────────
+            var header = document.getElementById('site-header');
+            function updateHeader() {
+                if (window.scrollY > 50) {
+                    header.classList.add('bg-base-100/90', 'backdrop-blur-md', 'shadow-sm', 'border-base-300');
+                    header.classList.remove('border-base-300/0');
+                } else {
+                    header.classList.remove('bg-base-100/90', 'backdrop-blur-md', 'shadow-sm', 'border-base-300');
+                    header.classList.add('border-base-300/0');
+                }
+            }
+            window.addEventListener('scroll', updateHeader, { passive: true });
+            updateHeader(); // run once on load
+
+            // ── Scroll-spy: highlight active section in desktop nav ───────────────
+            var sections = document.querySelectorAll('section[id], div[id]');
+            var navLinks = document.querySelectorAll('#desktop-nav-links .nav-link');
+
+            if (navLinks.length > 0 && sections.length > 0) {
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            var id = entry.target.getAttribute('id');
+                            navLinks.forEach(function (link) {
+                                var isActive = link.getAttribute('data-section') === id;
+                                link.classList.toggle('text-primary', isActive);
+                                link.classList.toggle('font-semibold', isActive);
+                                link.classList.toggle('bg-primary/8', isActive);
+                            });
+                        }
+                    });
+                }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+
+                sections.forEach(function (section) {
+                    var id = section.getAttribute('id');
+                    // Only observe sections that have a matching nav link
+                    if (Array.from(navLinks).some(function (l) { return l.getAttribute('data-section') === id; })) {
+                        observer.observe(section);
+                    }
                 });
             }
         });
