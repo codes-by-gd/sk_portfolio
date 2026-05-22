@@ -78,11 +78,12 @@ The homepage is a single-page scrolling interface with a sticky navigation bar.
 
 ### A. Sticky Navbar
 - Uses daisyUI `navbar`.
-- Contains: Name/Designation logo, scroll links (Home, About, Development Work, Achievements, Feedback, Gallery, Contact), and the native language switcher dropdown (English, ગુજરાતી, हिन्दी).
+- Contains: Name/Designation logo, scroll links (Home, About, Development Work, Achievements, Gallery, Contact), and the native language switcher dropdown (English, ગુજરાતી, हिन्दी).
+- **CTA Button:** A prominent Call-to-Action button ("Give Feedback") is aligned on the right side of the navbar, linking directly to the standalone detailed feedback page.
 
 ### B. Hero Section
 - **Layout:** Two-column grid (large screen) or stack (mobile).
-- **Left Column:** Greeting, Name, BJP designation, mission statement, and primary CTA ("Share Your Feedback" scrolls to the feedback section, secondary CTA "View Development Work").
+- **Left Column:** Greeting, Name, BJP designation, mission statement, and primary CTA ("Share Your Feedback" redirects to the detailed feedback page, secondary CTA "View Development Work").
 - **Right Column:** Premium portrait image with animated floating civic highlight tags (e.g. `badge badge-accent` style tags like *Road Development*, *Cleanliness*, *Water Supply*, *Healthcare*).
 
 ### C. About Section
@@ -97,18 +98,20 @@ The homepage is a single-page scrolling interface with a sticky navigation bar.
 - Shows dynamic metrics like Completed Works, Welfare Campaigns, and Public Engagements.
 
 ### F. Public Feedback Section (Single Page Home)
-- **Feedback Carousel:** Uses daisyUI `carousel` with cards displaying only approved reviews. Cards show citizen name, ward area, message, photo (if available), and rating.
-- **Quick Feedback Form:** A compact version of the submission form with floating label inputs for quick comments.
+- **Featured Carousel:** Uses daisyUI `carousel` displaying only featured feedback entries (`is_featured = true` and `status = 'approved'`).
+  - **Listing Density:** Displays multiple feedback cards next to each other on larger viewports (e.g. 3 cards per slide/grid) to show more content together.
+  - **User Image:** Displays the optional user avatar (`avatar_path`) uploaded from the admin dashboard.
+- **Detailed feedback CTA:** A centered, prominent button ("Submit Detailed Review") directing users to the standalone detailed feedback page.
+- **No Quick Form:** The inline quick feedback form is completely removed.
 
 ---
 
 ## 5. Detailed Feedback Page (Separate Page Layout)
 
-A standalone webpage optimized for mobile sharing via messaging links.
+A standalone webpage optimized for mobile sharing via messaging links. It has two priority areas:
 
-### Visual Architecture
-- Simple, premium header (Sachin Khandelwal logo) and language switcher.
-- Centered detailed card layout (`card w-full max-w-xl bg-base-100 shadow-xl border border-base-200`).
+### A. Detailed Feedback Form (Primary Focus)
+- Centered detailed card layout (`card w-full max-w-xl bg-base-100 shadow-xl border border-base-200`) positioned at the top of the page.
 - **Interactive 5-Star Rating Component:** Built with daisyUI rating mask stars:
 ```html
 <div class="rating rating-lg gap-1 flex justify-center py-2">
@@ -120,6 +123,10 @@ A standalone webpage optimized for mobile sharing via messaging links.
 </div>
 ```
 - **Mobile Photo Capture Button:** Stylized upload block. On mobile devices, clicking this button triggers the native device camera for quick snaps of local development or issues.
+
+### B. Approved Feedbacks Listing (Secondary Focus)
+- Placed below the form section to keep it clean.
+- Displays a grid/list of all approved feedbacks (`status = 'approved'`) with star ratings, name, ward area, feedback title, date, and user-uploaded feedback images. Avatars and mobile numbers are omitted in this list for privacy and simplicity.
 
 ---
 

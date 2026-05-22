@@ -37,7 +37,7 @@ The database should consist of the following core tables with multilingual field
 - Columns: `id`, `name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`.
 
 ### `feedbacks`
-- Stores citizen reviews from both the quick form and the detailed feedback page.
+- Stores citizen reviews submitted via the shareable detailed feedback page.
 - Columns:
   - `id` (primary key)
   - `name` (string)
@@ -48,6 +48,7 @@ The database should consist of the following core tables with multilingual field
   - `rating` (tinyInteger, 1 to 5 stars)
   - `status` (enum: `'pending'`, `'approved'`, `'rejected'`; default is `'pending'`)
   - `is_featured` (boolean, default `false`)
+  - `avatar_path` (string, nullable; stored path to the optional user avatar uploaded/managed from the admin dashboard)
   - `created_at`, `updated_at`
 
 ### `feedback_images`
@@ -116,11 +117,16 @@ The admin panel should be constructed using a unified Blade, Tailwind CSS, and d
 - **Default Behavior:** Newly submitted feedbacks default to `pending` status.
 - **Admin Capabilities:**
   - View all pending, approved, and rejected reviews.
-  - Approve feedback (makes it visible in the homepage carousel).
+  - Approve feedback.
   - Reject feedback.
   - Delete feedback.
-  - Mark feedback as "featured".
-- **Rule:** Only approved reviews (`status = 'approved'`) must render on the frontend.
+  - Toggle "featured" status.
+  - Upload or update an optional user avatar image (`avatar_path`) for any feedback record.
+  - The admin dashboard feedback list must use AJAX-based pagination (updating the table asynchronously without full page reload).
+- **Frontend Display Rules:**
+  - **Homepage Carousel:** Displays ONLY approved feedbacks marked as featured (`status = 'approved'` AND `is_featured = true`). It must display multiple cards simultaneously on desktop (showing more feedbacks together) and render the user avatar image.
+  - **Detailed Feedback Page:** Displays the detailed submission form at the top (primary priority) and lists ALL approved feedbacks (`status = 'approved'`) underneath (secondary priority). It must omit the user avatar images for simplicity/contrast, and pagination must be handled asynchronously via AJAX (no full page reload).
+  - **Navbar CTA:** Homepage and layout navigation bars must feature a clear Call-to-Action button on the right linking to this detailed feedback page, and remove the scrolling 'Feedback' menu item.
 
 ### C. CMS Module
 - Manage landing page contents (Hero copy, biography, leadership vision, achievements numbers, and contact office details).

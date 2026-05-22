@@ -3,17 +3,18 @@
 @section('title', __('messages.form.detailed_title') . ' - Sachin Khandelwal')
 
 @section('content')
-<section class="py-12 bg-gradient-to-b from-[#FFFDF8] via-[#FFFDF8] to-[#F3EFE6]">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-12 bg-gradient-to-b from-[#FFFDF8] via-[#FFFDF8] to-[#F3EFE6] min-h-screen">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         <!-- Breadcrumb / Back button -->
-        <div class="mb-6">
+        <div class="flex justify-start">
             <a href="{{ route('home') }}" class="btn btn-sm btn-ghost gap-1.5 text-neutral/70 hover:text-primary rounded-lg">
                 <i class="fa-solid fa-arrow-left-long"></i> Back to Homepage
             </a>
         </div>
 
-        <div class="bg-[#FFFDF8] border border-base-300 rounded-3xl shadow-xl overflow-hidden">
+        <div class="w-full">
+            <div class="bg-[#FFFDF8] border border-base-300 rounded-3xl shadow-xl overflow-hidden">
             <!-- Saffron Accent Banner -->
             <div class="h-2.5 w-full bg-[#FF8A3D]"></div>
 
@@ -193,6 +194,28 @@
                 </form>
             </div>
         </div>
+
+        <!-- Divider -->
+        <div class="relative flex py-6 items-center">
+            <div class="flex-grow border-t border-base-300/60"></div>
+            <span class="flex-shrink mx-4 text-neutral/30"><i class="fa-solid fa-comments text-lg"></i></span>
+            <div class="flex-grow border-t border-base-300/60"></div>
+        </div>
+
+        <!-- Approved Feedbacks Listing Section -->
+        <div class="space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <h2 class="font-heading font-extrabold text-2xl sm:text-3xl text-neutral">
+                    {{ __('messages.sections.approved_list_title') }}
+                </h2>
+                <p class="text-xs sm:text-sm text-neutral/60">Verified feedback and testimonials from citizens of Ward No. 7</p>
+                <div class="w-16 h-1 bg-[#FF8A3D] mx-auto mt-2 rounded-full"></div>
+            </div>
+
+            <div id="feedback-listing-container">
+                @include('partials.feedback-list-container')
+            </div>
+        </div>
     </div>
 </section>
 
@@ -275,5 +298,48 @@
 
     // Clean up streams if navigating away
     window.addEventListener('beforeunload', stopCamera);
+</script>
+
+<!-- AJAX Pagination Handler -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('feedback-listing-container');
+    if (container) {
+        container.addEventListener('click', function(e) {
+            const link = e.target.closest('.join-item[href]');
+            if (link) {
+                e.preventDefault();
+                const url = link.getAttribute('href');
+                fetchFeedbacks(url);
+            }
+        });
+    }
+
+    function fetchFeedbacks(url) {
+        if (!container) return;
+        container.style.opacity = '0.5';
+        
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            container.innerHTML = data.html;
+            container.style.opacity = '1';
+            
+            // Scroll to the top of the listing section smoothly
+            const sectionHeader = document.querySelector('#feedback-listing-container');
+            if (sectionHeader) {
+                sectionHeader.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching feedbacks:', error);
+            container.style.opacity = '1';
+        });
+    }
+});
 </script>
 @endsection

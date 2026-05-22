@@ -6,6 +6,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\DevelopmentWorkController;
+use App\Http\Controllers\Admin\CmsController;
+use App\Http\Controllers\Admin\SettingsController;
 
 // Public Landing Page
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -22,9 +26,34 @@ Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.logi
 // Authenticated Admin Dashboard Routes
 Route::middleware(['auth'])->group(function () {
     Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
+
+    // Feedback Management
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::post('/admin/feedback/{feedback}/status', [DashboardController::class, 'updateStatus'])->name('admin.feedback.status');
     Route::post('/admin/feedback/{feedback}/featured', [DashboardController::class, 'toggleFeatured'])->name('admin.feedback.featured');
+    Route::post('/admin/feedback/{feedback}/avatar', [DashboardController::class, 'updateAvatar'])->name('admin.feedback.avatar');
     Route::delete('/admin/feedback/{feedback}', [DashboardController::class, 'destroy'])->name('admin.feedback.destroy');
     Route::get('/admin/feedback/export', [DashboardController::class, 'export'])->name('admin.feedback.export');
+
+    // Gallery Management
+    Route::get('/admin/gallery', [GalleryController::class, 'index'])->name('admin.gallery.index');
+    Route::post('/admin/gallery', [GalleryController::class, 'store'])->name('admin.gallery.store');
+    Route::delete('/admin/gallery/{gallery}', [GalleryController::class, 'destroy'])->name('admin.gallery.destroy');
+
+    // Development Works Management
+    Route::get('/admin/development', [DevelopmentWorkController::class, 'index'])->name('admin.development.index');
+    Route::get('/admin/development/create', [DevelopmentWorkController::class, 'create'])->name('admin.development.create');
+    Route::post('/admin/development', [DevelopmentWorkController::class, 'store'])->name('admin.development.store');
+    Route::get('/admin/development/{development}/edit', [DevelopmentWorkController::class, 'edit'])->name('admin.development.edit');
+    Route::put('/admin/development/{development}', [DevelopmentWorkController::class, 'update'])->name('admin.development.update');
+    Route::delete('/admin/development/{development}', [DevelopmentWorkController::class, 'destroy'])->name('admin.development.destroy');
+
+    // CMS Content Management
+    Route::get('/admin/cms', [CmsController::class, 'index'])->name('admin.cms.index');
+    Route::put('/admin/cms/{cms}', [CmsController::class, 'update'])->name('admin.cms.update');
+
+    // Settings Management
+    Route::get('/admin/settings', [SettingsController::class, 'index'])->name('admin.settings.index');
+    Route::post('/admin/settings', [SettingsController::class, 'update'])->name('admin.settings.update');
 });
+

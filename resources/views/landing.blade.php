@@ -133,16 +133,24 @@
                             <!-- Before Container -->
                             <div class="relative overflow-hidden group">
                                 <div class="absolute top-2 left-2 z-10 badge badge-warning text-[10px] uppercase font-bold tracking-wider">Before</div>
-                                <div class="w-full h-full bg-[#1E1E1E] flex items-center justify-center text-white/50 text-xs font-semibold">
-                                    <i class="fa-solid fa-image text-2xl opacity-40"></i>
-                                </div>
+                                @if($work->before_image)
+                                    <img src="{{ asset($work->before_image) }}" class="object-cover w-full h-full" alt="Before" loading="lazy">
+                                @else
+                                    <div class="w-full h-full bg-[#1E1E1E] flex items-center justify-center text-white/50 text-xs font-semibold">
+                                        <i class="fa-solid fa-image text-2xl opacity-40"></i>
+                                    </div>
+                                @endif
                             </div>
                             <!-- After Container -->
                             <div class="relative overflow-hidden group">
                                 <div class="absolute top-2 right-2 z-10 badge badge-success text-[10px] uppercase font-bold text-white tracking-wider">After</div>
-                                <div class="w-full h-full bg-[#1E1E1E] flex items-center justify-center text-white/50 text-xs font-semibold">
-                                    <i class="fa-solid fa-circle-check text-2xl text-accent opacity-65"></i>
-                                </div>
+                                @if($work->after_image)
+                                    <img src="{{ asset($work->after_image) }}" class="object-cover w-full h-full" alt="After" loading="lazy">
+                                @else
+                                    <div class="w-full h-full bg-[#1E1E1E] flex items-center justify-center text-white/50 text-xs font-semibold">
+                                        <i class="fa-solid fa-circle-check text-2xl text-accent opacity-65"></i>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -176,40 +184,61 @@
 
             <!-- Feedback Carousel Wrapper -->
             @if($feedbacks->isNotEmpty())
-                <div class="relative max-w-4xl mx-auto mb-16 overflow-hidden bg-[#F6F3EB] rounded-3xl border border-base-300 p-8 sm:p-12 shadow-sm">
-                    <div class="absolute top-6 left-6 text-[#FF8A3D]/25 text-5xl sm:text-7xl"><i class="fa-solid fa-quote-left"></i></div>
+                <div class="relative max-w-6xl mx-auto mb-10 overflow-hidden bg-[#F6F3EB] rounded-3xl border border-base-300 p-8 sm:p-10 shadow-sm">
+                    <div class="absolute top-6 left-6 text-[#FF8A3D]/25 text-5xl sm:text-7xl pointer-events-none"><i class="fa-solid fa-quote-left"></i></div>
                     
                     <!-- Carousel Slider container -->
-                    <div id="feedback-slider" class="relative min-h-[12rem] flex flex-col justify-center items-center text-center">
-                        @foreach($feedbacks as $index => $fb)
-                            <div class="feedback-slide {{ $index === 0 ? '' : 'hidden' }} space-y-6 transition-opacity duration-500" data-index="{{ $index }}">
-                                <h3 class="font-heading font-bold text-xl text-neutral">{{ $fb->title }}</h3>
-                                <p class="text-neutral/80 text-md sm:text-lg italic leading-relaxed max-w-2xl">
-                                    "{!! nl2br(e($fb->message)) !!}"
-                                </p>
-                                
-                                <!-- Rating Stars -->
-                                <div class="flex justify-center text-warning text-lg gap-0.5">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <i class="fa-{{ $i <= $fb->rating ? 'solid' : 'regular' }} fa-star"></i>
-                                    @endfor
-                                </div>
+                    <div id="feedback-slider" class="relative w-full">
+                        @foreach($feedbacks->chunk(3) as $slideIndex => $chunk)
+                            <div class="feedback-slide {{ $slideIndex === 0 ? '' : 'hidden' }} grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-500" data-index="{{ $slideIndex }}">
+                                @foreach($chunk as $fb)
+                                    <div class="bg-[#FFFDF8] rounded-2xl border border-base-300 p-6 shadow-sm flex flex-col justify-between space-y-4">
+                                        <div class="space-y-4">
+                                            <!-- Submitter Avatar & Details -->
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-12 h-12 rounded-full overflow-hidden border border-base-300 bg-base-200 shrink-0 shadow-sm">
+                                                    @if($fb->avatar_path)
+                                                        <img src="{{ asset($fb->avatar_path) }}" class="object-cover w-full h-full" alt="{{ $fb->name }}">
+                                                    @else
+                                                        <div class="w-full h-full bg-neutral/10 flex items-center justify-center text-neutral/50 font-heading font-extrabold text-xs uppercase">
+                                                            {{ substr($fb->name, 0, 2) }}
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div class="text-left">
+                                                    <h4 class="font-bold text-neutral text-sm leading-snug">{{ $fb->name }}</h4>
+                                                    <p class="text-[10px] text-secondary font-bold uppercase tracking-wider">{{ $fb->area }}</p>
+                                                </div>
+                                            </div>
 
-                                <!-- Feedback Images if present -->
-                                @if($fb->images->isNotEmpty())
-                                    <div class="flex justify-center gap-2 flex-wrap">
-                                        @foreach($fb->images as $img)
-                                            <a href="{{ asset($img->image_path) }}" target="_blank" class="w-16 h-16 rounded-xl overflow-hidden border border-base-300 hover:scale-105 transition-transform duration-300">
-                                                <img src="{{ asset($img->image_path) }}" class="object-cover w-full h-full" alt="Feedback media">
-                                            </a>
-                                        @endforeach
+                                            <!-- Rating Stars -->
+                                            <div class="flex text-warning text-xs gap-0.5">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    <i class="fa-{{ $i <= $fb->rating ? 'solid' : 'regular' }} fa-star"></i>
+                                                @endfor
+                                            </div>
+
+                                            <!-- Title & Message -->
+                                            <div>
+                                                <h5 class="font-bold text-neutral text-sm leading-snug mb-1">{{ $fb->title }}</h5>
+                                                <p class="text-neutral/70 text-xs leading-relaxed line-clamp-4 italic">
+                                                    "{!! nl2br(e($fb->message)) !!}"
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Media Attachments -->
+                                        @if($fb->images->isNotEmpty())
+                                            <div class="flex gap-1.5 flex-wrap pt-2">
+                                                @foreach($fb->images as $img)
+                                                    <a href="{{ asset($img->image_path) }}" target="_blank" class="w-8 h-8 rounded-lg overflow-hidden border border-base-300 hover:scale-105 transition-transform duration-200 block bg-base-300">
+                                                        <img src="{{ asset($img->image_path) }}" class="object-cover w-full h-full" alt="Feedback media">
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        @endif
                                     </div>
-                                @endif
-
-                                <div class="flex flex-col items-center">
-                                    <span class="font-bold text-neutral">{{ $fb->name }}</span>
-                                    <span class="text-xs text-neutral/60 font-semibold uppercase tracking-wider">{{ $fb->area }}</span>
-                                </div>
+                                @endforeach
                             </div>
                         @endforeach
                     </div>
@@ -220,8 +249,8 @@
                             <i class="fa-solid fa-chevron-left"></i>
                         </button>
                         <div class="flex gap-1.5" id="slide-dots">
-                            @foreach($feedbacks as $index => $fb)
-                                <button onclick="setSlide({{ $index }})" class="w-2.5 h-2.5 rounded-full {{ $index === 0 ? 'bg-[#FF8A3D]' : 'bg-base-300' }} transition-colors" data-dot="{{ $index }}"></button>
+                            @foreach($feedbacks->chunk(3) as $slideIndex => $chunk)
+                                <button onclick="setSlide({{ $slideIndex }})" class="w-2.5 h-2.5 rounded-full {{ $slideIndex === 0 ? 'bg-[#FF8A3D]' : 'bg-base-300' }} transition-colors" data-dot="{{ $slideIndex }}"></button>
                             @endforeach
                         </div>
                         <button onclick="nextSlide()" class="btn btn-sm btn-circle btn-outline hover:bg-neutral hover:text-white border-base-300" aria-label="Next Slide">
@@ -231,124 +260,11 @@
                 </div>
             @endif
 
-            <!-- Quick Feedback Form Card -->
-            <div id="quick-feedback-form" class="max-w-2xl mx-auto bg-[#FFFDF8] rounded-3xl border border-base-300 shadow-xl overflow-hidden mt-8">
-                <!-- Top border accent -->
-                <div class="h-2 bg-[#FF8A3D]"></div>
-                
-                <div class="p-8 sm:p-10 space-y-6">
-                    <div class="text-center">
-                        <h3 class="font-heading font-extrabold text-2xl text-neutral">{{ __('messages.form.quick_title') }}</h3>
-                        <p class="text-sm text-neutral/70 mt-1">Submit your quick review. For file uploads and pictures, please use our <a href="{{ route('feedback.detailed') }}" class="text-[#3D5AFE] font-semibold hover:underline">detailed feedback page</a>.</p>
-                    </div>
-
-                    <!-- Alerts for Form Status -->
-                    @if(session('success'))
-                        <div class="alert alert-success shadow-sm rounded-xl">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6 text-white" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span class="text-sm font-semibold text-white">{{ session('success') }}</span>
-                        </div>
-                    @endif
-
-                    @if($errors->any())
-                        <div class="alert alert-error shadow-sm rounded-xl text-white">
-                            <ul class="text-xs list-disc pl-4 font-medium">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <!-- Form with DaisyUI Floating Labels -->
-                    <form action="{{ route('feedback.store') }}" method="POST" class="space-y-5">
-                        @csrf
-                        
-                        <!-- Floating Label Name -->
-                        <div class="relative w-full">
-                            <input type="text" id="name" name="name" required placeholder=" " 
-                                class="peer input input-bordered w-full pt-4 pb-1 h-14 bg-transparent border-base-300 focus:border-primary focus:outline-none rounded-xl text-neutral text-sm transition-all" />
-                            <label for="name" 
-                                class="absolute left-4 pointer-events-none transition-all duration-200 text-neutral/50 font-medium
-                                top-3 -translate-y-0 text-xs
-                                peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm
-                                peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary">
-                                {{ __('messages.form.name') }}
-                            </label>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            <!-- Floating Label Mobile -->
-                            <div class="relative w-full">
-                                <input type="tel" id="mobile_number" name="mobile_number" required placeholder=" " 
-                                    class="peer input input-bordered w-full pt-4 pb-1 h-14 bg-transparent border-base-300 focus:border-primary focus:outline-none rounded-xl text-neutral text-sm transition-all" />
-                                <label for="mobile_number" 
-                                    class="absolute left-4 pointer-events-none transition-all duration-200 text-neutral/50 font-medium
-                                    top-3 -translate-y-0 text-xs
-                                    peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm
-                                    peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary">
-                                    {{ __('messages.form.mobile') }}
-                                </label>
-                            </div>
-
-                            <!-- Floating Label Area -->
-                            <div class="relative w-full">
-                                <input type="text" id="area" name="area" required placeholder=" " 
-                                    class="peer input input-bordered w-full pt-4 pb-1 h-14 bg-transparent border-base-300 focus:border-primary focus:outline-none rounded-xl text-neutral text-sm transition-all" />
-                                <label for="area" 
-                                    class="absolute left-4 pointer-events-none transition-all duration-200 text-neutral/50 font-medium
-                                    top-3 -translate-y-0 text-xs
-                                    peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm
-                                    peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary">
-                                    {{ __('messages.form.area') }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Floating Label Title -->
-                        <div class="relative w-full">
-                            <input type="text" id="title" name="title" required placeholder=" " 
-                                class="peer input input-bordered w-full pt-4 pb-1 h-14 bg-transparent border-base-300 focus:border-primary focus:outline-none rounded-xl text-neutral text-sm transition-all" />
-                            <label for="title" 
-                                class="absolute left-4 pointer-events-none transition-all duration-200 text-neutral/50 font-medium
-                                top-3 -translate-y-0 text-xs
-                                peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm
-                                peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary">
-                                {{ __('messages.form.title') }}
-                            </label>
-                        </div>
-
-                        <!-- Floating Label Message -->
-                        <div class="relative w-full">
-                            <textarea id="message" name="message" required placeholder=" " rows="3" 
-                                class="peer textarea textarea-bordered w-full pt-5 pb-1 min-h-[5rem] bg-transparent border-base-300 focus:border-primary focus:outline-none rounded-xl text-neutral text-sm transition-all"></textarea>
-                            <label for="message" 
-                                class="absolute left-4 pointer-events-none transition-all duration-200 text-neutral/50 font-medium
-                                top-5 -translate-y-1/2 text-sm
-                                peer-placeholder-shown:top-5 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm
-                                peer-focus:top-2 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary">
-                                {{ __('messages.form.message') }}
-                            </label>
-                        </div>
-
-                        <!-- Rating Selection (1-5 Stars) -->
-                        <div class="flex flex-col gap-2">
-                            <span class="text-xs font-bold text-neutral/70 uppercase tracking-wider">{{ __('messages.form.rating') }}</span>
-                            <div class="rating rating-md gap-1">
-                                <input type="radio" name="rating" value="1" class="mask mask-star-2 bg-warning" />
-                                <input type="radio" name="rating" value="2" class="mask mask-star-2 bg-warning" />
-                                <input type="radio" name="rating" value="3" class="mask mask-star-2 bg-warning" />
-                                <input type="radio" name="rating" value="4" class="mask mask-star-2 bg-warning" />
-                                <input type="radio" name="rating" value="5" class="mask mask-star-2 bg-warning" checked />
-                            </div>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary w-full text-white font-bold h-12 rounded-xl mt-2 hover:shadow-lg transition-all">
-                            {{ __('messages.form.submit') }}
-                        </button>
-                    </form>
-                </div>
+            <!-- CTA Button to Detailed Feedback Page -->
+            <div class="text-center mt-8">
+                <a href="{{ route('feedback.detailed') }}" class="btn btn-primary text-white font-bold rounded-xl shadow-md px-8 py-3.5 hover:shadow-lg transition-all gap-2">
+                    <i class="fa-solid fa-file-pen text-lg"></i> {{ __('messages.hero.cta_feedback') }}
+                </a>
             </div>
         </div>
     </section>
@@ -449,10 +365,10 @@
                     <div class="border-t border-base-300 pt-6">
                         <span class="text-xs font-bold uppercase tracking-wider text-neutral/50">Follow on Social Media</span>
                         <div class="flex gap-3 text-lg mt-3">
-                            <a href="#" class="btn btn-sm btn-circle btn-primary text-white"><i class="fa-brands fa-facebook-f"></i></a>
-                            <a href="#" class="btn btn-sm btn-circle btn-info text-white"><i class="fa-brands fa-twitter"></i></a>
-                            <a href="#" class="btn btn-sm btn-circle btn-error text-white"><i class="fa-brands fa-instagram"></i></a>
-                            <a href="#" class="btn btn-sm btn-circle btn-ghost border-base-300 hover:border-red-600 text-red-600"><i class="fa-brands fa-youtube"></i></a>
+                            <a href="{{ $settings['facebook_url'] ?? '#' }}" target="_blank" rel="noopener" class="btn btn-sm btn-circle btn-primary text-white"><i class="fa-brands fa-facebook-f"></i></a>
+                            <a href="{{ $settings['twitter_url'] ?? '#' }}" target="_blank" rel="noopener" class="btn btn-sm btn-circle btn-info text-white"><i class="fa-brands fa-twitter"></i></a>
+                            <a href="{{ $settings['instagram_url'] ?? '#' }}" target="_blank" rel="noopener" class="btn btn-sm btn-circle btn-error text-white"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="{{ $settings['youtube_url'] ?? '#' }}" target="_blank" rel="noopener" class="btn btn-sm btn-circle btn-ghost border-base-300 hover:border-red-600 text-red-600"><i class="fa-brands fa-youtube"></i></a>
                         </div>
                     </div>
                 </div>

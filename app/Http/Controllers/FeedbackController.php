@@ -33,9 +33,20 @@ class FeedbackController extends Controller
         return back()->with('success', __('messages.form.success'));
     }
 
-    public function createDetailed()
+    public function createDetailed(Request $request)
     {
-        return view('detailed-feedback');
+        $approvedFeedbacks = Feedback::with('images')
+            ->where('status', 'approved')
+            ->latest()
+            ->paginate(6);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('partials.feedback-list-container', compact('approvedFeedbacks'))->render(),
+            ]);
+        }
+
+        return view('detailed-feedback', compact('approvedFeedbacks'));
     }
 
     public function storeDetailed(Request $request)

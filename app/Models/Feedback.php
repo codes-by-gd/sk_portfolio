@@ -17,6 +17,7 @@ class Feedback extends Model
         'rating',
         'status',
         'is_featured',
+        'avatar_path',
     ];
 
     public function images()

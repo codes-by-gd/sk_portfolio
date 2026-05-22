@@ -73,10 +73,11 @@
     </header>
 
     @auth
-        <!-- Authenticated Layout with Sidebar -->
-        <div class="flex-grow flex flex-col lg:flex-row w-full">
-            <!-- Sidebar -->
-            <aside class="w-full lg:w-64 bg-neutral text-neutral-content p-6 flex flex-col justify-between border-r border-white/10 lg:min-h-[calc(100vh-4.5rem)]">
+        <!-- Authenticated Layout: sidebar + content column side by side -->
+        <div class="flex-grow flex flex-col lg:flex-row w-full overflow-hidden">
+
+            <!-- Sidebar: fixed viewport height, sticky below navbar, scrollable internally -->
+            <aside class="w-full lg:w-64 bg-neutral text-neutral-content p-6 flex flex-col border-r border-white/10 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto shrink-0">
                 <div class="space-y-6">
                     <!-- User block -->
                     <div class="border-b border-white/10 pb-4">
@@ -87,22 +88,40 @@
                     <!-- Sidebar navigation -->
                     <ul class="space-y-1 font-semibold text-sm">
                         <li>
-                            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary text-white transition-all shadow-md">
+                            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.dashboard') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
                                 <i class="fa-solid fa-comments text-lg"></i>
-                                <span>{{ __('messages.admin.feedback_mgmt') }}</span>
+                                <span>Feedback Management</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-all text-neutral-content/85 hover:text-white">
-                                <i class="fa-solid fa-house-user text-lg"></i>
-                                <span>Public Portal</span>
+                            <a href="{{ route('admin.gallery.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.gallery*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                <i class="fa-solid fa-images text-lg"></i>
+                                <span>Gallery</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.development.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.development*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                <i class="fa-solid fa-helmet-safety text-lg"></i>
+                                <span>Development Works</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.cms.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.cms*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                <i class="fa-solid fa-pen-nib text-lg"></i>
+                                <span>CMS Content</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.settings*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                <i class="fa-solid fa-gear text-lg"></i>
+                                <span>Settings</span>
                             </a>
                         </li>
                     </ul>
                 </div>
 
-                <!-- Logout Action -->
-                <div class="pt-6 border-t border-white/10 mt-6 lg:mt-0">
+                <!-- Logout pinned to bottom of sidebar -->
+                <div class="mt-auto pt-6 border-t border-white/10">
                     <form action="{{ route('admin.logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-outline btn-error btn-sm w-full rounded-lg gap-2">
@@ -112,24 +131,35 @@
                 </div>
             </aside>
 
-            <!-- Content Area -->
-            <main class="flex-grow p-6 lg:p-8 space-y-6 w-full">
-                @yield('content')
-            </main>
+            <!-- Content column: grows to fill remaining width, footer scoped here only -->
+            <div class="flex-grow flex flex-col min-w-0">
+                <main class="flex-grow p-6 lg:p-8 space-y-6">
+                    @yield('content')
+                </main>
+
+                <!-- Footer inside content column — does NOT appear below sidebar -->
+                <footer class="bg-neutral text-neutral-content/50 py-4 border-t border-white/10 text-xs shrink-0">
+                    <div class="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
+                        <p>&copy; {{ date('Y') }} Sachin Khandelwal Office Admin Portal. All Rights Reserved.</p>
+                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-[#53C58B]"></i> Secured and optimized</p>
+                    </div>
+                </footer>
+            </div>
+
         </div>
     @else
         <!-- Guest Layout (e.g. Login page) -->
         <main class="flex-grow flex items-center justify-center p-6 bg-gradient-to-br from-[#FFFDF8] via-[#EAE5D9] to-[#FFFDF8] min-h-[calc(100vh-8.5rem)]">
             @yield('content')
         </main>
-    @endauth
 
-    <!-- Minimalist Admin Footer -->
-    <footer class="bg-neutral text-neutral-content/50 py-4 border-t border-white/10 text-xs">
-        <div class="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
-            <p>&copy; {{ date('Y') }} Sachin Khandelwal Office Admin Portal. All Rights Reserved.</p>
-            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-[#53C58B]"></i> Secured and optimized</p>
-        </div>
-    </footer>
+        <!-- Footer for guest/login page -->
+        <footer class="bg-neutral text-neutral-content/50 py-4 border-t border-white/10 text-xs">
+            <div class="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
+                <p>&copy; {{ date('Y') }} Sachin Khandelwal Office Admin Portal. All Rights Reserved.</p>
+                <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-[#53C58B]"></i> Secured and optimized</p>
+            </div>
+        </footer>
+    @endauth
 </body>
 </html>

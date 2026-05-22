@@ -39,10 +39,9 @@
                         <li><a href="{{ route('home') }}#about">{{ __('messages.nav.about') }}</a></li>
                         <li><a href="{{ route('home') }}#development">{{ __('messages.nav.development') }}</a></li>
                         <li><a href="{{ route('home') }}#achievements">{{ __('messages.nav.achievements') }}</a></li>
-                        <li><a href="{{ route('home') }}#feedback">{{ __('messages.nav.feedback') }}</a></li>
                         <li><a href="{{ route('home') }}#gallery">{{ __('messages.nav.gallery') }}</a></li>
                         <li><a href="{{ route('home') }}#contact">{{ __('messages.nav.contact') }}</a></li>
-                        <li><a href="{{ route('feedback.detailed') }}" class="text-primary font-semibold"><i class="fa-solid fa-file-pen"></i> Survey</a></li>
+                        <li><a href="{{ route('feedback.detailed') }}" class="bg-primary text-white font-bold rounded-lg py-2 mt-2 text-center flex justify-center items-center gap-1.5"><i class="fa-solid fa-comments"></i> {{ __('messages.nav.give_feedback') }}</a></li>
                     </ul>
                 </div>
                 <!-- Brand / Logo -->
@@ -64,7 +63,6 @@
                     <li><a href="{{ route('home') }}#about" class="hover:text-primary transition-colors">{{ __('messages.nav.about') }}</a></li>
                     <li><a href="{{ route('home') }}#development" class="hover:text-primary transition-colors">{{ __('messages.nav.development') }}</a></li>
                     <li><a href="{{ route('home') }}#achievements" class="hover:text-primary transition-colors">{{ __('messages.nav.achievements') }}</a></li>
-                    <li><a href="{{ route('home') }}#feedback" class="hover:text-primary transition-colors">{{ __('messages.nav.feedback') }}</a></li>
                     <li><a href="{{ route('home') }}#gallery" class="hover:text-primary transition-colors">{{ __('messages.nav.gallery') }}</a></li>
                     <li><a href="{{ route('home') }}#contact" class="hover:text-primary transition-colors">{{ __('messages.nav.contact') }}</a></li>
                 </ul>
@@ -89,6 +87,11 @@
                         <li><a href="?lang=en" class="{{ app()->getLocale() == 'en' ? 'active bg-primary/10 text-primary' : '' }}">English</a></li>
                     </ul>
                 </div>
+
+                <!-- Give Feedback CTA Button -->
+                <a href="{{ route('feedback.detailed') }}" class="btn btn-sm btn-primary text-white font-bold rounded-lg shadow-sm gap-1.5 hidden md:inline-flex">
+                    <i class="fa-solid fa-comments text-xs"></i> {{ __('messages.nav.give_feedback') }}
+                </a>
 
                 <!-- Admin Link -->
                 <a href="{{ route('admin.login') }}" class="btn btn-sm btn-circle btn-ghost text-neutral/70 hover:text-primary" title="{{ __('messages.nav.admin') }}">

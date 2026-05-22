@@ -34,6 +34,12 @@ class DashboardController extends Controller
 
         $feedbacks = $query->latest()->paginate(10)->withQueryString();
 
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('admin.partials.feedback-table', compact('feedbacks'))->render(),
+            ]);
+        }
+
         // Calculate counts
         $counts = [
             'total' => Feedback::count(),
@@ -68,6 +74,33 @@ class DashboardController extends Controller
         $feedback->delete();
 
         return back()->with('success', 'Feedback deleted successfully.');
+    }
+
+    public function updateAvatar(Request $request, Feedback $feedback)
+    {
+        $validated = $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
+        ]);
+
+        $uploadPath = public_path('uploads/avatars');
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        $file = $request->file('avatar');
+        $filename = time() . '_' . \Illuminate\Support\Str::random(10) . '.' . $file->getClientOriginalExtension();
+        $file->move($uploadPath, $filename);
+
+        // Delete old avatar if exists
+        if ($feedback->avatar_path && file_exists(public_path($feedback->avatar_path))) {
+            @unlink(public_path($feedback->avatar_path));
+        }
+
+        $feedback->update([
+            'avatar_path' => 'uploads/avatars/' . $filename,
+        ]);
+
+        return back()->with('success', 'Citizen avatar updated successfully.');
     }
 
     public function export()

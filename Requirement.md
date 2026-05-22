@@ -78,10 +78,11 @@ Home
 About
 Development Work
 Achievements
-Public Feedback
 Gallery
 Contact
 ```
+
+Additionally, the right side of the navigation bar features a prominent Call-to-Action (CTA) button ("Give Feedback") leading directly to the standalone detailed feedback page.
 
 ---
 
@@ -496,20 +497,23 @@ This is the core public engagement section on the main scrolling landing page.
 Displays:
 
 ```text id="1jlwmw"
-- Feedback Carousel (displaying ONLY approved citizen feedback)
-- Quick Feedback Section (for quick and fast citizen interaction)
+- Feedback Carousel (displaying ONLY featured citizen feedback reviews)
+- CTA Link Button (prominent saffron button redirecting users to the detailed feedback page)
 ```
 
----
-
-# Feedback Card Features
+## Feedback Card Features (Home Carousel)
 
 * citizen name
 * area
 * review message
 * rating (1-5 stars)
-* optional image
-* featured feedback
+* optional user avatar (uploaded/managed exclusively from the admin side; only featured feedbacks show this image)
+* featured feedback flag
+
+## Layout & Display
+
+* **Listing Density:** The carousel listing must display multiple featured cards together on larger screens (e.g. 3 cards per slide/grid on desktop) to allow visitors to read more reviews at once.
+* **No Quick Form:** The quick inline feedback form is entirely removed from the homepage.
 
 ---
 
@@ -517,29 +521,19 @@ Displays:
 
 # SHAREABLE FEEDBACK MODULE
 
-A separate, standalone page that can be shared as a link to different people to gather detailed feedback.
+A separate, standalone page that can be shared as a link to different people to gather detailed feedback. It acts as both the submission portal and the public log of approved entries.
 
-## Key Features
+## Page Layout & Priorities
 
-* **Shareable URL Link:** Easily shared via WhatsApp, SMS, or social media.
-* **Detailed Feedback Form:** For users to fill detailed reviews.
-* **Photo Capture & Upload:** Ability to take a picture directly using a mobile camera or upload an existing image.
-* **5-Star Rating System:** A rating option from 5 stars.
-
-## Form Fields
-
-### Required Fields
-
-* Full Name
-* Mobile Number
-* Area
-* Feedback Title
-* Feedback Message
-* Rating (out of 5 stars)
-
-### Optional
-
-* Image upload (with direct camera capture support on mobile)
+1. **Detailed Feedback Form (Primary Focus):** Positioned at the top of the page (first priority for user's attention). Allows submitting:
+   * Full Name (required)
+   * Mobile Number (required)
+   * Area (required)
+   * Feedback Title (required)
+   * Feedback Message (required)
+   * Rating (1-5 stars; required)
+   * Photo Capture/Upload (optional; supports mobile camera capture)
+2. **Approved Feedbacks Listing (Secondary Focus):** Positioned below the form (second priority). Displays a grid or list of all approved feedback entries (excluding their contact phone numbers for privacy).
 
 ---
 
@@ -862,3 +856,12 @@ NOT:
 ```text id="9jlwmf"
 a traditional political campaign website
 ```
+
+---
+
+# 21. AJAX-Based Pagination Requirement
+
+The pagination across the system must be dynamic and AJAX-based to enhance user experience without full page reloads:
+
+* **Detailed Feedback Page:** The list of approved testimonials shown under the feedback form must load pages asynchronously via AJAX when pagination links are clicked.
+* **Admin Dashboard:** The administrative list/table of citizen feedback must load pagination results asynchronously via AJAX for smooth backend management.
