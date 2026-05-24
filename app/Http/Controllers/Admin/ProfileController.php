@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Helpers\ImageHelper;
 
 class ProfileController extends Controller
 {
@@ -52,15 +53,19 @@ class ProfileController extends Controller
             }
 
             $file = $request->file('avatar');
-            $filename = time() . '_admin_' . \Illuminate\Support\Str::random(10) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadPath, $filename);
+            try {
+                $filename = time() . '_admin_' . \Illuminate\Support\Str::random(10);
+                $webpName = ImageHelper::convertToWebP($file, $uploadPath, $filename);
 
-            // Delete old avatar if exists
-            if ($user->avatar_path && file_exists(public_path($user->avatar_path))) {
-                @unlink(public_path($user->avatar_path));
+                // Delete old avatar if exists
+                if ($user->avatar_path && file_exists(public_path($user->avatar_path))) {
+                    @unlink(public_path($user->avatar_path));
+                }
+
+                $user->avatar_path = 'uploads/avatars/' . $webpName;
+            } catch (\Exception $e) {
+                return back()->withErrors(['avatar' => 'Failed to convert avatar image to WebP: ' . $e->getMessage()])->withInput();
             }
-
-            $user->avatar_path = 'uploads/avatars/' . $filename;
         }
 
         $user->first_name = $request->first_name;

@@ -62,9 +62,9 @@
                         @if($feedback->images->isNotEmpty())
                             <div class="flex gap-1.5 flex-wrap">
                                 @foreach($feedback->images as $img)
-                                    <a href="{{ asset($img->image_path) }}" target="_blank" class="w-12 h-12 rounded-lg overflow-hidden border border-base-300 hover:scale-105 transition-transform duration-200 block bg-base-300">
+                                    <div onclick="openViewerModal('{{ asset($img->image_path) }}', 'Attachment', 'Submitted citizen image')" class="w-12 h-12 rounded-lg overflow-hidden border border-base-300 hover:scale-105 transition-transform duration-200 block bg-base-300 cursor-zoom-in">
                                         <img src="{{ asset($img->image_path) }}" class="object-cover w-full h-full" alt="Review Media" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=Media&backgroundColor=e2e8f0&textColor=1f2937'">
-                                    </a>
+                                    </div>
                                 @endforeach
                             </div>
                         @else
@@ -121,21 +121,6 @@
                                 </form>
                             @endif
 
-                            <!-- Edit Action -->
-                            <button type="button" 
-                                class="btn btn-sm btn-square btn-soft btn-info tooltip tooltip-top edit-feedback-btn"
-                                data-tip="Edit Feedback"
-                                data-id="{{ $feedback->id }}"
-                                data-name="{{ $feedback->name }}"
-                                data-mobile="{{ $feedback->mobile_number }}"
-                                data-area="{{ $feedback->area }}"
-                                data-title="{{ $feedback->title }}"
-                                data-message="{{ $feedback->message }}"
-                                data-rating="{{ $feedback->rating }}"
-                                data-status="{{ $feedback->status }}">
-                                <i class="fa-solid fa-pen-to-square text-xs"></i>
-                            </button>
-
                             <!-- Feature Action -->
                             @if($feedback->status === 'approved')
                                 <form action="{{ route('admin.feedback.featured', $feedback) }}" method="POST" class="inline">
@@ -151,6 +136,22 @@
                                     @endif
                                 </form>
                             @endif
+
+                            <!-- Edit Action -->
+                            <button type="button" 
+                                class="btn btn-sm btn-square btn-soft btn-info tooltip tooltip-top edit-feedback-btn"
+                                data-tip="Edit Feedback"
+                                data-id="{{ $feedback->id }}"
+                                data-name="{{ $feedback->name }}"
+                                data-mobile="{{ $feedback->mobile_number }}"
+                                data-area="{{ $feedback->area }}"
+                                data-title="{{ $feedback->title }}"
+                                data-message="{{ $feedback->message }}"
+                                data-rating="{{ $feedback->rating }}"
+                                data-status="{{ $feedback->status }}"
+                                data-images="{{ json_encode($feedback->images->map(fn($img) => ['id' => $img->id, 'path' => asset($img->image_path)])->toArray()) }}">
+                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                            </button>
 
                             <!-- Delete Action -->
                             <form action="{{ route('admin.feedback.destroy', $feedback) }}" method="POST" class="inline" onsubmit="return confirm('Delete this feedback permanently?')">

@@ -40,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     // Gallery Management
     Route::get('/admin/gallery', [GalleryController::class, 'index'])->name('admin.gallery.index');
     Route::post('/admin/gallery', [GalleryController::class, 'store'])->name('admin.gallery.store');
+    Route::put('/admin/gallery/{gallery}', [GalleryController::class, 'update'])->name('admin.gallery.update');
     Route::delete('/admin/gallery/{gallery}', [GalleryController::class, 'destroy'])->name('admin.gallery.destroy');
 
     // Development Works Management
@@ -53,6 +54,8 @@ Route::middleware(['auth'])->group(function () {
     // CMS Content Management
     Route::get('/admin/cms', [CmsController::class, 'index'])->name('admin.cms.index');
     Route::put('/admin/cms/{cms}', [CmsController::class, 'update'])->name('admin.cms.update');
+    Route::post('/admin/cms/update-section', [CmsController::class, 'updateSection'])->name('admin.cms.update-section');
+    Route::post('/admin/cms/hero-image', [CmsController::class, 'updateHero'])->name('admin.cms.update-hero');
 
     // Settings Management
     Route::get('/admin/settings', [SettingsController::class, 'index'])->name('admin.settings.index');

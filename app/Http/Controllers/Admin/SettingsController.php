@@ -21,10 +21,10 @@ class SettingsController extends Controller
             'office_phone'    => 'nullable|string|max:100',
             'office_email'    => 'nullable|email|max:255',
             'office_timings'  => 'nullable|string|max:255',
-            'facebook_url'    => 'nullable|url|max:500',
-            'twitter_url'     => 'nullable|url|max:500',
-            'instagram_url'   => 'nullable|url|max:500',
-            'youtube_url'     => 'nullable|url|max:500',
+            'facebook_url'    => 'nullable|string|max:500',
+            'twitter_url'     => 'nullable|string|max:500',
+            'instagram_url'   => 'nullable|string|max:500',
+            'youtube_url'     => 'nullable|string|max:500',
         ]);
 
         foreach ($validated as $key => $value) {

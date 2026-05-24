@@ -4,6 +4,18 @@ This document outlines the technical architecture, environment setup, database s
 
 ---
 
+## 🗺️ Documentation Suite & AI Context Map
+
+*To ensure strict architectural and design alignment, all AI coding agents must reference and adhere to the following unified project documentation suite:*
+
+* 📄 **[README.md](./README.md)** — Standard repository overview, environment configuration, and agentic development tools.
+* 📋 **[Requirement.md](./Requirement.md)** — Master index mapping functional specifications and modular requirements.
+* ⚙️ **[AGENT.md](./AGENT.md) (You are here)** — Technical development specifications, PHP 8.4 setup details, SQL database columns, and backend routing/controllers.
+* 🎨 **[DESIGN.md](./DESIGN.md)** — UX/UI Design system, semantic light/dark patriotic themes, daisyUI v5 layouts, fixed-height viewport rules, and official civic branding guidelines.
+* 🛠️ **[DAISYUI.md](./DAISYUI.md)** — Comprehensive daisyUI 5 rules, class lists, and components reference (utilized as an LLM system-level skill).
+
+---
+
 ## 1. Project Overview & Identity
 - **Owner:** Sachin Khandelwal (BJP Adhyaksh & Corporator, Vadodara Ward No. 7).
 - **Core Goal:** A premium, multilingual public leadership website, civic engagement portal, and citizen feedback platform.
@@ -23,8 +35,12 @@ This document outlines the technical architecture, environment setup, database s
 - **Styling:** Tailwind CSS + daisyUI (compulsory UI components).
 
 ### Local Environment Setup
-- **PHP Version:** Fixed to **PHP 8.4** in the project directory using `direnv`.
-- **Configuration:** Maintain a `.envrc` file in the root containing environment declarations (e.g., forcing path resolution to PHP 8.4 binary).
+- **PHP Version:** Strictly locked to **PHP 8.4** inside the project workspace directory.
+- **Path Resolution Mechanics via `direnv`:**
+  - The root `.envrc` exports `/var/www/html/Learning/Review/.bin` at the front of your shell's `PATH`.
+  - Inside the `.bin/` folder, a symbolic link named `php` points directly to `/usr/bin/php8.4`.
+  - This ensures all terminal sessions, Composer routines, Artisan commands, and subshells executed in the workspace root will automatically bind and resolve to `php8.4` (avoiding host version conflicts).
+  - Agents must run `direnv allow` upon entering the directory to initialize these local environment paths.
 
 ---
 
@@ -122,10 +138,10 @@ The admin panel should be constructed using a unified Blade, Tailwind CSS, and d
   - Delete feedback.
   - Toggle "featured" status.
   - Upload or update an optional user avatar image (`avatar_path`) for any feedback record.
-  - The admin dashboard feedback list must use AJAX-based pagination (updating the table asynchronously without full page reload).
+  - The admin feedback list must use AJAX-based pagination (updating the table asynchronously without full page reload).
 - **Frontend Display Rules:**
   - **Homepage Carousel:** Displays ONLY approved feedbacks marked as featured (`status = 'approved'` AND `is_featured = true`). It must display multiple cards simultaneously on desktop (showing more feedbacks together) and render the user avatar image.
-  - **Detailed Feedback Page:** Displays the detailed submission form at the top (primary priority) and lists ALL approved feedbacks (`status = 'approved'`) underneath (secondary priority). It must omit the user avatar images for simplicity/contrast, and pagination must be handled asynchronously via AJAX (no full page reload).
+  - **Detailed Feedback Page:** Displays the detailed submission form at the top (primary priority) and lists ALL approved feedbacks (`status = 'approved'`) underneath (secondary priority). It must render the citizen's avatar image if present (using standard DaisyUI avatar component layout), and fallback to displaying the citizen's initials if no custom avatar image has been uploaded, and pagination must be handled asynchronously via AJAX (no full page reload).
   - **Navbar CTA:** Homepage and layout navigation bars must feature a clear Call-to-Action button on the right linking to this detailed feedback page, and remove the scrolling 'Feedback' menu item.
 
 ### C. CMS Module

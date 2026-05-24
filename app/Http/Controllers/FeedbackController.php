@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Feedback;
 use App\Models\FeedbackImage;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 
 class FeedbackController extends Controller
 {
@@ -81,36 +82,32 @@ class FeedbackController extends Controller
         // Handle uploaded files
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photo) {
-                $filename = time() . '_' . Str::random(10) . '.' . $photo->getClientOriginalExtension();
-                $photo->move($uploadPath, $filename);
+                try {
+                    $filename = time() . '_' . Str::random(10);
+                    $webpName = ImageHelper::convertToWebP($photo, $uploadPath, $filename);
 
-                FeedbackImage::create([
-                    'feedback_id' => $feedback->id,
-                    'image_path' => 'uploads/feedbacks/' . $filename,
-                ]);
+                    FeedbackImage::create([
+                        'feedback_id' => $feedback->id,
+                        'image_path' => 'uploads/feedbacks/' . $webpName,
+                    ]);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error("WebP upload failed: " . $e->getMessage());
+                }
             }
         }
 
         // Handle camera photo (Base64 data URL)
         if (!empty($validated['camera_photo'])) {
-            $base64Image = $validated['camera_photo'];
+            try {
+                $filename = time() . '_camera_' . Str::random(10);
+                $webpName = ImageHelper::base64ToWebP($validated['camera_photo'], $uploadPath, $filename);
 
-            if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
-                $data = substr($base64Image, strpos($base64Image, ',') + 1);
-                $type = strtolower($type[1]); // png, jpeg, etc.
-
-                if (in_array($type, ['jpg', 'jpeg', 'gif', 'png'])) {
-                    $data = base64_decode($data);
-                    if ($data !== false) {
-                        $filename = time() . '_camera_' . Str::random(10) . '.' . $type;
-                        file_put_contents($uploadPath . '/' . $filename, $data);
-
-                        FeedbackImage::create([
-                            'feedback_id' => $feedback->id,
-                            'image_path' => 'uploads/feedbacks/' . $filename,
-                        ]);
-                    }
-                }
+                FeedbackImage::create([
+                    'feedback_id' => $feedback->id,
+                    'image_path' => 'uploads/feedbacks/' . $webpName,
+                ]);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("WebP camera snapshot conversion failed: " . $e->getMessage());
             }
         }
 

@@ -53,13 +53,37 @@
                     </ul>
                 </div>
                 <!-- Brand / Logo -->
-                <a href="{{ route('home') }}" class="flex items-center gap-2 group">
-                    <div class="bg-primary text-white p-2 rounded-xl flex items-center justify-center font-bold text-lg shadow-md group-hover:scale-105 transition-transform duration-300">
+                <a href="{{ route('home') }}" class="flex items-center gap-2.5 group">
+                    <!-- SK Monogram Badge — saffron gradient + lotus ring glow -->
+                    <div class="relative flex items-center justify-center w-10 h-10 rounded-xl font-bold text-lg text-white group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-orange-400/30 shrink-0"
+                         style="background: linear-gradient(135deg, #FF8A3D 0%, #e8651a 100%)">
                         SK
+                        <!-- Subtle lotus petal SVG ring -->
+                        <svg class="absolute inset-0 w-full h-full opacity-[0.18] pointer-events-none" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(0 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(45 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(90 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(135 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(180 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(225 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(270 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(315 20 20)"/>
+                        </svg>
                     </div>
                     <div class="flex flex-col">
-                        <span class="font-heading font-extrabold text-lg sm:text-xl tracking-tight text-base-content">Sachin Khandelwal</span>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-primary">Vadodara Ward 7</span>
+                        <span class="font-heading font-extrabold text-lg sm:text-xl tracking-tight text-base-content leading-tight">Sachin Khandelwal</span>
+                        <span class="flex items-center gap-1 text-[10px] font-extrabold tracking-wide text-primary leading-tight">
+                            <!-- Tiny lotus SVG accent -->
+                            <svg class="w-2.5 h-2.5 shrink-0" viewBox="0 0 12 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(60 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(120 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(180 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(240 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(300 6 6)" />
+                            </svg>
+                            BJP Adhyaksh &middot; Ward 7
+                        </span>
                     </div>
                 </a>
             </div>
@@ -123,12 +147,39 @@
     <footer class="bg-neutral text-neutral-content pt-12 pb-6 border-t-2 border-primary/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="space-y-4">
-                <div class="flex items-center gap-2">
-                    <div class="bg-primary text-white p-2 rounded-xl flex items-center justify-center font-bold text-lg">
+                <a href="{{ route('home') }}" class="flex items-center gap-2.5 group">
+                    <!-- SK Monogram Badge — saffron gradient + lotus ring glow -->
+                    <div class="relative flex items-center justify-center w-10 h-10 rounded-xl font-bold text-lg text-white group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-orange-400/30 shrink-0"
+                         style="background: linear-gradient(135deg, #FF8A3D 0%, #e8651a 100%)">
                         SK
+                        <!-- Subtle lotus petal SVG ring -->
+                        <svg class="absolute inset-0 w-full h-full opacity-[0.18] pointer-events-none" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(0 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(45 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(90 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(135 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(180 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(225 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(270 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(315 20 20)"/>
+                        </svg>
                     </div>
-                    <span class="font-heading font-extrabold text-xl tracking-tight text-white">Sachin Khandelwal</span>
-                </div>
+                    <div class="flex flex-col">
+                        <span class="font-heading font-extrabold text-lg sm:text-xl tracking-tight text-white leading-tight">Sachin Khandelwal</span>
+                        <span class="flex items-center gap-1 text-[10px] font-extrabold tracking-wide text-primary leading-tight">
+                            <!-- Tiny lotus SVG accent -->
+                            <svg class="w-2.5 h-2.5 shrink-0" viewBox="0 0 12 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(60 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(120 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(180 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(240 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(300 6 6)" />
+                            </svg>
+                            BJP Adhyaksh &middot; Ward 7
+                        </span>
+                    </div>
+                </a>
                 <p class="text-sm text-neutral-content/75 leading-relaxed">
                     {{ __('messages.hero.designation') }}
                 </p>

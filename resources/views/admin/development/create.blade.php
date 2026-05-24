@@ -4,11 +4,11 @@
 
 @section('content')
 <div class="flex items-center gap-4">
-    <a href="{{ route('admin.development.index') }}" class="btn btn-sm btn-ghost gap-1.5 text-neutral/70 hover:text-primary rounded-lg">
+    <a href="{{ route('admin.development.index') }}" class="btn btn-sm btn-ghost gap-1.5 text-base-content/70 hover:text-primary rounded-lg">
         <i class="fa-solid fa-arrow-left-long"></i> Back to Projects
     </a>
     <div>
-        <h1 class="font-heading font-extrabold text-2xl text-neutral">Add New Development Project</h1>
+        <h1 class="font-heading font-extrabold text-2xl text-base-content">Add New Development Project</h1>
     </div>
 </div>
 
@@ -22,26 +22,30 @@
     </div>
 @endif
 
-<div class="bg-[#FFFDF8] border border-base-300 rounded-2xl shadow-sm p-6 sm:p-8">
+<div class="card-base rounded-2xl p-6 sm:p-8">
     <form action="{{ route('admin.development.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
         <!-- Title Fields -->
         <div class="space-y-3">
-            <h3 class="font-heading font-bold text-base text-neutral border-b border-base-300 pb-2">
+            <h3 class="font-heading font-bold text-base text-base-content border-b border-base-300 pb-2">
                 <i class="fa-solid fa-heading text-primary mr-1.5"></i> Project Title
             </h3>
-            <div class="form-control">
-                <x-float-input 
-                    type="text" 
-                    name="title_en" 
-                    label="Title (English)" 
-                    value="{{ old('title_en') }}" 
-                    required="true"
-                />
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="form-control">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <!-- English input -->
+                <div class="form-control relative">
+                    <span class="absolute top-2 right-3 z-10 badge badge-xs bg-primary/15 border-primary/20 text-primary font-bold text-[9px]">EN</span>
+                    <x-float-input 
+                        type="text" 
+                        name="title_en" 
+                        label="Title (English)" 
+                        value="{{ old('title_en') }}" 
+                        required="true"
+                    />
+                </div>
+                <!-- Gujarati input -->
+                <div class="form-control relative">
+                    <span class="absolute top-2 right-3 z-10 badge badge-xs bg-secondary/15 border-secondary/20 text-secondary font-bold text-[9px]">GU</span>
                     <x-float-input 
                         type="text" 
                         name="title_gu" 
@@ -49,7 +53,9 @@
                         value="{{ old('title_gu') }}"
                     />
                 </div>
-                <div class="form-control">
+                <!-- Hindi input -->
+                <div class="form-control relative">
+                    <span class="absolute top-2 right-3 z-10 badge badge-xs bg-accent/15 border-accent/20 text-accent font-bold text-[9px]">HI</span>
                     <x-float-input 
                         type="text" 
                         name="title_hi" 
@@ -73,24 +79,28 @@
 
         <!-- Description Fields -->
         <div class="space-y-3">
-            <h3 class="font-heading font-bold text-base text-neutral border-b border-base-300 pb-2">
+            <h3 class="font-heading font-bold text-base text-base-content border-b border-base-300 pb-2">
                 <i class="fa-solid fa-align-left text-primary mr-1.5"></i> Description
             </h3>
-            <div class="form-control">
-                <label class="floating-label w-full block">
-                    <span>Description (English) <span class="text-error font-extrabold">*</span></span>
-                    <textarea 
-                        name="description_en" 
-                        id="description_en" 
-                        required 
-                        rows="3" 
-                        placeholder="Description (English)"
-                        class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-24"
-                    >{{ old('description_en') }}</textarea>
-                </label>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="form-control">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <!-- English description -->
+                <div class="form-control relative">
+                    <span class="absolute top-2 right-3 z-10 badge badge-xs bg-primary/15 border-primary/20 text-primary font-bold text-[9px]">EN</span>
+                    <label class="floating-label w-full block">
+                        <span>Description (English) <span class="text-error font-extrabold">*</span></span>
+                        <textarea 
+                            name="description_en" 
+                            id="description_en" 
+                            required 
+                            rows="3" 
+                            placeholder="Description (English)"
+                            class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-28"
+                        >{{ old('description_en') }}</textarea>
+                    </label>
+                </div>
+                <!-- Gujarati description -->
+                <div class="form-control relative">
+                    <span class="absolute top-2 right-3 z-10 badge badge-xs bg-secondary/15 border-secondary/20 text-secondary font-bold text-[9px]">GU</span>
                     <label class="floating-label w-full block">
                         <span>Description (ગુજરાતી)</span>
                         <textarea 
@@ -98,11 +108,13 @@
                             id="description_gu" 
                             rows="3" 
                             placeholder="Description (ગુજરાતી)"
-                            class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-24"
+                            class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-28"
                         >{{ old('description_gu') }}</textarea>
                     </label>
                 </div>
-                <div class="form-control">
+                <!-- Hindi description -->
+                <div class="form-control relative">
+                    <span class="absolute top-2 right-3 z-10 badge badge-xs bg-accent/15 border-accent/20 text-accent font-bold text-[9px]">HI</span>
                     <label class="floating-label w-full block">
                         <span>Description (हिंदी)</span>
                         <textarea 
@@ -110,7 +122,7 @@
                             id="description_hi" 
                             rows="3" 
                             placeholder="Description (हिंदी)"
-                            class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-24"
+                            class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-28"
                         >{{ old('description_hi') }}</textarea>
                     </label>
                 </div>
@@ -119,17 +131,58 @@
 
         <!-- Before / After Images -->
         <div class="space-y-3">
-            <h3 class="font-heading font-bold text-base text-neutral border-b border-base-300 pb-2">
+            <h3 class="font-heading font-bold text-base text-base-content border-b border-base-300 pb-2">
                 <i class="fa-solid fa-images text-primary mr-1.5"></i> Before / After Images
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="form-control">
-                    <label class="label"><span class="label-text font-bold text-xs text-neutral/70 uppercase tracking-wider">Before Image</span></label>
-                    <input type="file" name="before_image" accept="image/*" class="file-input file-input-bordered file-input-warning w-full rounded-xl bg-transparent border-base-300">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Before Image Input & Preview -->
+                <div class="space-y-3">
+                    <label class="label pb-0">
+                        <span class="label-text font-bold text-xs text-base-content/70 uppercase tracking-wider">Before Image</span>
+                    </label>
+                    
+                    <!-- Premium Preview Card -->
+                    <div id="before-preview-container" class="relative group aspect-video w-full rounded-2xl overflow-hidden border border-dashed border-base-300 bg-base-200/50 flex flex-col items-center justify-center transition-all duration-300 hover:border-primary/40">
+                        <!-- Default empty state -->
+                        <div id="before-empty-state" class="flex flex-col items-center gap-2 p-6 text-center text-base-content/40 transition-opacity">
+                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-primary/60"></i>
+                            <div class="text-xs font-semibold">No before image selected</div>
+                            <div class="text-[10px]">JPEG, PNG, JPG, WEBP up to 5MB</div>
+                        </div>
+                        <!-- Preview Image Tag -->
+                        <img id="before-preview-img" class="hidden w-full h-full object-cover rounded-2xl" alt="Before Preview">
+                        <!-- Floating clear button if selected -->
+                        <button type="button" id="before-clear-btn" class="hidden absolute top-3 right-3 btn btn-circle btn-xs btn-error text-white shadow-md hover:scale-105 transition-all">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <input type="file" name="before_image" id="before_image" accept="image/*" class="file-input file-input-bordered file-input-warning w-full rounded-xl bg-transparent border-base-300">
                 </div>
-                <div class="form-control">
-                    <label class="label"><span class="label-text font-bold text-xs text-neutral/70 uppercase tracking-wider">After Image</span></label>
-                    <input type="file" name="after_image" accept="image/*" class="file-input file-input-bordered file-input-success w-full rounded-xl bg-transparent border-base-300">
+
+                <!-- After Image Input & Preview -->
+                <div class="space-y-3">
+                    <label class="label pb-0">
+                        <span class="label-text font-bold text-xs text-base-content/70 uppercase tracking-wider">After Image</span>
+                    </label>
+
+                    <!-- Premium Preview Card -->
+                    <div id="after-preview-container" class="relative group aspect-video w-full rounded-2xl overflow-hidden border border-dashed border-base-300 bg-base-200/50 flex flex-col items-center justify-center transition-all duration-300 hover:border-primary/40">
+                        <!-- Default empty state -->
+                        <div id="after-empty-state" class="flex flex-col items-center gap-2 p-6 text-center text-base-content/40 transition-opacity">
+                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-success/60"></i>
+                            <div class="text-xs font-semibold">No after image selected</div>
+                            <div class="text-[10px]">JPEG, PNG, JPG, WEBP up to 5MB</div>
+                        </div>
+                        <!-- Preview Image Tag -->
+                        <img id="after-preview-img" class="hidden w-full h-full object-cover rounded-2xl" alt="After Preview">
+                        <!-- Floating clear button if selected -->
+                        <button type="button" id="after-clear-btn" class="hidden absolute top-3 right-3 btn btn-circle btn-xs btn-error text-white shadow-md hover:scale-105 transition-all">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <input type="file" name="after_image" id="after_image" accept="image/*" class="file-input file-input-bordered file-input-success w-full rounded-xl bg-transparent border-base-300">
                 </div>
             </div>
         </div>
@@ -142,4 +195,45 @@
         </div>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function setupImagePreview(inputId, imgId, emptyId, containerId, clearId) {
+        const input = document.getElementById(inputId);
+        const img = document.getElementById(imgId);
+        const empty = document.getElementById(emptyId);
+        const container = document.getElementById(containerId);
+        const clearBtn = document.getElementById(clearId);
+
+        input.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    empty.classList.add('hidden');
+                    clearBtn.classList.remove('hidden');
+                    container.classList.remove('border-dashed');
+                    container.classList.add('border-solid');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        clearBtn.addEventListener('click', function() {
+            input.value = '';
+            img.src = '';
+            img.classList.add('hidden');
+            empty.classList.remove('hidden');
+            clearBtn.classList.add('hidden');
+            container.classList.add('border-dashed');
+            container.classList.remove('border-solid');
+        });
+    }
+
+    setupImagePreview('before_image', 'before-preview-img', 'before-empty-state', 'before-preview-container', 'before-clear-btn');
+    setupImagePreview('after_image', 'after-preview-img', 'after-empty-state', 'after-preview-container', 'after-clear-btn');
+});
+</script>
 @endsection

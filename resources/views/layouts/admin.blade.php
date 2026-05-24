@@ -35,13 +35,37 @@
     <header class="fixed top-1.5 left-0 right-0 z-50 bg-neutral text-neutral-content border-b border-white/10 shadow-md">
         <div class="navbar w-full px-4 sm:px-6 lg:px-8">
             <div class="navbar-start">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 group">
-                    <div class="bg-primary text-white p-2 rounded-xl flex items-center justify-center font-bold text-sm shadow-md">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 group">
+                    <!-- SK Monogram Badge — saffron gradient + lotus ring glow -->
+                    <div class="relative flex items-center justify-center w-10 h-10 rounded-xl font-bold text-lg text-white group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-orange-400/30 shrink-0"
+                         style="background: linear-gradient(135deg, #FF8A3D 0%, #e8651a 100%)">
                         SK
+                        <!-- Subtle lotus petal SVG ring -->
+                        <svg class="absolute inset-0 w-full h-full opacity-[0.18] pointer-events-none" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(0 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(45 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(90 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(135 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(180 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(225 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(270 20 20)"/>
+                            <ellipse cx="20" cy="8"  rx="3.5" ry="7" fill="white" transform="rotate(315 20 20)"/>
+                        </svg>
                     </div>
                     <div class="flex flex-col">
-                        <span class="font-heading font-extrabold text-sm sm:text-base tracking-tight text-white">Sachin Khandelwal</span>
-                        <span class="text-[9px] uppercase font-bold tracking-widest text-neutral-content/70">Admin Office Portal</span>
+                        <span class="font-heading font-extrabold text-sm sm:text-base tracking-tight text-white leading-tight">Sachin Khandelwal</span>
+                        <span class="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-neutral-content/70 leading-tight">
+                            <!-- Tiny lotus SVG accent -->
+                            <svg class="w-2.5 h-2.5 shrink-0" viewBox="0 0 12 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(60 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(120 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(180 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(240 6 6)" />
+                                <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(300 6 6)" />
+                            </svg>
+                            Admin Office Portal
+                        </span>
                     </div>
                 </a>
             </div>

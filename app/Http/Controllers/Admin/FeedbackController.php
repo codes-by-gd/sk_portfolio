@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Feedback;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Helpers\ImageHelper;
 
 class FeedbackController extends Controller
 {
@@ -48,7 +49,7 @@ class FeedbackController extends Controller
             'rejected' => Feedback::where('status', 'rejected')->count(),
         ];
 
-        return view('admin.dashboard', compact('feedbacks', 'counts'));
+        return view('admin.feedback', compact('feedbacks', 'counts'));
     }
 
     public function update(Request $request, Feedback $feedback)
@@ -105,24 +106,48 @@ class FeedbackController extends Controller
         }
 
         $file = $request->file('avatar');
-        $filename = time() . '_' . \Illuminate\Support\Str::random(10) . '.' . $file->getClientOriginalExtension();
-        $file->move($uploadPath, $filename);
+        try {
+            $filename = time() . '_' . \Illuminate\Support\Str::random(10);
+            $webpName = ImageHelper::convertToWebP($file, $uploadPath, $filename);
 
-        // Delete old avatar if exists
-        if ($feedback->avatar_path && file_exists(public_path($feedback->avatar_path))) {
-            @unlink(public_path($feedback->avatar_path));
+            // Delete old avatar if exists
+            if ($feedback->avatar_path && file_exists(public_path($feedback->avatar_path))) {
+                @unlink(public_path($feedback->avatar_path));
+            }
+
+            $feedback->update([
+                'avatar_path' => 'uploads/avatars/' . $webpName,
+            ]);
+
+            return back()->with('success', 'Citizen avatar updated successfully.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['avatar' => 'Failed to convert avatar image to WebP: ' . $e->getMessage()]);
         }
-
-        $feedback->update([
-            'avatar_path' => 'uploads/avatars/' . $filename,
-        ]);
-
-        return back()->with('success', 'Citizen avatar updated successfully.');
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        $response = new StreamedResponse(function() {
+        $query = Feedback::where('status', 'approved');
+
+        // Filter 1: Ward Area
+        $query->when($request->filled('area'), function($q) use ($request) {
+            $q->where('area', 'like', "%" . $request->input('area') . "%");
+        });
+
+        // Filter 2: Rating Stars
+        $query->when($request->filled('rating'), function($q) use ($request) {
+            $q->where('rating', $request->input('rating'));
+        });
+
+        // Filter 3: Date Range
+        $query->when($request->filled('start_date'), function($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->input('start_date'));
+        });
+        $query->when($request->filled('end_date'), function($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->input('end_date'));
+        });
+
+        $response = new StreamedResponse(function() use ($query) {
             $handle = fopen('php://output', 'w');
 
             // Add UTF-8 BOM for Excel compatibility with Gujarati/Hindi characters
@@ -134,8 +159,7 @@ class FeedbackController extends Controller
             ]);
 
             // Data
-            Feedback::where('status', 'approved')
-                ->oldest()
+            $query->oldest()
                 ->chunk(100, function($feedbacks) use ($handle) {
                     foreach ($feedbacks as $feedback) {
                         fputcsv($handle, [

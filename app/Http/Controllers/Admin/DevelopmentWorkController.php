@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DevelopmentWork;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 
 class DevelopmentWorkController extends Controller
 {
@@ -51,16 +52,24 @@ class DevelopmentWorkController extends Controller
 
         if ($request->hasFile('before_image')) {
             $file = $request->file('before_image');
-            $filename = time() . '_before_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadPath, $filename);
-            $data['before_image'] = 'uploads/development/' . $filename;
+            try {
+                $filename = time() . '_before_' . Str::random(8);
+                $webpName = ImageHelper::convertToWebP($file, $uploadPath, $filename);
+                $data['before_image'] = 'uploads/development/' . $webpName;
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("WebP before_image upload failed: " . $e->getMessage());
+            }
         }
 
         if ($request->hasFile('after_image')) {
             $file = $request->file('after_image');
-            $filename = time() . '_after_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadPath, $filename);
-            $data['after_image'] = 'uploads/development/' . $filename;
+            try {
+                $filename = time() . '_after_' . Str::random(8);
+                $webpName = ImageHelper::convertToWebP($file, $uploadPath, $filename);
+                $data['after_image'] = 'uploads/development/' . $webpName;
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("WebP after_image upload failed: " . $e->getMessage());
+            }
         }
 
         DevelopmentWork::create($data);
@@ -103,23 +112,33 @@ class DevelopmentWorkController extends Controller
         }
 
         if ($request->hasFile('before_image')) {
-            if ($development->before_image && file_exists(public_path($development->before_image))) {
-                @unlink(public_path($development->before_image));
-            }
             $file = $request->file('before_image');
-            $filename = time() . '_before_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadPath, $filename);
-            $data['before_image'] = 'uploads/development/' . $filename;
+            try {
+                $filename = time() . '_before_' . Str::random(8);
+                $webpName = ImageHelper::convertToWebP($file, $uploadPath, $filename);
+
+                if ($development->before_image && file_exists(public_path($development->before_image))) {
+                    @unlink(public_path($development->before_image));
+                }
+                $data['before_image'] = 'uploads/development/' . $webpName;
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("WebP before_image update failed: " . $e->getMessage());
+            }
         }
 
         if ($request->hasFile('after_image')) {
-            if ($development->after_image && file_exists(public_path($development->after_image))) {
-                @unlink(public_path($development->after_image));
-            }
             $file = $request->file('after_image');
-            $filename = time() . '_after_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadPath, $filename);
-            $data['after_image'] = 'uploads/development/' . $filename;
+            try {
+                $filename = time() . '_after_' . Str::random(8);
+                $webpName = ImageHelper::convertToWebP($file, $uploadPath, $filename);
+
+                if ($development->after_image && file_exists(public_path($development->after_image))) {
+                    @unlink(public_path($development->after_image));
+                }
+                $data['after_image'] = 'uploads/development/' . $webpName;
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("WebP after_image update failed: " . $e->getMessage());
+            }
         }
 
         $development->update($data);
