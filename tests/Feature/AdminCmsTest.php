@@ -25,13 +25,32 @@ class AdminCmsTest extends TestCase
             'password' => bcrypt('Password@123'),
         ]);
 
-        // Create mock CMS page
-        $this->cmsPage = CmsPage::create([
-            'key' => 'hero_greeting',
-            'content_en' => 'Welcome English',
-            'content_gu' => 'Welcome Gujarati',
-            'content_hi' => 'Welcome Hindi',
-        ]);
+        // Create mock CMS pages required by the admin view
+        $cmsKeys = [
+            'hero_greeting' => ['Welcome English', 'Welcome Gujarati', 'Welcome Hindi'],
+            'hero_title' => ['Title English', 'Title Gujarati', 'Title Hindi'],
+            'hero_mission' => ['Mission English', 'Mission Gujarati', 'Mission Hindi'],
+            'about_title' => ['About English', 'About Gujarati', 'About Hindi'],
+            'about_bio' => ['Bio English', 'Bio Gujarati', 'Bio Hindi'],
+            'about_vision' => ['Vision English', 'Vision Gujarati', 'Vision Hindi'],
+            'achievement_roads' => ['12 | + km | Roads Built', '12 | + km | રસ્તાઓ બનાવેલ', '12 | + km | सड़कें निर्मित'],
+            'achievement_lights' => ['1500 | + | Lights', '1500 | + | લાઈટો', '1500 | + | लाइटें'],
+            'achievement_grievances' => ['98 | % | Grievances', '98 | % | ફરિયાદો', '98 | % | शिकायतें'],
+            'achievement_camps' => ['50 | + | Camps', '50 | + | કેम्पો', '50 | + | शिविर'],
+        ];
+
+        foreach ($cmsKeys as $key => $vals) {
+            $page = CmsPage::create([
+                'key' => $key,
+                'content_en' => $vals[0],
+                'content_gu' => $vals[1],
+                'content_hi' => $vals[2],
+            ]);
+
+            if ($key === 'hero_greeting') {
+                $this->cmsPage = $page;
+            }
+        }
     }
 
     public function test_admin_can_access_cms_page()

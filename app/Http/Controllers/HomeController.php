@@ -14,11 +14,23 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Fetch CMS content
-        $cms = CmsPage::all()->pluck('content', 'key');
+        // Fetch CMS content (Cached forever, invalidated instantly on admin update)
+        $cmsPages = \Illuminate\Support\Facades\Cache::rememberForever('site_cms_pages', function() {
+            return CmsPage::all()->keyBy('key')->toArray();
+        });
 
-        // Fetch settings
-        $settings = Setting::all()->pluck('value', 'key');
+        // Resolve active locale at runtime to populate correct translation
+        $locale = app()->getLocale();
+        $cms = [];
+        foreach ($cmsPages as $key => $translations) {
+            $cms[$key] = $translations["content_{$locale}"] ?? $translations["content_gu"] ?? $translations["content_en"] ?? '';
+        }
+
+
+        // Fetch settings (Cached forever, invalidated instantly on admin update)
+        $settings = \Illuminate\Support\Facades\Cache::rememberForever('site_settings', function() {
+            return Setting::all()->pluck('value', 'key')->toArray();
+        });
 
         // Fetch development works
         $developmentWorks = DevelopmentWork::latest()->get();

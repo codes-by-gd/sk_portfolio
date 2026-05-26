@@ -67,14 +67,32 @@
 
                             <!-- Row 1: Name and Mobile Number -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <x-float-input name="name" :label="__('messages.form.name')" required />
-                                <x-float-input name="mobile_number" :label="__('messages.form.mobile')" type="tel" required />
+                                <label class="floating-label w-full block">
+                                    <span>{{ __('messages.form.name') }} <span class="text-error font-extrabold">*</span></span>
+                                    <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="{{ __('messages.form.name') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
+                                    <div class="validator-hint text-[10px] mt-1 font-semibold text-error/90">Please enter your name</div>
+                                </label>
+
+                                <label class="floating-label w-full block">
+                                    <span>{{ __('messages.form.mobile') }} <span class="text-error font-extrabold">*</span></span>
+                                    <input type="tel" name="mobile_number" id="mobile_number" value="{{ old('mobile_number') }}" placeholder="{{ __('messages.form.mobile') }}" required pattern="[0-9]{10}" class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
+                                    <div class="validator-hint text-[10px] mt-1 font-semibold text-error/90">Enter a 10-digit mobile number (e.g. 9876543210)</div>
+                                </label>
                             </div>
 
                             <!-- Row 2: Ward Area and Feedback Title -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <x-float-input name="area" :label="__('messages.form.area')" required />
-                                <x-float-input name="title" :label="__('messages.form.title')" required />
+                                <label class="floating-label w-full block">
+                                    <span>{{ __('messages.form.area') }} <span class="text-error font-extrabold">*</span></span>
+                                    <input type="text" name="area" id="area" value="{{ old('area') }}" placeholder="{{ __('messages.form.area') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
+                                    <div class="validator-hint text-[10px] mt-1 font-semibold text-error/90">Ward Area or Block is required</div>
+                                </label>
+
+                                <label class="floating-label w-full block">
+                                    <span>{{ __('messages.form.title') }} <span class="text-error font-extrabold">*</span></span>
+                                    <input type="text" name="title" id="title" value="{{ old('title') }}" placeholder="{{ __('messages.form.title') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
+                                    <div class="validator-hint text-[10px] mt-1 font-semibold text-error/90">A brief title is required</div>
+                                </label>
                             </div>
 
                             <!-- DaisyUI Star Rating Input block nested perfectly -->
@@ -92,11 +110,12 @@
                             <!-- Row 3: Feedback Message Area -->
                             <div class="relative w-full">
                                 <textarea id="message" name="message" required placeholder=" " rows="3" 
-                                    class="peer textarea textarea-bordered w-full pt-5 pb-2 min-h-[5rem] bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-transparent transition-all"></textarea>
+                                    class="peer textarea textarea-bordered w-full pt-5 pb-2 min-h-[5rem] bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-transparent transition-all validator"></textarea>
                                 <label for="message" 
                                     class="absolute left-4 top-2.5 text-[10px] text-base-content/50 font-extrabold uppercase tracking-wider transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-placeholder-shown:font-medium peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:top-2.5 peer-focus:text-[10px] peer-focus:text-primary peer-focus:font-extrabold peer-focus:uppercase peer-focus:tracking-wider pointer-events-none">
                                     {{ __('messages.form.message') }}
                                 </label>
+                                <div class="validator-hint text-[10px] mt-1 font-semibold text-error/90 font-sans">Please share your feedback details</div>
                             </div>
 
                             <!-- Unified Media Upload & Live Camera Grid Row -->
@@ -321,7 +340,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function fetchFeedbacks(url) {
         if (!container) return;
-        container.style.opacity = '0.5';
+        
+        container.classList.add('relative');
+        
+        // Remove any old overlay
+        const oldOverlay = container.querySelector('.feedback-loader-overlay');
+        if (oldOverlay) oldOverlay.remove();
+        
+        // Create dynamic premium overlay loading block
+        const loader = document.createElement('div');
+        loader.className = 'feedback-loader-overlay absolute inset-0 bg-base-100/75 backdrop-blur-[2px] flex items-center justify-center z-50 min-h-[300px] transition-opacity duration-300';
+        loader.innerHTML = `
+            <div class="flex flex-col items-center gap-3 bg-base-100 border border-base-300 shadow-2xl px-6 py-4 rounded-3xl animate-fade-in">
+                <span class="loading loading-spinner loading-md text-primary animate-spin"></span>
+                <span class="text-[10px] font-extrabold text-base-content/75 uppercase tracking-wider">Loading Feedbacks...</span>
+            </div>
+        `;
+        container.appendChild(loader);
         
         fetch(url, {
             headers: {
@@ -331,17 +366,17 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             container.innerHTML = data.html;
-            container.style.opacity = '1';
             
             // Scroll to the top of the listing section smoothly
-            const sectionHeader = document.querySelector('#feedback-listing-container');
+            const sectionHeader = document.getElementById('feedback-listing-container');
             if (sectionHeader) {
                 sectionHeader.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
         })
         .catch(error => {
             console.error('Error fetching feedbacks:', error);
-            container.style.opacity = '1';
+            const overlay = container.querySelector('.feedback-loader-overlay');
+            if (overlay) overlay.remove();
         });
     }
 });

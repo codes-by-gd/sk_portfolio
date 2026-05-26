@@ -30,11 +30,38 @@ class CmsController extends Controller
             'content_hi' => $validated['content_hi'] ?? $validated['content_en'],
         ]);
 
+        \Illuminate\Support\Facades\Cache::forget('site_cms_pages');
+
         return back()->with('success', "CMS key '{$cms->key}' updated successfully.");
     }
 
     public function updateSection(Request $request)
     {
+        $input = $request->all();
+        $content = $input['content'] ?? [];
+
+        // Preprocess any split metric inputs (starting with 'achievement_')
+        foreach ($content as $key => $data) {
+            if (strpos($key, 'achievement_') === 0 && is_array($data) && isset($data['number'])) {
+                $number = $data['number'] ?? '';
+                $suffix = $data['suffix'] ?? '';
+                
+                $labelEn = $data['label_en'] ?? '';
+                $labelGu = $data['label_gu'] ?? $labelEn;
+                $labelHi = $data['label_hi'] ?? $labelEn;
+
+                // Merge into translated content strings with pipe separator
+                $content[$key] = [
+                    'content_en' => "{$number} | {$suffix} | {$labelEn}",
+                    'content_gu' => "{$number} | {$suffix} | {$labelGu}",
+                    'content_hi' => "{$number} | {$suffix} | {$labelHi}",
+                ];
+            }
+        }
+
+        // Replace request data with preprocessed content so validation passes
+        $request->merge(['content' => $content]);
+
         $validated = $request->validate([
             'content' => 'required|array',
             'content.*.content_en' => 'required|string',
@@ -52,6 +79,8 @@ class CmsController extends Controller
                 ]);
             }
         }
+
+        \Illuminate\Support\Facades\Cache::forget('site_cms_pages');
 
         return back()->with('success', 'CMS content section updated successfully.');
     }
@@ -90,6 +119,8 @@ class CmsController extends Controller
                     ['key' => 'hero_image'],
                     ['value' => 'uploads/settings/' . $webpName]
                 );
+                
+                \Illuminate\Support\Facades\Cache::forget('site_settings');
                 
                 return back()->with('success', 'Hero portrait image updated successfully.');
             } catch (\Exception $e) {

@@ -131,3 +131,13 @@
 [data-theme="patriotic-dark"] .ribbon-gradient {
   background: linear-gradient(to right, #FF8A3D, #252320, #53C58B);
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@utility animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+

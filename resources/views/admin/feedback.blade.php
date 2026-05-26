@@ -114,7 +114,7 @@
 </div>
 
 <!-- Edit Feedback Modal -->
-<div id="edit-feedback-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50">
+<div id="edit-feedback-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50" style="max-height: 100vh; overflow-y: auto;">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-lg p-6 relative">
         <button type="button" onclick="closeEditModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
@@ -262,7 +262,7 @@
 </div>
 
 <!-- Export Feedback Modal -->
-<div id="export-feedback-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50">
+<div id="export-feedback-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50" style="max-height: 100vh; overflow-y: auto;">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-md p-6 relative">
         <button type="button" onclick="closeExportModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>

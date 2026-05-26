@@ -34,6 +34,8 @@ class SettingsController extends Controller
             );
         }
 
+        \Illuminate\Support\Facades\Cache::forget('site_settings');
+
         return back()->with('success', 'Settings updated successfully.');
     }
 }

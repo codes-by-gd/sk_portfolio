@@ -17,6 +17,16 @@ return [
         'cta_feedback' => 'Share Your Feedback',
         'cta_work' => 'View Development Work',
     ],
+    'contact' => [
+        'office_address' => 'Office Address',
+        'phone' => 'Phone Numbers',
+        'email' => 'Email Contact',
+        'timings' => 'Office Timings',
+        'social' => 'Follow on Social Media',
+        'map_title' => 'Vadodara Ward Office Location Map',
+        'map_subtitle' => 'Subhanpura Road, Ward 7, Vadodara, Gujarat',
+        'map_open' => 'Open in Google Maps',
+    ],
     'sections' => [
         'about' => 'Biography',
         'development' => 'Development Projects',
@@ -25,6 +35,7 @@ return [
         'approved_list_title' => 'Citizen Testimonials',
         'gallery' => 'Photo Gallery',
         'contact' => 'Get in Touch',
+        'public_leadership' => 'Public Leadership',
     ],
     'gallery' => [
         'all' => 'All Media',
@@ -32,6 +43,9 @@ return [
         'events' => 'BJP Events',
         'works' => 'Development Works',
         'community' => 'Community Programs',
+        'view_photo' => 'View Photo',
+        'photo_of' => 'Photo',
+        'close' => 'Close',
     ],
     'form' => [
         'quick_title' => 'Quick Feedback Form',

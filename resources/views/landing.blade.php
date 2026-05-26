@@ -3,6 +3,39 @@
 @section('title', 'Sachin Khandelwal - Vadodara Ward No. 7')
 
 @section('content')
+    @php
+        if (!function_exists('parseMetric')) {
+            function parseMetric($value, $defaultNumber = '', $defaultSuffix = '', $defaultLabel = '') {
+                if (strpos($value, '|') !== false) {
+                    $parts = explode('|', $value);
+                    return [
+                        'number' => trim($parts[0] ?? ''),
+                        'suffix' => trim($parts[1] ?? ''),
+                        'label'  => trim($parts[2] ?? ''),
+                    ];
+                }
+                
+                // Smart fallback for raw legacy values (e.g. "1,500+ LED Lights Installed")
+                preg_match('/^([0-9,.]+)\s*(.*?)$/', $value, $matches);
+                $number = trim($matches[1] ?? $value);
+                $rem = trim($matches[2] ?? '');
+                
+                if (preg_match('/^([+%]|[+]\s*[a-zA-Z]+)\s*(.*?)$/', $rem, $submatches)) {
+                    $suffix = trim($submatches[1]);
+                    $label = trim($submatches[2] ?? $defaultLabel);
+                } else {
+                    $suffix = '';
+                    $label = !empty($rem) ? $rem : $defaultLabel;
+                }
+                
+                return [
+                    'number' => $number,
+                    'suffix' => $suffix,
+                    'label'  => $label,
+                ];
+            }
+        }
+    @endphp
     <!-- Hero Section -->
     <section id="home" class="relative overflow-hidden bg-gradient-to-b from-base-100 via-base-100 to-base-200 py-24 lg:py-40">
         <!-- Background decorative blobs -->
@@ -12,7 +45,7 @@
         <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,138,61,0.07),transparent_55%)] pointer-events-none"></div>
         <!-- Laxmi Vilas Palace silhouette watermark -->
         <div class="absolute bottom-0 right-0 w-full h-full flex items-end justify-end pointer-events-none overflow-hidden opacity-[0.035] text-base-content">
-            <svg class="w-[520px] h-auto" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+            <svg class="w-[520px] h-[173px]" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
                 <!-- Ground base -->
                 <rect x="0" y="193" width="600" height="7" rx="3"/>
                 <!-- Far left small tower -->
@@ -80,7 +113,7 @@
                         <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(240 6 6)" />
                         <ellipse cx="6" cy="2.5" rx="1.5" ry="3" transform="rotate(300 6 6)" />
                     </svg>
-                    BJP Adhyaksh &amp; Corporator &middot; Vadodara Ward No. 7
+                    {{ __('messages.hero.designation') }}
                 </div>
                 
                 <p class="text-lg text-base-content/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
@@ -142,7 +175,7 @@
                 <!-- Biography Card -->
                 <div class="lg:col-span-7 bg-base-200 p-8 rounded-2xl border border-base-300 shadow-sm space-y-6">
                     <h3 class="font-heading font-bold text-xl text-secondary flex items-center gap-2">
-                        <i class="fa-solid fa-landmark"></i> Public Leadership
+                        <i class="fa-solid fa-landmark"></i> {{ __('messages.sections.public_leadership') }}
                     </h3>
                     <p class="text-base-content/80 leading-relaxed text-justify">
                         {{ $cms['about_bio'] ?? '' }}
@@ -189,38 +222,105 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+            <div class="stats stats-vertical lg:stats-horizontal shadow-xl bg-white/5 border border-white/10 w-full rounded-3xl overflow-hidden divide-y lg:divide-y-0 lg:divide-x divide-white/10">
                 <!-- Metric 1 — Roads (Saffron) -->
-                <div class="group space-y-3 p-5 bg-white/5 rounded-2xl border border-white/10 hover:border-primary/40 hover:bg-primary/10 hover:scale-105 transition-all duration-300">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors duration-300">
-                        <i class="fa-solid fa-road text-2xl text-primary"></i>
+                @php
+                    $roads = parseMetric($cms['achievement_roads'] ?? '12 | + km | Roads Built', '12', '+ km', 'Roads Built');
+                @endphp
+                <div class="stat p-8 text-center flex flex-col items-center justify-center group hover:bg-white/[0.02] transition-all duration-300">
+                    <div class="stat-figure text-primary mb-3">
+                        <div class="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300 shadow-md shadow-primary/5">
+                            <i class="fa-solid fa-road text-2xl text-primary"></i>
+                        </div>
                     </div>
-                    <div class="font-heading font-extrabold text-2xl sm:text-3xl text-neutral-content">{{ $cms['achievement_roads'] ?? '12+ km' }}</div>
-                    <p class="text-xs sm:text-sm text-neutral-content/65 font-semibold uppercase tracking-wider">Roads Built</p>
+                    <div class="flex items-baseline justify-center gap-1.5">
+                        <span class="font-heading font-black text-4xl sm:text-5xl text-primary tracking-tight transition-transform duration-300 group-hover:scale-105">
+                            {{ $roads['number'] }}
+                        </span>
+                        @if(!empty($roads['suffix']))
+                            <span class="text-xl sm:text-2xl font-bold text-primary/75 font-heading">
+                                {{ $roads['suffix'] }}
+                            </span>
+                        @endif
+                    </div>
+                    <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-2 font-heading">
+                        {{ $roads['label'] }}
+                    </div>
                 </div>
+
                 <!-- Metric 2 — LED Lights (Accent/Green) -->
-                <div class="group space-y-3 p-5 bg-white/5 rounded-2xl border border-white/10 hover:border-accent/40 hover:bg-accent/10 hover:scale-105 transition-all duration-300">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-accent/15 flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300">
-                        <i class="fa-solid fa-lightbulb text-2xl text-accent"></i>
+                @php
+                    $lights = parseMetric($cms['achievement_lights'] ?? '1,500 | + | LED Lights Installed', '1,500', '+', 'LED Lights Installed');
+                @endphp
+                <div class="stat p-8 text-center flex flex-col items-center justify-center group hover:bg-white/[0.02] transition-all duration-300">
+                    <div class="stat-figure text-accent mb-3">
+                        <div class="w-16 h-16 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-accent/20 transition-all duration-300 shadow-md shadow-accent/5">
+                            <i class="fa-solid fa-lightbulb text-2xl text-accent"></i>
+                        </div>
                     </div>
-                    <div class="font-heading font-extrabold text-2xl sm:text-3xl text-neutral-content">{{ $cms['achievement_lights'] ?? '1,500+' }}</div>
-                    <p class="text-xs sm:text-sm text-neutral-content/65 font-semibold uppercase tracking-wider">LED Lights</p>
-                </div>
-                <!-- Metric 3 — Grievances (Secondary/Blue) -->
-                <div class="group space-y-3 p-5 bg-white/5 rounded-2xl border border-white/10 hover:border-secondary/40 hover:bg-secondary/10 hover:scale-105 transition-all duration-300">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-secondary/15 flex items-center justify-center group-hover:bg-secondary/25 transition-colors duration-300">
-                        <i class="fa-solid fa-circle-check text-2xl text-secondary"></i>
+                    <div class="flex items-baseline justify-center gap-1.5">
+                        <span class="font-heading font-black text-4xl sm:text-5xl text-accent tracking-tight transition-transform duration-300 group-hover:scale-105">
+                            {{ $lights['number'] }}
+                        </span>
+                        @if(!empty($lights['suffix']))
+                            <span class="text-xl sm:text-2xl font-bold text-accent/75 font-heading">
+                                {{ $lights['suffix'] }}
+                            </span>
+                        @endif
                     </div>
-                    <div class="font-heading font-extrabold text-2xl sm:text-3xl text-neutral-content">{{ $cms['achievement_grievances'] ?? '98%' }}</div>
-                    <p class="text-xs sm:text-sm text-neutral-content/65 font-semibold uppercase tracking-wider">Resolved Grievances</p>
+                    <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-2 font-heading">
+                        {{ $lights['label'] }}
+                    </div>
                 </div>
+
+                <!-- Metric 3 — Grievances (Success/Teal) -->
+                @php
+                    $grievances = parseMetric($cms['achievement_grievances'] ?? '98 | % | Grievances Resolved', '98', '%', 'Grievances Resolved');
+                @endphp
+                <div class="stat p-8 text-center flex flex-col items-center justify-center group hover:bg-white/[0.02] transition-all duration-300">
+                    <div class="stat-figure text-success mb-3">
+                        <div class="w-16 h-16 rounded-2xl bg-success/10 border border-success/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-success/20 transition-all duration-300 shadow-md shadow-success/5">
+                            <i class="fa-solid fa-circle-check text-2xl text-success"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline justify-center gap-1.5">
+                        <span class="font-heading font-black text-4xl sm:text-5xl text-success tracking-tight transition-transform duration-300 group-hover:scale-105">
+                            {{ $grievances['number'] }}
+                        </span>
+                        @if(!empty($grievances['suffix']))
+                            <span class="text-xl sm:text-2xl font-bold text-success/75 font-heading">
+                                {{ $grievances['suffix'] }}
+                            </span>
+                        @endif
+                    </div>
+                    <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-2 font-heading">
+                        {{ $grievances['label'] }}
+                    </div>
+                </div>
+
                 <!-- Metric 4 — Health Camps (Warning/Gold) -->
-                <div class="group space-y-3 p-5 bg-white/5 rounded-2xl border border-white/10 hover:border-warning/40 hover:bg-warning/10 hover:scale-105 transition-all duration-300">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-warning/15 flex items-center justify-center group-hover:bg-warning/25 transition-colors duration-300">
-                        <i class="fa-solid fa-hand-holding-heart text-2xl text-warning"></i>
+                @php
+                    $camps = parseMetric($cms['achievement_camps'] ?? '50 | + | Health Camps Done', '50', '+', 'Health Camps Done');
+                @endphp
+                <div class="stat p-8 text-center flex flex-col items-center justify-center group hover:bg-white/[0.02] transition-all duration-300">
+                    <div class="stat-figure text-warning mb-3">
+                        <div class="w-16 h-16 rounded-2xl bg-warning/10 border border-warning/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-warning/20 transition-all duration-300 shadow-md shadow-warning/5">
+                            <i class="fa-solid fa-hand-holding-heart text-2xl text-warning"></i>
+                        </div>
                     </div>
-                    <div class="font-heading font-extrabold text-2xl sm:text-3xl text-neutral-content">{{ $cms['achievement_camps'] ?? '50+' }}</div>
-                    <p class="text-xs sm:text-sm text-neutral-content/65 font-semibold uppercase tracking-wider">Health Camps</p>
+                    <div class="flex items-baseline justify-center gap-1.5">
+                        <span class="font-heading font-black text-4xl sm:text-5xl text-warning tracking-tight transition-transform duration-300 group-hover:scale-105">
+                            {{ $camps['number'] }}
+                        </span>
+                        @if(!empty($camps['suffix']))
+                            <span class="text-xl sm:text-2xl font-bold text-warning/75 font-heading">
+                                {{ $camps['suffix'] }}
+                            </span>
+                        @endif
+                    </div>
+                    <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-2 font-heading">
+                        {{ $camps['label'] }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -259,50 +359,63 @@
                 <div class="relative overflow-hidden w-full py-4 -mx-4 px-4 dev-slider-viewport">
                     <div id="development-track" class="flex flex-row gap-6 transition-transform duration-500 ease-out" style="transform: translateX(0px);">
                         @foreach($developmentWorks as $index => $work)
-                            <div class="development-card shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-base-100 border border-base-300/60 rounded-3xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative group flex flex-col justify-between" data-index="{{ $index }}">
+                            <div class="development-card cursor-pointer shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-base-100 border border-base-300/60 rounded-3xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative group flex flex-col justify-between" 
+                                 data-index="{{ $index }}"
+                                 data-title="{{ $work->title }}"
+                                 data-location="{{ $work->location }}"
+                                 data-description="{{ $work->description }}"
+                                 data-before="{{ asset($work->before_image ?: 'images/before_road.jpg') }}"
+                                 data-after="{{ asset($work->after_image ?: 'images/after_road.jpg') }}">
                                 <!-- Saffron accent stripe -->
                                 <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20"></div>
 
-                                <div>
-                                    <!-- Before / After Side-by-side or stacked container -->
-                                    <div class="grid grid-cols-2 gap-0.5 bg-base-300 h-52 relative overflow-hidden">
-                                        <!-- Before Container -->
-                                        <div class="relative overflow-hidden group/img">
-                                            <div class="absolute top-3 left-3 z-10 badge badge-warning text-[10px] uppercase font-bold tracking-wider rounded-lg">Before</div>
-                                            @if($work->before_image)
-                                                <img src="{{ asset($work->before_image) }}" class="object-cover w-full h-full group-hover/img:scale-105 transition-transform duration-500" alt="Before" loading="lazy" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=Before&backgroundColor=d1d5db&textColor=1f2937'">
-                                            @else
-                                                <div class="w-full h-full bg-[#1E1E1E] flex items-center justify-center text-white/50 text-xs font-semibold">
-                                                    <i class="fa-solid fa-image text-2xl opacity-40"></i>
-                                                </div>
-                                            @endif
+                                    <!-- Card Thumbnail: two images side by side -->
+                                    <div class="relative flex h-48 overflow-hidden">
+                                        <!-- LEFT — Before -->
+                                        <div class="relative w-1/2 overflow-hidden">
+                                            <img src="{{ asset($work->before_image ?: 'images/before_road.jpg') }}"
+                                                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                 alt="Before"
+                                                 loading="lazy"
+                                                 onerror="this.onerror=null;this.src='{{ asset('images/before_road.jpg') }}'">
+                                            <span class="absolute top-2 left-2 badge badge-warning text-[10px] font-bold shadow pointer-events-none">Before</span>
                                         </div>
-                                        <!-- After Container -->
-                                        <div class="relative overflow-hidden group/img">
-                                            <div class="absolute top-3 right-3 z-10 badge badge-success text-[10px] uppercase font-bold text-white tracking-wider rounded-lg">After</div>
-                                            @if($work->after_image)
-                                                <img src="{{ asset($work->after_image) }}" class="object-cover w-full h-full group-hover/img:scale-105 transition-transform duration-500" alt="After" loading="lazy" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=After&backgroundColor=53C58B&textColor=ffffff'">
-                                            @else
-                                                <div class="w-full h-full bg-[#1E1E1E] flex items-center justify-center text-white/50 text-xs font-semibold">
-                                                    <i class="fa-solid fa-circle-check text-2xl text-accent opacity-65"></i>
-                                                </div>
-                                            @endif
+
+                                        <!-- Vertical centre divider -->
+                                        <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-0.5 bg-white/70 z-10 shadow"></div>
+
+                                        <!-- RIGHT — After -->
+                                        <div class="relative w-1/2 overflow-hidden">
+                                            <img src="{{ asset($work->after_image ?: 'images/after_road.jpg') }}"
+                                                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                 alt="After"
+                                                 loading="lazy"
+                                                 onerror="this.onerror=null;this.src='{{ asset('images/after_road.jpg') }}'">
+                                            <span class="absolute top-2 right-2 badge badge-success text-[10px] font-bold text-white shadow pointer-events-none">After</span>
+                                        </div>
+
+                                        <!-- Hover overlay -->
+                                        <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/15 transition-all duration-300 flex items-end justify-center pb-3 opacity-0 group-hover:opacity-100 z-20">
+                                            <span class="badge badge-primary gap-1.5 shadow-lg text-white border-none text-[11px]">
+                                                <i class="fa-solid fa-expand text-[10px]"></i> View &amp; Compare
+                                            </span>
                                         </div>
                                     </div>
 
                                     <!-- Card Details -->
-                                    <div class="p-6 space-y-3">
-                                        <span class="inline-flex items-center gap-1.5 text-[10px] text-secondary font-extrabold uppercase tracking-wider">
-                                            <i class="fa-solid fa-location-dot text-primary"></i> {{ $work->location }}
-                                        </span>
-                                        <h3 class="font-heading font-extrabold text-lg text-base-content leading-snug group-hover:text-primary transition-colors duration-200">
-                                            {{ $work->title }}
-                                        </h3>
-                                        <p class="text-xs text-base-content/70 leading-relaxed line-clamp-3">
-                                            {{ $work->description }}
-                                        </p>
+                                    <div class="p-6 space-y-3 flex-grow flex flex-col justify-between">
+                                        <div class="space-y-2">
+                                            <span class="inline-flex items-center gap-1.5 text-[10px] text-secondary font-extrabold uppercase tracking-wider">
+                                                <i class="fa-solid fa-location-dot text-primary"></i> {{ $work->location }}
+                                            </span>
+                                            <h3 class="font-heading font-extrabold text-lg text-base-content leading-snug group-hover:text-primary transition-colors duration-200">
+                                                {{ $work->title }}
+                                            </h3>
+                                            <p class="text-xs text-base-content/70 leading-relaxed line-clamp-3">
+                                                {{ $work->description }}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -493,13 +606,40 @@
 
             <!-- Gallery Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="gallery-grid">
-                @foreach($galleryImages as $image)
-                    <div class="gallery-item relative overflow-hidden rounded-2xl border border-base-300 shadow-md group h-64 bg-base-300 transition-all duration-300 hover:scale-[1.02]" data-category="{{ $image->category }}">
-                        <!-- Placeholder graphic overlay since these are local Review seed tags -->
-                        <div class="absolute inset-0 bg-neutral/85 flex flex-col justify-center items-center text-center p-4 opacity-100 group-hover:opacity-90 transition-opacity duration-300 z-10">
-                            <span class="text-primary text-xs font-bold uppercase tracking-widest mb-1">{{ $image->category }}</span>
-                            <h4 class="text-white font-bold font-heading text-md px-2">{{ $image->caption }}</h4>
-                            <div class="mt-3 text-white/50 text-xs"><i class="fa-solid fa-camera"></i> Photo Asset</div>
+                @foreach($galleryImages as $index => $image)
+                    <div class="gallery-item relative overflow-hidden rounded-2xl border border-base-300 shadow-md group h-64 bg-base-300 transition-all duration-300 hover:scale-[1.02] cursor-pointer" 
+                         data-category="{{ $image->category }}"
+                         data-image="{{ asset($image->image_path) }}"
+                         data-caption="{{ $image->caption }}"
+                         data-category-label="{{ __('messages.gallery.' . $image->category) }}"
+                         onclick="openLightbox({{ $index }})">
+                        <!-- Real Image with dynamic high-quality Unsplash fallbacks based on category -->
+                        @php
+                            $fallback = 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop';
+                            if ($image->category === 'events') {
+                                $fallback = 'https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=600&auto=format&fit=crop';
+                            } elseif ($image->category === 'visits') {
+                                $fallback = 'https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=600&auto=format&fit=crop';
+                            } elseif ($image->category === 'community') {
+                                $fallback = 'https://images.unsplash.com/photo-1469571486119-07551202826d?q=80&w=600&auto=format&fit=crop';
+                            }
+                        @endphp
+                        <img src="{{ asset($image->image_path) }}" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                             alt="{{ $image->caption }}" 
+                             onerror="this.onerror=null; this.src='{{ $fallback }}';">
+
+                        <!-- Saffron orange & dark gradient luxury overlay on hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-neutral/95 via-neutral/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 z-10">
+                            <span class="text-primary text-xs font-extrabold uppercase tracking-widest mb-1">
+                                {{ __('messages.gallery.' . $image->category) }}
+                            </span>
+                            <h4 class="text-white font-bold font-heading text-md line-clamp-2">
+                                {{ $image->caption }}
+                            </h4>
+                            <div class="mt-3 text-primary font-bold text-xs flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                                <i class="fa-solid fa-maximize"></i> {{ __('messages.gallery.view_photo') }}
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -548,7 +688,7 @@
                         <div class="flex items-start gap-4">
                             <div class="bg-primary/10 text-primary p-3 rounded-xl"><i class="fa-solid fa-location-dot text-xl"></i></div>
                             <div>
-                                <h4 class="font-heading font-bold text-base-content">Office Address</h4>
+                                <h4 class="font-heading font-bold text-base-content">{{ __('messages.contact.office_address') }}</h4>
                                 <p class="text-sm text-base-content/70 mt-1">{{ $settings['office_address'] ?? '' }}</p>
                             </div>
                         </div>
@@ -556,7 +696,7 @@
                         <div class="flex items-start gap-4">
                             <div class="bg-secondary/10 text-secondary p-3 rounded-xl"><i class="fa-solid fa-phone text-xl"></i></div>
                             <div>
-                                <h4 class="font-heading font-bold text-base-content">Phone Numbers</h4>
+                                <h4 class="font-heading font-bold text-base-content">{{ __('messages.contact.phone') }}</h4>
                                 <p class="text-sm text-base-content/70 mt-1">{{ $settings['office_phone'] ?? '' }}</p>
                             </div>
                         </div>
@@ -564,7 +704,7 @@
                         <div class="flex items-start gap-4">
                             <div class="bg-accent/10 text-accent p-3 rounded-xl"><i class="fa-solid fa-envelope text-xl"></i></div>
                             <div>
-                                <h4 class="font-heading font-bold text-base-content">Email Contact</h4>
+                                <h4 class="font-heading font-bold text-base-content">{{ __('messages.contact.email') }}</h4>
                                 <p class="text-sm text-base-content/70 mt-1">{{ $settings['office_email'] ?? '' }}</p>
                             </div>
                         </div>
@@ -572,7 +712,7 @@
                         <div class="flex items-start gap-4">
                             <div class="bg-primary/10 text-primary p-3 rounded-xl"><i class="fa-solid fa-calendar-days text-xl"></i></div>
                             <div>
-                                <h4 class="font-heading font-bold text-base-content">Office Timings</h4>
+                                <h4 class="font-heading font-bold text-base-content">{{ __('messages.contact.timings') }}</h4>
                                 <p class="text-sm text-base-content/70 mt-1">{{ $settings['office_timings'] ?? '' }}</p>
                             </div>
                         </div>
@@ -580,7 +720,7 @@
 
                     <!-- Quick Banner Info -->
                     <div class="border-t border-base-300 pt-6">
-                        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50">Follow on Social Media</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50">{{ __('messages.contact.social') }}</span>
                         <div class="flex gap-3 text-lg mt-3">
                             <a href="{{ $settings['facebook_url'] ?? '#' }}" target="_blank" rel="noopener" class="btn btn-sm btn-circle btn-primary text-white"><i class="fa-brands fa-facebook-f"></i></a>
                             <a href="{{ $settings['twitter_url'] ?? '#' }}" target="_blank" rel="noopener" class="btn btn-sm btn-circle btn-info text-white"><i class="fa-brands fa-twitter"></i></a>
@@ -595,14 +735,121 @@
                     <!-- Interactive styled SVG mock map -->
                     <div class="absolute inset-0 bg-base-300/30 flex flex-col justify-center items-center text-center p-8">
                         <i class="fa-solid fa-map-location text-5xl text-base-content/30 mb-4 animate-bounce"></i>
-                        <h4 class="font-heading font-bold text-base-content">Vadodara Ward Office Location Map</h4>
-                        <p class="text-sm text-base-content/65 max-w-sm mt-1">Mock Interactive Map Center: Subhanpura Road, Ward 7, Vadodara, Gujarat</p>
-                        <span class="btn btn-xs btn-outline btn-secondary hover:text-white mt-4 rounded-lg">Open in Google Maps</span>
+                        <h4 class="font-heading font-bold text-base-content">{{ __('messages.contact.map_title') }}</h4>
+                        <p class="text-sm text-base-content/65 max-w-sm mt-1">{{ __('messages.contact.map_subtitle') }}</p>
+                        <span class="btn btn-xs btn-outline btn-secondary hover:text-white mt-4 rounded-lg">{{ __('messages.contact.map_open') }}</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    <!-- ============================================================ -->
+    <!-- Development Project Compare Modal (DaisyUI <dialog> modal)  -->
+    <!-- diff-item-1 = LEFT  = BEFORE  |  diff-item-2 = RIGHT = AFTER -->
+    <!-- ============================================================ -->
+    <dialog id="project_modal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box w-11/12 max-w-3xl p-0 overflow-hidden rounded-3xl shadow-2xl bg-base-100">
+
+            <!-- DaisyUI close button (top-right) -->
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3 z-50 bg-base-300/80 backdrop-blur-sm hover:bg-error hover:text-white transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </form>
+
+            <!-- Interactive Before / After Diff Slider (pure DaisyUI v5 markup) -->
+            <figure class="diff aspect-[16/9] w-full">
+                <!-- diff-item-1 = LEFT = BEFORE (clipped by the resizer width) -->
+                <div class="diff-item-1">
+                    <img id="modal-before-img" src="" alt="Before">
+                </div>
+                <!-- diff-item-2 = RIGHT background = AFTER -->
+                <div class="diff-item-2">
+                    <img id="modal-after-img" src="" alt="After">
+                </div>
+                <div class="diff-resizer"></div>
+            </figure>
+
+            <!-- Badge row sits just below the diff figure -->
+            <div class="flex items-center justify-between px-4 py-2 bg-base-200 border-b border-base-300">
+                <div class="badge badge-warning gap-1 font-bold">
+                    <i class="fa-solid fa-backward text-[10px]"></i> Before
+                </div>
+                <span class="text-[11px] text-base-content/50 font-semibold flex items-center gap-1">
+                    <i class="fa-solid fa-left-right text-primary animate-pulse"></i>
+                    Drag the handle to compare
+                </span>
+                <div class="badge badge-success gap-1 font-bold text-white">
+                    After <i class="fa-solid fa-forward text-[10px]"></i>
+                </div>
+            </div>
+
+            <!-- Project meta -->
+            <div class="p-6 space-y-3">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="badge badge-outline badge-primary gap-1 font-bold">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span id="modal-location"></span>
+                    </span>
+                </div>
+                <h3 id="modal-title"
+                    class="font-heading font-extrabold text-xl sm:text-2xl text-base-content leading-snug"></h3>
+                <div class="divider my-1"></div>
+                <p class="text-xs font-bold uppercase tracking-widest text-base-content/40">Project Description</p>
+                <p id="modal-desc"
+                   class="text-sm text-base-content/80 leading-relaxed"></p>
+            </div>
+
+        </div>
+        <!-- Clicking backdrop closes the modal -->
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- Photo Gallery Lightbox Viewer (DaisyUI <dialog> modal) -->
+    <dialog id="gallery_modal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box w-11/12 max-w-4xl p-0 overflow-hidden rounded-3xl shadow-2xl bg-base-100 border border-base-300">
+            <!-- Close button (top-right) -->
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3 z-50 bg-base-300/80 backdrop-blur-sm hover:bg-error hover:text-white transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </form>
+
+            <!-- Lightbox Main Frame (Image with Navigation Chevrons) -->
+            <div class="relative w-full aspect-[4/3] sm:aspect-[16/10] bg-neutral flex items-center justify-center group/lightbox">
+                <img id="lightbox-img" src="" class="max-w-full max-h-full object-contain select-none" alt="Gallery Lightbox Image">
+                
+                <!-- Left Control Button -->
+                <button onclick="prevGalleryImage(event)" class="absolute left-4 top-1/2 -translate-y-1/2 btn btn-circle btn-ghost bg-black/30 text-white hover:bg-primary border-none shadow-md" aria-label="Previous Photo">
+                    <i class="fa-solid fa-chevron-left text-lg"></i>
+                </button>
+
+                <!-- Right Control Button -->
+                <button onclick="nextGalleryImage(event)" class="absolute right-4 top-1/2 -translate-y-1/2 btn btn-circle btn-ghost bg-black/30 text-white hover:bg-primary border-none shadow-md" aria-label="Next Photo">
+                    <i class="fa-solid fa-chevron-right text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Meta Section underneath the image -->
+            <div class="p-6 bg-base-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-base-300">
+                <div class="space-y-1 flex-1">
+                    <span id="lightbox-category" class="badge badge-primary font-bold uppercase tracking-widest text-[10px]"></span>
+                    <h3 id="lightbox-caption" class="font-heading font-extrabold text-lg text-base-content leading-snug"></h3>
+                </div>
+                <!-- Close Dialog button -->
+                <form method="dialog" class="shrink-0">
+                    <button class="btn btn-sm btn-outline hover:bg-neutral hover:text-white rounded-xl gap-1">
+                        <i class="fa-solid fa-circle-xmark"></i> {{ __('messages.gallery.close') }}
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- Backdrop click closes modal -->
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
 
     <!-- Carousel Javascript -->
     <script>
@@ -681,22 +928,48 @@
         const galleryItemsPerPage = 6;
         let filteredGalleryItems = [];
 
+        let galleryTimeout = null;
+
         function initGalleryPagination() {
             const allItems = Array.from(document.querySelectorAll('.gallery-item'));
             if (allItems.length === 0) return;
             
-            // Filter based on active category
-            filteredGalleryItems = allItems.filter(item => {
+            // Clear any active gallery timeout
+            if (galleryTimeout) clearTimeout(galleryTimeout);
+            
+            const grid = document.getElementById('gallery-grid');
+            
+            // Remove any leftover skeleton elements
+            document.querySelectorAll('.gallery-skeleton').forEach(el => el.remove());
+            
+            // Hide all real items immediately during transition
+            allItems.forEach(item => {
+                item.classList.add('hidden');
+                item.classList.remove('animate-fade-in');
+            });
+            
+            // Render beautiful daisyUI skeletons matches the category size
+            const activeItems = allItems.filter(item => {
                 const cat = item.getAttribute('data-category');
                 return activeGalleryCategory === 'all' || cat === activeGalleryCategory;
             });
+            
+            const startIdx = (currentGalleryPage - 1) * galleryItemsPerPage;
+            const endIdx = startIdx + galleryItemsPerPage;
+            const pageItemsCount = activeItems.slice(startIdx, endIdx).length;
+            
+            for (let i = 0; i < pageItemsCount; i++) {
+                const skeleton = document.createElement('div');
+                skeleton.className = 'gallery-skeleton skeleton w-full h-64 rounded-2xl border border-base-300 shadow-md bg-base-300/40 animate-pulse';
+                grid.appendChild(skeleton);
+            }
+            
+            // Filter based on active category
+            filteredGalleryItems = activeItems;
 
             const totalPages = Math.ceil(filteredGalleryItems.length / galleryItemsPerPage);
             const paginationContainer = document.getElementById('gallery-pagination');
             const pageNumbersContainer = document.getElementById('gallery-page-numbers');
-
-            // Hide all gallery items initially
-            allItems.forEach(item => item.classList.add('hidden'));
 
             if (totalPages > 1) {
                 if (paginationContainer) paginationContainer.classList.remove('hidden');
@@ -717,17 +990,22 @@
                 if (paginationContainer) paginationContainer.classList.add('hidden');
             }
 
-            // Show current page items
-            const startIdx = (currentGalleryPage - 1) * galleryItemsPerPage;
-            const endIdx = startIdx + galleryItemsPerPage;
-            const pageItems = filteredGalleryItems.slice(startIdx, endIdx);
-            pageItems.forEach(item => item.classList.remove('hidden'));
-
             // Disable/Enable chevron buttons
             const prevBtn = document.getElementById('gallery-prev-btn');
             const nextBtn = document.getElementById('gallery-next-btn');
             if (prevBtn) prevBtn.disabled = currentGalleryPage === 1;
             if (nextBtn) nextBtn.disabled = currentGalleryPage === totalPages || totalPages === 0;
+
+            // Wait 250ms for skeleton pulse visual indicator, then fade in real items
+            galleryTimeout = setTimeout(() => {
+                document.querySelectorAll('.gallery-skeleton').forEach(el => el.remove());
+                
+                const pageItems = filteredGalleryItems.slice(startIdx, endIdx);
+                pageItems.forEach(item => {
+                    item.classList.remove('hidden');
+                    item.classList.add('animate-fade-in');
+                });
+            }, 250);
         }
 
         function filterGallery(category) {
@@ -858,6 +1136,76 @@
             startDevAutoSlide();
         }
 
+        // ── Photo Gallery Lightbox Viewer Logic ──
+        let currentLightboxIndex = 0;
+
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            const allItems = Array.from(document.querySelectorAll('.gallery-item'));
+            const item = allItems[index];
+            if (!item) return;
+
+            document.getElementById('lightbox-img').src = item.dataset.image || '';
+            document.getElementById('lightbox-caption').textContent = item.dataset.caption || '';
+            document.getElementById('lightbox-category').textContent = item.dataset.categoryLabel || '';
+
+            const modal = document.getElementById('gallery_modal');
+            if (modal) modal.showModal();
+        }
+
+        function prevGalleryImage(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            navigateLightbox(-1);
+        }
+
+        function nextGalleryImage(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            navigateLightbox(1);
+        }
+
+        function navigateLightbox(direction) {
+            // Find all currently visible (not hidden by category tabs/pagination) gallery items
+            const visibleItems = Array.from(document.querySelectorAll('.gallery-item:not(.hidden)'));
+            if (visibleItems.length === 0) return;
+
+            const allItems = Array.from(document.querySelectorAll('.gallery-item'));
+            const currentItem = allItems[currentLightboxIndex];
+            let visibleIndex = visibleItems.indexOf(currentItem);
+
+            if (visibleIndex === -1) {
+                visibleIndex = 0;
+            }
+
+            // Cycle index
+            visibleIndex = (visibleIndex + direction + visibleItems.length) % visibleItems.length;
+
+            const nextItem = visibleItems[visibleIndex];
+            currentLightboxIndex = allItems.indexOf(nextItem);
+
+            // Update modal fields
+            document.getElementById('lightbox-img').src = nextItem.dataset.image || '';
+            document.getElementById('lightbox-caption').textContent = nextItem.dataset.caption || '';
+            document.getElementById('lightbox-category').textContent = nextItem.dataset.categoryLabel || '';
+        }
+
+        // Support Arrow keys for Lightbox navigation
+        document.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('gallery_modal');
+            if (modal && modal.open) {
+                if (e.key === 'ArrowLeft') {
+                    prevGalleryImage();
+                } else if (e.key === 'ArrowRight') {
+                    nextGalleryImage();
+                }
+            }
+        });
+
         // Initialize on DOM load
         document.addEventListener('DOMContentLoaded', () => {
             initGalleryPagination();
@@ -877,6 +1225,24 @@
                 viewport.addEventListener('mouseenter', stopDevAutoSlide);
                 viewport.addEventListener('mouseleave', startDevAutoSlide);
             }
+
+            // ── Development card click → open compare modal ──
+            document.querySelectorAll('.development-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    // Populate modal fields from data-* attributes
+                    document.getElementById('modal-title').textContent    = card.dataset.title       || '';
+                    document.getElementById('modal-location').textContent = card.dataset.location    || '';
+                    document.getElementById('modal-desc').textContent     = card.dataset.description || '';
+
+                    // Set images — diff-item-1 (left) = BEFORE, diff-item-2 (right) = AFTER
+                    document.getElementById('modal-before-img').src = card.dataset.before || '';
+                    document.getElementById('modal-after-img').src  = card.dataset.after  || '';
+
+                    // Open the DaisyUI <dialog> modal
+                    const modal = document.getElementById('project_modal');
+                    if (modal) modal.showModal();
+                });
+            });
         });
     </script>
 @endsection

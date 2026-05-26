@@ -3,6 +3,68 @@
 @section('title', 'CMS Content Management - Admin Portal')
 
 @section('content')
+@php
+    if (!function_exists('getMetricFields')) {
+        function getMetricFields($cmsPage, $defaultLabelEn = 'Stat Label') {
+            $val = $cmsPage->content_en ?? '';
+            $number = '';
+            $suffix = '';
+            $labelEn = '';
+            $labelGu = '';
+            $labelHi = '';
+
+            if (strpos($val, '|') !== false) {
+                $parts = explode('|', $val);
+                $number = trim($parts[0] ?? '');
+                $suffix = trim($parts[1] ?? '');
+                $labelEn = trim($parts[2] ?? '');
+                
+                $valGu = $cmsPage->content_gu ?? '';
+                $partsGu = explode('|', $valGu);
+                $labelGu = trim($partsGu[2] ?? '');
+
+                $valHi = $cmsPage->content_hi ?? '';
+                $partsHi = explode('|', $valHi);
+                $labelHi = trim($partsHi[2] ?? '');
+            } else {
+                // Highly robust legacy fallback parsing
+                preg_match('/^([0-9,.]+)\s*(.*?)$/', $val, $matches);
+                $number = trim($matches[1] ?? $val);
+                $rem = trim($matches[2] ?? '');
+                
+                if (preg_match('/^([+%]|[+]\s*[a-zA-Z]+)\s*(.*?)$/', $rem, $submatches)) {
+                    $suffix = trim($submatches[1]);
+                    $labelEn = trim($submatches[2] ?? $defaultLabelEn);
+                } else {
+                    $suffix = '';
+                    $labelEn = !empty($rem) ? $rem : $defaultLabelEn;
+                }
+                
+                // Gujarati
+                $valGu = $cmsPage->content_gu ?? '';
+                preg_match('/^([0-9,.]+)\s*(.*?)$/', $valGu, $matchesGu);
+                $remGu = trim($matchesGu[2] ?? '');
+                if (preg_match('/^([+%]|[+]\s*[a-zA-Z]+)\s*(.*?)$/', $remGu, $submatchesGu)) {
+                    $labelGu = trim($submatchesGu[2] ?? '');
+                } else {
+                    $labelGu = !empty($remGu) ? $remGu : '';
+                }
+
+                // Hindi
+                $valHi = $cmsPage->content_hi ?? '';
+                preg_match('/^([0-9,.]+)\s*(.*?)$/', $valHi, $matchesHi);
+                $remHi = trim($matchesHi[2] ?? '');
+                if (preg_match('/^([+%]|[+]\s*[a-zA-Z]+)\s*(.*?)$/', $remHi, $submatchesHi)) {
+                    $labelHi = trim($submatchesHi[2] ?? '');
+                } else {
+                    $labelHi = !empty($remHi) ? $remHi : '';
+                }
+            }
+
+            return compact('number', 'suffix', 'labelEn', 'labelGu', 'labelHi');
+        }
+    }
+@endphp
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
     <div>
         <h1 class="font-heading font-extrabold text-3xl text-base-content">CMS Content</h1>
@@ -336,102 +398,154 @@
             <form action="{{ route('admin.cms.update-section') }}" method="POST" class="space-y-8">
                 @csrf
                 
-                <!-- Metric 1: Roads counter title -->
-                <div class="space-y-3 pb-6 border-b border-base-200">
-                    <div class="flex items-center gap-2 text-primary font-bold">
-                        <i class="fa-solid fa-road text-base"></i>
-                        <span class="text-xs uppercase tracking-wider font-extrabold text-base-content/85">Metric 1: Roads Built Banner Title</span>
+                <!-- Metric 1: Roads Built Highlight -->
+                @php
+                    $roads = getMetricFields($pages['achievement_roads'], 'Roads Completed');
+                @endphp
+                <div class="p-5 bg-base-200/40 border border-base-300 rounded-2xl space-y-4 shadow-sm hover:border-primary/30 transition-colors duration-300">
+                    <div class="flex items-center gap-2 text-primary font-extrabold">
+                        <div class="bg-primary/10 p-2 rounded-lg text-primary"><i class="fa-solid fa-road text-base"></i></div>
+                        <span class="text-xs uppercase tracking-wider text-base-content/85">Metric 1: Roads Built Highlight</span>
                     </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        <!-- English -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-primary/15 border-primary/20 text-primary font-bold text-[9px]">EN</span>
-                            <x-float-input type="text" name="content[achievement_roads][content_en]" label="Roads Stat (English)" value="{{ $pages['achievement_roads']->content_en ?? '' }}" required="true" />
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+                        <!-- Value & Suffix (Shared / Global fields) -->
+                        <div class="lg:col-span-4 grid grid-cols-2 gap-3 bg-base-100 p-4 border border-base-300 rounded-xl">
+                            <div class="col-span-2 text-[10px] font-bold text-base-content/50 uppercase tracking-widest mb-1">Numeric Stat</div>
+                            <x-float-input type="text" name="content[achievement_roads][number]" label="Value (e.g. 12)" value="{{ $roads['number'] }}" required="true" />
+                            <x-float-input type="text" name="content[achievement_roads][suffix]" label="Suffix (e.g. + km)" value="{{ $roads['suffix'] }}" />
                         </div>
-                        <!-- Gujarati -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-secondary/15 border-secondary/20 text-secondary font-bold text-[9px]">GU</span>
-                            <x-float-input type="text" name="content[achievement_roads][content_gu]" label="Roads Stat (ગુજરાતી)" value="{{ $pages['achievement_roads']->content_gu ?? '' }}" />
-                        </div>
-                        <!-- Hindi -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-accent/15 border-accent/20 text-accent font-bold text-[9px]">HI</span>
-                            <x-float-input type="text" name="content[achievement_roads][content_hi]" label="Roads Stat (हिंदी)" value="{{ $pages['achievement_roads']->content_hi ?? '' }}" />
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Metric 2: Lights counter title -->
-                <div class="space-y-3 pb-6 border-b border-base-200">
-                    <div class="flex items-center gap-2 text-accent font-bold">
-                        <i class="fa-solid fa-lightbulb text-base"></i>
-                        <span class="text-xs uppercase tracking-wider font-extrabold text-base-content/85">Metric 2: LED Lights Installed Title</span>
-                    </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        <!-- English -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-primary/15 border-primary/20 text-primary font-bold text-[9px]">EN</span>
-                            <x-float-input type="text" name="content[achievement_lights][content_en]" label="LED Lights Stat (English)" value="{{ $pages['achievement_lights']->content_en ?? '' }}" required="true" />
-                        </div>
-                        <!-- Gujarati -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-secondary/15 border-secondary/20 text-secondary font-bold text-[9px]">GU</span>
-                            <x-float-input type="text" name="content[achievement_lights][content_gu]" label="LED Lights Stat (ગુજરાતી)" value="{{ $pages['achievement_lights']->content_gu ?? '' }}" />
-                        </div>
-                        <!-- Hindi -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-accent/15 border-accent/20 text-accent font-bold text-[9px]">HI</span>
-                            <x-float-input type="text" name="content[achievement_lights][content_hi]" label="LED Lights Stat (हिंदी)" value="{{ $pages['achievement_lights']->content_hi ?? '' }}" />
+                        <!-- Localized Description Labels -->
+                        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-base-100 p-4 border border-base-300 rounded-xl">
+                            <div class="col-span-full text-[10px] font-bold text-base-content/50 uppercase tracking-widest mb-1 font-heading">Localized Description Labels</div>
+                            <!-- English -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-primary/15 border-primary/20 text-primary font-bold text-[9px]">EN</span>
+                                <x-float-input type="text" name="content[achievement_roads][label_en]" label="Label (English)" value="{{ $roads['labelEn'] }}" required="true" />
+                            </div>
+                            <!-- Gujarati -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-secondary/15 border-secondary/20 text-secondary font-bold text-[9px]">GU</span>
+                                <x-float-input type="text" name="content[achievement_roads][label_gu]" label="Label (ગુજરાતી)" value="{{ $roads['labelGu'] }}" />
+                            </div>
+                            <!-- Hindi -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-accent/15 border-accent/20 text-accent font-bold text-[9px]">HI</span>
+                                <x-float-input type="text" name="content[achievement_roads][label_hi]" label="Label (हिंदी)" value="{{ $roads['labelHi'] }}" />
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Metric 3: Grievance resolution title -->
-                <div class="space-y-3 pb-6 border-b border-base-200">
-                    <div class="flex items-center gap-2 text-success font-bold">
-                        <i class="fa-solid fa-circle-check text-base"></i>
-                        <span class="text-xs uppercase tracking-wider font-extrabold text-base-content/85">Metric 3: Grievances Resolved Title</span>
+                <!-- Metric 2: Smart LED Streetlights -->
+                @php
+                    $lights = getMetricFields($pages['achievement_lights'], 'LED Lights Installed');
+                @endphp
+                <div class="p-5 bg-base-200/40 border border-base-300 rounded-2xl space-y-4 shadow-sm hover:border-accent/30 transition-colors duration-300">
+                    <div class="flex items-center gap-2 text-accent font-extrabold">
+                        <div class="bg-accent/10 p-2 rounded-lg text-accent"><i class="fa-solid fa-lightbulb text-base"></i></div>
+                        <span class="text-xs uppercase tracking-wider text-base-content/85">Metric 2: LED Lights Installed Highlight</span>
                     </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        <!-- English -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-primary/15 border-primary/20 text-primary font-bold text-[9px]">EN</span>
-                            <x-float-input type="text" name="content[achievement_grievances][content_en]" label="Grievances Stat (English)" value="{{ $pages['achievement_grievances']->content_en ?? '' }}" required="true" />
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+                        <!-- Value & Suffix (Shared / Global fields) -->
+                        <div class="lg:col-span-4 grid grid-cols-2 gap-3 bg-base-100 p-4 border border-base-300 rounded-xl">
+                            <div class="col-span-2 text-[10px] font-bold text-base-content/50 uppercase tracking-widest mb-1">Numeric Stat</div>
+                            <x-float-input type="text" name="content[achievement_lights][number]" label="Value (e.g. 1500)" value="{{ $lights['number'] }}" required="true" />
+                            <x-float-input type="text" name="content[achievement_lights][suffix]" label="Suffix (e.g. +)" value="{{ $lights['suffix'] }}" />
                         </div>
-                        <!-- Gujarati -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-secondary/15 border-secondary/20 text-secondary font-bold text-[9px]">GU</span>
-                            <x-float-input type="text" name="content[achievement_grievances][content_gu]" label="Grievances Stat (ગુજરાતી)" value="{{ $pages['achievement_grievances']->content_gu ?? '' }}" />
-                        </div>
-                        <!-- Hindi -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-accent/15 border-accent/20 text-accent font-bold text-[9px]">HI</span>
-                            <x-float-input type="text" name="content[achievement_grievances][content_hi]" label="Grievances Stat (हिंदी)" value="{{ $pages['achievement_grievances']->content_hi ?? '' }}" />
+                        <!-- Localized Description Labels -->
+                        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-base-100 p-4 border border-base-300 rounded-xl">
+                            <div class="col-span-full text-[10px] font-bold text-base-content/50 uppercase tracking-widest mb-1 font-heading">Localized Description Labels</div>
+                            <!-- English -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-primary/15 border-primary/20 text-primary font-bold text-[9px]">EN</span>
+                                <x-float-input type="text" name="content[achievement_lights][label_en]" label="Label (English)" value="{{ $lights['labelEn'] }}" required="true" />
+                            </div>
+                            <!-- Gujarati -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-secondary/15 border-secondary/20 text-secondary font-bold text-[9px]">GU</span>
+                                <x-float-input type="text" name="content[achievement_lights][label_gu]" label="Label (ગુજરાતી)" value="{{ $lights['labelGu'] }}" />
+                            </div>
+                            <!-- Hindi -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-accent/15 border-accent/20 text-accent font-bold text-[9px]">HI</span>
+                                <x-float-input type="text" name="content[achievement_lights][label_hi]" label="Label (हिंदी)" value="{{ $lights['labelHi'] }}" />
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Metric 4: Health counter title -->
-                <div class="space-y-3 pb-2">
-                    <div class="flex items-center gap-2 text-warning font-bold">
-                        <i class="fa-solid fa-hand-holding-heart text-base"></i>
-                        <span class="text-xs uppercase tracking-wider font-extrabold text-base-content/85">Metric 4: Health Camps Done Title</span>
+                <!-- Metric 3: Grievance Resolution -->
+                @php
+                    $grievances = getMetricFields($pages['achievement_grievances'], 'Grievances Resolved');
+                @endphp
+                <div class="p-5 bg-base-200/40 border border-base-300 rounded-2xl space-y-4 shadow-sm hover:border-success/30 transition-colors duration-300">
+                    <div class="flex items-center gap-2 text-success font-extrabold">
+                        <div class="bg-success/10 p-2 rounded-lg text-success"><i class="fa-solid fa-circle-check text-base"></i></div>
+                        <span class="text-xs uppercase tracking-wider text-base-content/85">Metric 3: Grievances Resolved Highlight</span>
                     </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        <!-- English -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-primary/15 border-primary/20 text-primary font-bold text-[9px]">EN</span>
-                            <x-float-input type="text" name="content[achievement_camps][content_en]" label="Health Camps Stat (English)" value="{{ $pages['achievement_camps']->content_en ?? '' }}" required="true" />
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+                        <!-- Value & Suffix (Shared / Global fields) -->
+                        <div class="lg:col-span-4 grid grid-cols-2 gap-3 bg-base-100 p-4 border border-base-300 rounded-xl">
+                            <div class="col-span-2 text-[10px] font-bold text-base-content/50 uppercase tracking-widest mb-1">Numeric Stat</div>
+                            <x-float-input type="text" name="content[achievement_grievances][number]" label="Value (e.g. 98)" value="{{ $grievances['number'] }}" required="true" />
+                            <x-float-input type="text" name="content[achievement_grievances][suffix]" label="Suffix (e.g. %)" value="{{ $grievances['suffix'] }}" />
                         </div>
-                        <!-- Gujarati -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-secondary/15 border-secondary/20 text-secondary font-bold text-[9px]">GU</span>
-                            <x-float-input type="text" name="content[achievement_camps][content_gu]" label="Health Camps Stat (ગુજરાતી)" value="{{ $pages['achievement_camps']->content_gu ?? '' }}" />
+                        <!-- Localized Description Labels -->
+                        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-base-100 p-4 border border-base-300 rounded-xl">
+                            <div class="col-span-full text-[10px] font-bold text-base-content/50 uppercase tracking-widest mb-1 font-heading">Localized Description Labels</div>
+                            <!-- English -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-primary/15 border-primary/20 text-primary font-bold text-[9px]">EN</span>
+                                <x-float-input type="text" name="content[achievement_grievances][label_en]" label="Label (English)" value="{{ $grievances['labelEn'] }}" required="true" />
+                            </div>
+                            <!-- Gujarati -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-secondary/15 border-secondary/20 text-secondary font-bold text-[9px]">GU</span>
+                                <x-float-input type="text" name="content[achievement_grievances][label_gu]" label="Label (ગુજરાતી)" value="{{ $grievances['labelGu'] }}" />
+                            </div>
+                            <!-- Hindi -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-accent/15 border-accent/20 text-accent font-bold text-[9px]">HI</span>
+                                <x-float-input type="text" name="content[achievement_grievances][label_hi]" label="Label (हिंदी)" value="{{ $grievances['labelHi'] }}" />
+                            </div>
                         </div>
-                        <!-- Hindi -->
-                        <div class="relative">
-                            <span class="absolute top-2 right-3 z-10 badge badge-xs bg-accent/15 border-accent/20 text-accent font-bold text-[9px]">HI</span>
-                            <x-float-input type="text" name="content[achievement_camps][content_hi]" label="Health Camps Stat (हिंदी)" value="{{ $pages['achievement_camps']->content_hi ?? '' }}" />
+                    </div>
+                </div>
+
+                <!-- Metric 4: Free Health Camps -->
+                @php
+                    $camps = getMetricFields($pages['achievement_camps'], 'Health Camps Done');
+                @endphp
+                <div class="p-5 bg-base-200/40 border border-base-300 rounded-2xl space-y-4 shadow-sm hover:border-warning/30 transition-colors duration-300 font-sans">
+                    <div class="flex items-center gap-2 text-warning font-extrabold">
+                        <div class="bg-warning/10 p-2 rounded-lg text-warning"><i class="fa-solid fa-hand-holding-heart text-base"></i></div>
+                        <span class="text-xs uppercase tracking-wider text-base-content/85">Metric 4: Health Camps Done Highlight</span>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+                        <!-- Value & Suffix (Shared / Global fields) -->
+                        <div class="lg:col-span-4 grid grid-cols-2 gap-3 bg-base-100 p-4 border border-base-300 rounded-xl">
+                            <div class="col-span-2 text-[10px] font-bold text-base-content/50 uppercase tracking-widest mb-1">Numeric Stat</div>
+                            <x-float-input type="text" name="content[achievement_camps][number]" label="Value (e.g. 50)" value="{{ $camps['number'] }}" required="true" />
+                            <x-float-input type="text" name="content[achievement_camps][suffix]" label="Suffix (e.g. +)" value="{{ $camps['suffix'] }}" />
+                        </div>
+                        <!-- Localized Description Labels -->
+                        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-base-100 p-4 border border-base-300 rounded-xl">
+                            <div class="col-span-full text-[10px] font-bold text-base-content/50 uppercase tracking-widest mb-1 font-heading">Localized Description Labels</div>
+                            <!-- English -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-primary/15 border-primary/20 text-primary font-bold text-[9px]">EN</span>
+                                <x-float-input type="text" name="content[achievement_camps][label_en]" label="Label (English)" value="{{ $camps['labelEn'] }}" required="true" />
+                            </div>
+                            <!-- Gujarati -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-secondary/15 border-secondary/20 text-secondary font-bold text-[9px]">GU</span>
+                                <x-float-input type="text" name="content[achievement_camps][label_gu]" label="Label (ગુજરાતી)" value="{{ $camps['labelGu'] }}" />
+                            </div>
+                            <!-- Hindi -->
+                            <div class="relative">
+                                <span class="absolute top-2 right-3 z-10 badge badge-xs bg-accent/15 border-accent/20 text-accent font-bold text-[9px]">HI</span>
+                                <x-float-input type="text" name="content[achievement_camps][label_hi]" label="Label (हिंदी)" value="{{ $camps['labelHi'] }}" />
+                            </div>
                         </div>
                     </div>
                 </div>
