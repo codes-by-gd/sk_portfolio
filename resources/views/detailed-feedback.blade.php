@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('title', __('messages.form.detailed_title') . ' - Sachin Khandelwal')
+@section('title', 'Feedback Survey — Sachin Khandelwal, Ward 7')
+@section('meta_description', 'Submit your detailed feedback, share development concerns and rate ward services for Sachin Khandelwal, Corporator & BJP Adhyaksh, Vadodara Ward No. 7.')
 
 @section('content')
 <section class="py-12 bg-gradient-to-b from-base-100 via-base-100 to-base-200 min-h-screen">
@@ -62,37 +63,45 @@
                         @endif
 
                         <!-- Feedback Survey Form -->
-                        <form action="{{ route('feedback.detailed.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4" id="detailed-feedback-form">
+                        <form action="{{ route('feedback.detailed.store') }}" method="POST" enctype="multipart/form-data" class="space-y-3" id="detailed-feedback-form">
                             @csrf
 
                             <!-- Row 1: Name and Mobile Number -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <label class="floating-label w-full block">
-                                    <span>{{ __('messages.form.name') }} <span class="text-error font-extrabold">*</span></span>
-                                    <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="{{ __('messages.form.name') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
-                                    <div class="validator-hint text-[10px] mt-1 font-semibold text-error/90">Please enter your name</div>
-                                </label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="floating-label w-full block">
+                                        <span>{{ __('messages.form.name') }} <span class="text-error font-extrabold">*</span></span>
+                                        <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="{{ __('messages.form.name') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
+                                    </label>
+                                    <div class="validator-hint text-[10px] font-semibold text-error/90">Please enter your name</div>
+                                </div>
 
-                                <label class="floating-label w-full block">
-                                    <span>{{ __('messages.form.mobile') }} <span class="text-error font-extrabold">*</span></span>
-                                    <input type="tel" name="mobile_number" id="mobile_number" value="{{ old('mobile_number') }}" placeholder="{{ __('messages.form.mobile') }}" required pattern="[0-9]{10}" class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
-                                    <div class="validator-hint text-[10px] mt-1 font-semibold text-error/90">Enter a 10-digit mobile number (e.g. 9876543210)</div>
-                                </label>
+                                <div>
+                                    <label class="floating-label w-full block">
+                                        <span>{{ __('messages.form.mobile') }} <span class="text-error font-extrabold">*</span></span>
+                                        <input type="tel" name="mobile_number" id="mobile_number" value="{{ old('mobile_number') }}" placeholder="{{ __('messages.form.mobile') }}" required pattern="[0-9]{10}" class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
+                                    </label>
+                                    <div class="validator-hint text-[10px] font-semibold text-error/90">Enter a 10-digit mobile number (e.g. 9876543210)</div>
+                                </div>
                             </div>
 
                             <!-- Row 2: Ward Area and Feedback Title -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <label class="floating-label w-full block">
-                                    <span>{{ __('messages.form.area') }} <span class="text-error font-extrabold">*</span></span>
-                                    <input type="text" name="area" id="area" value="{{ old('area') }}" placeholder="{{ __('messages.form.area') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
-                                    <div class="validator-hint text-[10px] mt-1 font-semibold text-error/90">Ward Area or Block is required</div>
-                                </label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="floating-label w-full block">
+                                        <span>{{ __('messages.form.area') }} <span class="text-error font-extrabold">*</span></span>
+                                        <input type="text" name="area" id="area" value="{{ old('area') }}" placeholder="{{ __('messages.form.area') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
+                                    </label>
+                                    <div class="validator-hint text-[10px] font-semibold text-error/90">Ward Area or Block is required</div>
+                                </div>
 
-                                <label class="floating-label w-full block">
-                                    <span>{{ __('messages.form.title') }} <span class="text-error font-extrabold">*</span></span>
-                                    <input type="text" name="title" id="title" value="{{ old('title') }}" placeholder="{{ __('messages.form.title') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
-                                    <div class="validator-hint text-[10px] mt-1 font-semibold text-error/90">A brief title is required</div>
-                                </label>
+                                <div>
+                                    <label class="floating-label w-full block">
+                                        <span>{{ __('messages.form.title') }} <span class="text-error font-extrabold">*</span></span>
+                                        <input type="text" name="title" id="title" value="{{ old('title') }}" placeholder="{{ __('messages.form.title') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
+                                    </label>
+                                    <div class="validator-hint text-[10px] font-semibold text-error/90">A brief title is required</div>
+                                </div>
                             </div>
 
                             <!-- DaisyUI Star Rating Input block nested perfectly -->
@@ -115,7 +124,7 @@
                                     class="absolute left-4 top-2.5 text-[10px] text-base-content/50 font-extrabold uppercase tracking-wider transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-placeholder-shown:font-medium peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:top-2.5 peer-focus:text-[10px] peer-focus:text-primary peer-focus:font-extrabold peer-focus:uppercase peer-focus:tracking-wider pointer-events-none">
                                     {{ __('messages.form.message') }}
                                 </label>
-                                <div class="validator-hint text-[10px] mt-1 font-semibold text-error/90 font-sans">Please share your feedback details</div>
+                                <div class="validator-hint text-[10px] font-semibold text-error/90 font-sans">Please share your feedback details</div>
                             </div>
 
                             <!-- Unified Media Upload & Live Camera Grid Row -->

@@ -141,3 +141,48 @@
   animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Validator Hint — collapsed by default, revealed on invalid input
+   ═══════════════════════════════════════════════════════════════ */
+.validator-hint {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  margin-top: 0;
+  transition: max-height 0.2s ease, opacity 0.18s ease, margin-top 0.15s ease;
+}
+
+/* Expand hint when the adjacent input is invalid after user interaction */
+.validator:user-invalid ~ .validator-hint,
+.validator:not(:placeholder-shown):invalid ~ .validator-hint {
+  max-height: 2rem;
+  opacity: 1;
+  margin-top: 0.25rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   iOS Auto-Zoom Prevention — inputs below 16px font trigger zoom
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="number"],
+  input[type="search"],
+  input[type="password"],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Scrollbar Hide Utility — for horizontally scrollable tab rows
+   ═══════════════════════════════════════════════════════════════ */
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

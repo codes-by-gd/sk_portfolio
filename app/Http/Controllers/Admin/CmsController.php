@@ -30,7 +30,11 @@ class CmsController extends Controller
             'content_hi' => $validated['content_hi'] ?? $validated['content_en'],
         ]);
 
-        \Illuminate\Support\Facades\Cache::forget('site_cms_pages');
+        // Invalidate all locale-specific CMS caches so the updated content
+        // is immediately visible regardless of which language the visitor uses.
+        foreach (['en', 'gu', 'hi'] as $locale) {
+            \Illuminate\Support\Facades\Cache::forget('site_cms_pages_' . $locale);
+        }
 
         return back()->with('success', "CMS key '{$cms->key}' updated successfully.");
     }
@@ -80,7 +84,9 @@ class CmsController extends Controller
             }
         }
 
-        \Illuminate\Support\Facades\Cache::forget('site_cms_pages');
+        foreach (['en', 'gu', 'hi'] as $locale) {
+            \Illuminate\Support\Facades\Cache::forget('site_cms_pages_' . $locale);
+        }
 
         return back()->with('success', 'CMS content section updated successfully.');
     }

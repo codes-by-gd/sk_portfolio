@@ -278,6 +278,49 @@ To keep the codebase cleanly organized and prevent generic template overlaps:
 - All buttons must meet target tap targets of at least `48px x 48px`.
 - Form inputs must avoid auto-zooming on iOS (set appropriate font size).
 
+### Mobile-Specific Implementation Patterns
+
+#### A. Hero CTA Button Stacking (Compulsory)
+When two side-by-side CTA buttons are in the hero section, they MUST stack vertically on mobile and go side-by-side on `sm:` breakpoint (640px+):
+```html
+<div class="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-3 sm:gap-4">
+    <a class="btn btn-primary btn-md sm:btn-lg ...">Primary CTA</a>
+    <a class="btn btn-outline btn-secondary btn-md sm:btn-lg ...">Secondary CTA</a>
+</div>
+```
+
+#### B. Category Filter Tabs — Horizontal Scroll on Mobile
+Category filter tabs (gallery, development categories) must use a horizontally-scrollable row on mobile and wrapped flex on `sm:` viewports. Always add `shrink-0` and `snap-start` to individual tab buttons:
+```html
+<div class="flex sm:flex-wrap overflow-x-auto sm:overflow-visible sm:justify-center gap-2 pb-1 sm:pb-0 snap-x"
+     style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
+    <button class="btn btn-sm gallery-tab-btn shrink-0 snap-start" ...>Tab Label</button>
+</div>
+```
+
+#### C. Pagination — Flex-Wrap + Max Width Constraint
+Pagination number containers must always use `flex-wrap` to prevent overflow when many pages exist. Wrap inside a `max-w-[calc(100vw-8rem)]` to ensure prev/next buttons stay within viewport:
+```html
+<div class="flex flex-wrap justify-center items-center gap-2">
+    <button class="btn btn-sm btn-circle shrink-0">←</button>
+    <div class="flex flex-wrap justify-center gap-1.5 max-w-[calc(100vw-8rem)]" id="page-numbers"></div>
+    <button class="btn btn-sm btn-circle shrink-0">→</button>
+</div>
+```
+
+#### D. Section Padding — Mobile Reduction
+Large desktop section paddings (`py-24`, `p-8`, `p-12`) must scale down on mobile. Use responsive padding prefixes:
+- `py-16 sm:py-24 lg:py-40` for hero sections
+- `p-4 sm:p-8` for stat/metric blocks
+- `p-5 sm:p-8 md:p-12` for carousel containers
+
+#### E. Navbar Brand Shrink
+On mobile (`< sm`), the navbar brand must only show the SK badge + first name (no designation subtitle). The subtitle span must use `hidden sm:flex` to hide on tiny screens. Badge size should be `w-9 h-9 sm:w-10 sm:h-10`:
+```html
+<span class="font-heading font-extrabold text-base sm:text-lg ...">Sachin Khandelwal</span>
+<span class="hidden sm:flex items-center gap-1 ...">BJP Adhyaksh · Ward 7</span>
+```
+
 ---
 
 ## 8. Layout Separation Architecture (Frontend vs Backend)

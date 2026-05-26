@@ -37,10 +37,10 @@
         }
     @endphp
     <!-- Hero Section -->
-    <section id="home" class="relative overflow-hidden bg-gradient-to-b from-base-100 via-base-100 to-base-200 py-24 lg:py-40">
-        <!-- Background decorative blobs -->
-        <div class="absolute top-1/4 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-10 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+    <section id="home" class="relative overflow-hidden bg-gradient-to-b from-base-100 via-base-100 to-base-200 py-16 sm:py-24 lg:py-40">
+        <!-- Background decorative blobs (no animate-pulse — unnecessary GPU repaints) -->
+        <div class="absolute top-1/4 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none"></div>
         <!-- Radial saffron hero glow top-right -->
         <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,138,61,0.07),transparent_55%)] pointer-events-none"></div>
         <!-- Laxmi Vilas Palace silhouette watermark -->
@@ -82,9 +82,10 @@
             </svg>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             <!-- Left Info Column -->
-            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+            <!-- Left Info Column — on mobile this appears second (below portrait) -->
+            <div class="lg:col-span-7 space-y-4 lg:space-y-6 text-center lg:text-left order-last lg:order-first">
                 <!-- Greeting badge with lotus accent -->
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-widest">
                     <!-- Micro lotus SVG -->
@@ -99,7 +100,7 @@
                     {{ $cms['hero_greeting'] ?? 'Namaste & Welcome' }}
                 </span>
                 
-                <h1 class="font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl text-base-content leading-tight">
+                <h1 class="font-heading font-extrabold text-3xl sm:text-5xl lg:text-6xl text-base-content leading-tight">
                     {{ $cms['hero_title'] ?? 'Serving the People of Vadodara Ward No. 7' }}
                 </h1>
 
@@ -116,23 +117,23 @@
                     {{ __('messages.hero.designation') }}
                 </div>
                 
-                <p class="text-lg text-base-content/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                <p class="text-sm sm:text-lg text-base-content/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                     {{ $cms['hero_mission'] ?? 'Committed to development, public welfare, and transparent leadership.' }}
                 </p>
 
-                <div class="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
-                    <a href="#feedback" class="btn btn-primary btn-md sm:btn-lg shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200 rounded-xl gap-2 text-white">
+                <div class="flex flex-row sm:flex-row flex-wrap justify-center lg:justify-start gap-3 sm:gap-4 pt-2 lg:pt-4 w-full">
+                    <a href="#feedback" class="btn btn-primary btn-sm sm:btn-lg shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200 rounded-xl gap-2 text-white flex-1 sm:flex-none">
                         <i class="fa-solid fa-comment-dots"></i> {{ __('messages.hero.cta_feedback') }}
                     </a>
-                    <a href="#development" class="btn btn-outline btn-secondary btn-md sm:btn-lg transition-all duration-200 rounded-xl gap-2 hover:text-white hover:shadow-md hover:shadow-secondary/20">
+                    <a href="#development" class="btn btn-outline btn-secondary btn-sm sm:btn-lg transition-all duration-200 rounded-xl gap-2 hover:text-white hover:shadow-md hover:shadow-secondary/20 flex-1 sm:flex-none">
                         <i class="fa-solid fa-helmet-safety"></i> {{ __('messages.hero.cta_work') }}
                     </a>
                 </div>
             </div>
 
-            <!-- Right Portrait Image Column -->
-            <div class="lg:col-span-5 flex justify-center">
-                <div class="relative w-80 sm:w-[26rem] lg:w-[28rem] aspect-[3/4]">
+            <!-- Right Portrait Image Column — on mobile this appears first (above text) -->
+            <div class="lg:col-span-5 flex justify-center order-first lg:order-last">
+                <div class="relative w-56 sm:w-[26rem] lg:w-[28rem] aspect-[3/4]">
                     <!-- Elegant background glow shapes -->
                     <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/15 rounded-[2.5rem] rotate-6 scale-95 -z-10 animate-pulse"></div>
                     <div class="absolute inset-0 bg-base-100 rounded-[2.5rem] border-2 border-base-300 -z-10 shadow-xl"></div>
@@ -227,24 +228,26 @@
                 @php
                     $roads = parseMetric($cms['achievement_roads'] ?? '12 | + km | Roads Built', '12', '+ km', 'Roads Built');
                 @endphp
-                <div class="stat p-8 text-center flex flex-col items-center justify-center group hover:bg-white/[0.02] transition-all duration-300">
-                    <div class="stat-figure text-primary mb-3">
-                        <div class="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300 shadow-md shadow-primary/5">
-                            <i class="fa-solid fa-road text-2xl text-primary"></i>
+                <div class="stat p-4 sm:p-8 flex flex-row items-center gap-4 lg:flex-col lg:items-center lg:justify-center lg:text-center group hover:bg-white/[0.02] transition-all duration-300">
+                    <div class="stat-figure text-primary shrink-0 lg:mb-3">
+                        <div class="w-12 h-12 lg:w-16 lg:h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300 shadow-md shadow-primary/5">
+                            <i class="fa-solid fa-road text-xl lg:text-2xl text-primary"></i>
                         </div>
                     </div>
-                    <div class="flex items-baseline justify-center gap-1.5">
-                        <span class="font-heading font-black text-4xl sm:text-5xl text-primary tracking-tight transition-transform duration-300 group-hover:scale-105">
-                            {{ $roads['number'] }}
-                        </span>
-                        @if(!empty($roads['suffix']))
-                            <span class="text-xl sm:text-2xl font-bold text-primary/75 font-heading">
-                                {{ $roads['suffix'] }}
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-baseline gap-1.5 lg:justify-center">
+                            <span class="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-primary tracking-tight transition-transform duration-300 group-hover:scale-105">
+                                {{ $roads['number'] }}
                             </span>
-                        @endif
-                    </div>
-                    <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-2 font-heading">
-                        {{ $roads['label'] }}
+                            @if(!empty($roads['suffix']))
+                                <span class="text-lg lg:text-2xl font-bold text-primary/75 font-heading">
+                                    {{ $roads['suffix'] }}
+                                </span>
+                            @endif
+                        </div>
+                        <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-1 font-heading">
+                            {{ $roads['label'] }}
+                        </div>
                     </div>
                 </div>
 
@@ -252,24 +255,26 @@
                 @php
                     $lights = parseMetric($cms['achievement_lights'] ?? '1,500 | + | LED Lights Installed', '1,500', '+', 'LED Lights Installed');
                 @endphp
-                <div class="stat p-8 text-center flex flex-col items-center justify-center group hover:bg-white/[0.02] transition-all duration-300">
-                    <div class="stat-figure text-accent mb-3">
-                        <div class="w-16 h-16 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-accent/20 transition-all duration-300 shadow-md shadow-accent/5">
-                            <i class="fa-solid fa-lightbulb text-2xl text-accent"></i>
+                <div class="stat p-4 sm:p-8 flex flex-row items-center gap-4 lg:flex-col lg:items-center lg:justify-center lg:text-center group hover:bg-white/[0.02] transition-all duration-300">
+                    <div class="stat-figure text-accent shrink-0 lg:mb-3">
+                        <div class="w-12 h-12 lg:w-16 lg:h-16 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-accent/20 transition-all duration-300 shadow-md shadow-accent/5">
+                            <i class="fa-solid fa-lightbulb text-xl lg:text-2xl text-accent"></i>
                         </div>
                     </div>
-                    <div class="flex items-baseline justify-center gap-1.5">
-                        <span class="font-heading font-black text-4xl sm:text-5xl text-accent tracking-tight transition-transform duration-300 group-hover:scale-105">
-                            {{ $lights['number'] }}
-                        </span>
-                        @if(!empty($lights['suffix']))
-                            <span class="text-xl sm:text-2xl font-bold text-accent/75 font-heading">
-                                {{ $lights['suffix'] }}
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-baseline gap-1.5 lg:justify-center">
+                            <span class="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-accent tracking-tight transition-transform duration-300 group-hover:scale-105">
+                                {{ $lights['number'] }}
                             </span>
-                        @endif
-                    </div>
-                    <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-2 font-heading">
-                        {{ $lights['label'] }}
+                            @if(!empty($lights['suffix']))
+                                <span class="text-lg lg:text-2xl font-bold text-accent/75 font-heading">
+                                    {{ $lights['suffix'] }}
+                                </span>
+                            @endif
+                        </div>
+                        <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-1 font-heading">
+                            {{ $lights['label'] }}
+                        </div>
                     </div>
                 </div>
 
@@ -277,24 +282,26 @@
                 @php
                     $grievances = parseMetric($cms['achievement_grievances'] ?? '98 | % | Grievances Resolved', '98', '%', 'Grievances Resolved');
                 @endphp
-                <div class="stat p-8 text-center flex flex-col items-center justify-center group hover:bg-white/[0.02] transition-all duration-300">
-                    <div class="stat-figure text-success mb-3">
-                        <div class="w-16 h-16 rounded-2xl bg-success/10 border border-success/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-success/20 transition-all duration-300 shadow-md shadow-success/5">
-                            <i class="fa-solid fa-circle-check text-2xl text-success"></i>
+                <div class="stat p-4 sm:p-8 flex flex-row items-center gap-4 lg:flex-col lg:items-center lg:justify-center lg:text-center group hover:bg-white/[0.02] transition-all duration-300">
+                    <div class="stat-figure text-success shrink-0 lg:mb-3">
+                        <div class="w-12 h-12 lg:w-16 lg:h-16 rounded-2xl bg-success/10 border border-success/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-success/20 transition-all duration-300 shadow-md shadow-success/5">
+                            <i class="fa-solid fa-circle-check text-xl lg:text-2xl text-success"></i>
                         </div>
                     </div>
-                    <div class="flex items-baseline justify-center gap-1.5">
-                        <span class="font-heading font-black text-4xl sm:text-5xl text-success tracking-tight transition-transform duration-300 group-hover:scale-105">
-                            {{ $grievances['number'] }}
-                        </span>
-                        @if(!empty($grievances['suffix']))
-                            <span class="text-xl sm:text-2xl font-bold text-success/75 font-heading">
-                                {{ $grievances['suffix'] }}
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-baseline gap-1.5 lg:justify-center">
+                            <span class="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-success tracking-tight transition-transform duration-300 group-hover:scale-105">
+                                {{ $grievances['number'] }}
                             </span>
-                        @endif
-                    </div>
-                    <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-2 font-heading">
-                        {{ $grievances['label'] }}
+                            @if(!empty($grievances['suffix']))
+                                <span class="text-lg lg:text-2xl font-bold text-success/75 font-heading">
+                                    {{ $grievances['suffix'] }}
+                                </span>
+                            @endif
+                        </div>
+                        <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-1 font-heading">
+                            {{ $grievances['label'] }}
+                        </div>
                     </div>
                 </div>
 
@@ -302,24 +309,26 @@
                 @php
                     $camps = parseMetric($cms['achievement_camps'] ?? '50 | + | Health Camps Done', '50', '+', 'Health Camps Done');
                 @endphp
-                <div class="stat p-8 text-center flex flex-col items-center justify-center group hover:bg-white/[0.02] transition-all duration-300">
-                    <div class="stat-figure text-warning mb-3">
-                        <div class="w-16 h-16 rounded-2xl bg-warning/10 border border-warning/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-warning/20 transition-all duration-300 shadow-md shadow-warning/5">
-                            <i class="fa-solid fa-hand-holding-heart text-2xl text-warning"></i>
+                <div class="stat p-4 sm:p-8 flex flex-row items-center gap-4 lg:flex-col lg:items-center lg:justify-center lg:text-center group hover:bg-white/[0.02] transition-all duration-300">
+                    <div class="stat-figure text-warning shrink-0 lg:mb-3">
+                        <div class="w-12 h-12 lg:w-16 lg:h-16 rounded-2xl bg-warning/10 border border-warning/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-warning/20 transition-all duration-300 shadow-md shadow-warning/5">
+                            <i class="fa-solid fa-hand-holding-heart text-xl lg:text-2xl text-warning"></i>
                         </div>
                     </div>
-                    <div class="flex items-baseline justify-center gap-1.5">
-                        <span class="font-heading font-black text-4xl sm:text-5xl text-warning tracking-tight transition-transform duration-300 group-hover:scale-105">
-                            {{ $camps['number'] }}
-                        </span>
-                        @if(!empty($camps['suffix']))
-                            <span class="text-xl sm:text-2xl font-bold text-warning/75 font-heading">
-                                {{ $camps['suffix'] }}
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-baseline gap-1.5 lg:justify-center">
+                            <span class="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-warning tracking-tight transition-transform duration-300 group-hover:scale-105">
+                                {{ $camps['number'] }}
                             </span>
-                        @endif
-                    </div>
-                    <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-2 font-heading">
-                        {{ $camps['label'] }}
+                            @if(!empty($camps['suffix']))
+                                <span class="text-lg lg:text-2xl font-bold text-warning/75 font-heading">
+                                    {{ $camps['suffix'] }}
+                                </span>
+                            @endif
+                        </div>
+                        <div class="stat-desc text-xs sm:text-sm text-neutral-content/70 font-extrabold uppercase tracking-widest mt-1 font-heading">
+                            {{ $camps['label'] }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -470,7 +479,7 @@
 
             <!-- Feedback Carousel Wrapper -->
             @if($feedbacks->isNotEmpty())
-                <div class="relative max-w-6xl mx-auto mb-10 overflow-hidden bg-gradient-to-tr from-base-200 via-base-200/90 to-base-100/30 backdrop-blur-md rounded-[2.5rem] border border-base-300 p-8 sm:p-12 shadow-xl feedback-carousel-container z-10">
+                <div class="relative max-w-6xl mx-auto mb-10 overflow-hidden bg-gradient-to-tr from-base-200 via-base-200/90 to-base-100/30 backdrop-blur-md rounded-[2.5rem] border border-base-300 p-5 sm:p-8 md:p-12 shadow-xl feedback-carousel-container z-10">
                     <!-- Saffron watermarked background quote icon (lower opacity, no overlay conflict) -->
                     <div class="absolute -top-12 -left-4 text-primary/5 text-[14rem] sm:text-[18rem] font-serif pointer-events-none select-none -z-10"><i class="fa-solid fa-quote-left"></i></div>
                     
@@ -585,21 +594,21 @@
                 </div>
             </div>
 
-            <!-- Filter Tabs -->
-            <div class="flex flex-wrap justify-center gap-2 mb-8" id="gallery-tabs">
-                <button onclick="filterGallery('all')" class="btn btn-sm btn-active bg-primary hover:bg-primary/95 text-white border-none rounded-lg px-4 gallery-tab-btn" data-category="all">
+            <!-- Filter Tabs — horizontally scrollable on mobile, wrapped on sm+ -->
+            <div class="flex sm:flex-wrap overflow-x-auto sm:overflow-visible sm:justify-center gap-2 mb-8 pb-1 sm:pb-0 snap-x scrollbar-hide" id="gallery-tabs" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
+                <button onclick="filterGallery('all')" class="btn btn-sm btn-active bg-primary hover:bg-primary/95 text-white border-none rounded-lg px-4 gallery-tab-btn shrink-0 snap-start" data-category="all">
                     {{ __('messages.gallery.all') }}
                 </button>
-                <button onclick="filterGallery('visits')" class="btn btn-sm bg-base-100 hover:bg-base-200 text-base-content border border-base-300 rounded-lg px-4 gallery-tab-btn" data-category="visits">
+                <button onclick="filterGallery('visits')" class="btn btn-sm bg-base-100 hover:bg-base-200 text-base-content border border-base-300 rounded-lg px-4 gallery-tab-btn shrink-0 snap-start" data-category="visits">
                     {{ __('messages.gallery.visits') }}
                 </button>
-                <button onclick="filterGallery('events')" class="btn btn-sm bg-base-100 hover:bg-base-200 text-base-content border border-base-300 rounded-lg px-4 gallery-tab-btn" data-category="events">
+                <button onclick="filterGallery('events')" class="btn btn-sm bg-base-100 hover:bg-base-200 text-base-content border border-base-300 rounded-lg px-4 gallery-tab-btn shrink-0 snap-start" data-category="events">
                     {{ __('messages.gallery.events') }}
                 </button>
-                <button onclick="filterGallery('works')" class="btn btn-sm bg-base-100 hover:bg-base-200 text-base-content border border-base-300 rounded-lg px-4 gallery-tab-btn" data-category="works">
+                <button onclick="filterGallery('works')" class="btn btn-sm bg-base-100 hover:bg-base-200 text-base-content border border-base-300 rounded-lg px-4 gallery-tab-btn shrink-0 snap-start" data-category="works">
                     {{ __('messages.gallery.works') }}
                 </button>
-                <button onclick="filterGallery('community')" class="btn btn-sm bg-base-100 hover:bg-base-200 text-base-content border border-base-300 rounded-lg px-4 gallery-tab-btn" data-category="community">
+                <button onclick="filterGallery('community')" class="btn btn-sm bg-base-100 hover:bg-base-200 text-base-content border border-base-300 rounded-lg px-4 gallery-tab-btn shrink-0 snap-start" data-category="community">
                     {{ __('messages.gallery.community') }}
                 </button>
             </div>
@@ -621,12 +630,14 @@
                             } elseif ($image->category === 'visits') {
                                 $fallback = 'https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=600&auto=format&fit=crop';
                             } elseif ($image->category === 'community') {
-                                $fallback = 'https://images.unsplash.com/photo-1469571486119-07551202826d?q=80&w=600&auto=format&fit=crop';
+                                $fallback = 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=600&auto=format&fit=crop';
                             }
                         @endphp
                         <img src="{{ asset($image->image_path) }}" 
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
                              alt="{{ $image->caption }}" 
+                             loading="lazy"
+                             decoding="async"
                              onerror="this.onerror=null; this.src='{{ $fallback }}';">
 
                         <!-- Saffron orange & dark gradient luxury overlay on hover -->
@@ -646,12 +657,12 @@
             </div>
 
             <!-- Interactive Gallery Pagination Controls -->
-            <div id="gallery-pagination" class="flex justify-center items-center gap-2 mt-12 hidden">
-                <button onclick="prevGalleryPage()" class="btn btn-sm btn-circle btn-outline border-base-300 hover:bg-primary hover:text-white" id="gallery-prev-btn">
+            <div id="gallery-pagination" class="flex flex-wrap justify-center items-center gap-2 mt-12 hidden">
+                <button onclick="prevGalleryPage()" class="btn btn-sm btn-circle btn-outline border-base-300 hover:bg-primary hover:text-white shrink-0" id="gallery-prev-btn">
                     <i class="fa-solid fa-chevron-left text-xs"></i>
                 </button>
-                <div class="flex gap-2" id="gallery-page-numbers"></div>
-                <button onclick="nextGalleryPage()" class="btn btn-sm btn-circle btn-outline border-base-300 hover:bg-primary hover:text-white" id="gallery-next-btn">
+                <div class="flex flex-wrap justify-center gap-1.5 max-w-[calc(100vw-8rem)]" id="gallery-page-numbers"></div>
+                <button onclick="nextGalleryPage()" class="btn btn-sm btn-circle btn-outline border-base-300 hover:bg-primary hover:text-white shrink-0" id="gallery-next-btn">
                     <i class="fa-solid fa-chevron-right text-xs"></i>
                 </button>
             </div>
@@ -746,7 +757,7 @@
     <!-- Development Project Compare Modal (DaisyUI <dialog> modal)  -->
     <!-- diff-item-1 = LEFT  = BEFORE  |  diff-item-2 = RIGHT = AFTER -->
     <!-- ============================================================ -->
-    <dialog id="project_modal" class="modal modal-bottom sm:modal-middle">
+    <dialog id="project_modal" class="modal modal-middle">
         <div class="modal-box w-11/12 max-w-3xl p-0 overflow-hidden rounded-3xl shadow-2xl bg-base-100">
 
             <!-- DaisyUI close button (top-right) -->
@@ -784,7 +795,7 @@
             </div>
 
             <!-- Project meta -->
-            <div class="p-6 space-y-3">
+            <div class="p-4 sm:p-6 space-y-2 sm:space-y-3">
                 <div class="flex flex-wrap items-center gap-2">
                     <span class="badge badge-outline badge-primary gap-1 font-bold">
                         <i class="fa-solid fa-location-dot"></i>
@@ -807,7 +818,7 @@
     </dialog>
 
     <!-- Photo Gallery Lightbox Viewer (DaisyUI <dialog> modal) -->
-    <dialog id="gallery_modal" class="modal modal-bottom sm:modal-middle">
+    <dialog id="gallery_modal" class="modal modal-middle">
         <div class="modal-box w-11/12 max-w-4xl p-0 overflow-hidden rounded-3xl shadow-2xl bg-base-100 border border-base-300">
             <!-- Close button (top-right) -->
             <form method="dialog">

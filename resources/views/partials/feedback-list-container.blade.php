@@ -61,29 +61,31 @@
     <!-- Custom Premium daisyUI Pagination -->
     @if($approvedFeedbacks->hasPages())
         <div class="flex justify-center pt-8">
-            <div class="join border border-base-300 bg-base-100 shadow-sm rounded-xl overflow-hidden">
-                {{-- Previous Page Link --}}
-                @if($approvedFeedbacks->onFirstPage())
-                    <button class="join-item btn btn-md btn-ghost text-base-content/30 cursor-not-allowed" disabled>«</button>
-                @else
-                    <a href="{{ $approvedFeedbacks->previousPageUrl() }}" class="join-item btn btn-md btn-ghost text-base-content hover:bg-primary hover:text-white transition-colors">«</a>
-                @endif
-
-                {{-- Page Links --}}
-                @foreach(range(1, $approvedFeedbacks->lastPage()) as $i)
-                    @if($i == $approvedFeedbacks->currentPage())
-                        <button class="join-item btn btn-md btn-primary text-white font-bold">{{ $i }}</button>
+            <div class="overflow-x-auto max-w-full pb-1">
+                <div class="join border border-base-300 bg-base-100 shadow-sm rounded-xl overflow-hidden inline-flex">
+                    {{-- Previous Page Link --}}
+                    @if($approvedFeedbacks->onFirstPage())
+                        <button class="join-item btn btn-sm sm:btn-md btn-ghost text-base-content/30 cursor-not-allowed" disabled>«</button>
                     @else
-                        <a href="{{ $approvedFeedbacks->url($i) }}" class="join-item btn btn-md btn-ghost text-base-content hover:bg-primary hover:text-white transition-colors">{{ $i }}</a>
+                        <a href="{{ $approvedFeedbacks->previousPageUrl() }}" class="join-item btn btn-sm sm:btn-md btn-ghost text-base-content hover:bg-primary hover:text-white transition-colors">«</a>
                     @endif
-                @endforeach
 
-                {{-- Next Page Link --}}
-                @if($approvedFeedbacks->hasMorePages())
-                    <a href="{{ $approvedFeedbacks->nextPageUrl() }}" class="join-item btn btn-md btn-ghost text-base-content hover:bg-primary hover:text-white transition-colors">»</a>
-                @else
-                    <button class="join-item btn btn-md btn-ghost text-base-content/30 cursor-not-allowed" disabled>»</button>
-                @endif
+                    {{-- Page Links --}}
+                    @foreach(range(1, $approvedFeedbacks->lastPage()) as $i)
+                        @if($i == $approvedFeedbacks->currentPage())
+                            <button class="join-item btn btn-sm sm:btn-md btn-primary text-white font-bold">{{ $i }}</button>
+                        @else
+                            <a href="{{ $approvedFeedbacks->url($i) }}" class="join-item btn btn-sm sm:btn-md btn-ghost text-base-content hover:bg-primary hover:text-white transition-colors">{{ $i }}</a>
+                        @endif
+                    @endforeach
+
+                    {{-- Next Page Link --}}
+                    @if($approvedFeedbacks->hasMorePages())
+                        <a href="{{ $approvedFeedbacks->nextPageUrl() }}" class="join-item btn btn-sm sm:btn-md btn-ghost text-base-content hover:bg-primary hover:text-white transition-colors">»</a>
+                    @else
+                        <button class="join-item btn btn-sm sm:btn-md btn-ghost text-base-content/30 cursor-not-allowed" disabled>»</button>
+                    @endif
+                </div>
             </div>
         </div>
     @endif
