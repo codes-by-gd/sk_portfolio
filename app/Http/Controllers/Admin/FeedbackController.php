@@ -127,12 +127,17 @@ class FeedbackController extends Controller
 
     public function export(Request $request)
     {
-        $query = Feedback::where('status', 'approved');
+        $query = Feedback::query();
 
-        // Filter 1: Ward Area
-        $query->when($request->filled('area'), function($q) use ($request) {
-            $q->where('area', 'like', "%" . $request->input('area') . "%");
-        });
+        // Filter 1: Status
+        if ($request->filled('status')) {
+            if ($request->input('status') !== 'all') {
+                $query->where('status', $request->input('status'));
+            }
+        } else {
+            // Default to approved to keep continuity with previous baseline
+            $query->where('status', 'approved');
+        }
 
         // Filter 2: Rating Stars
         $query->when($request->filled('rating'), function($q) use ($request) {
@@ -147,42 +152,28 @@ class FeedbackController extends Controller
             $q->whereDate('created_at', '<=', $request->input('end_date'));
         });
 
-        $response = new StreamedResponse(function() use ($query) {
-            $handle = fopen('php://output', 'w');
+        $feedbacks = $query->oldest()->get();
 
-            // Add UTF-8 BOM for Excel compatibility with Gujarati/Hindi characters
-            fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+        $headers = [
+            'ID', 'Name', 'Mobile Number', 'Area', 'Title', 'Message', 'Rating', 'Status', 'Is Featured', 'Submitted At'
+        ];
 
-            // Header
-            fputcsv($handle, [
-                'ID', 'Name', 'Mobile Number', 'Area', 'Title', 'Message', 'Rating', 'Status', 'Is Featured', 'Submitted At'
-            ]);
+        $rows = [];
+        foreach ($feedbacks as $feedback) {
+            $rows[] = [
+                $feedback->id,
+                $feedback->name,
+                $feedback->mobile_number,
+                $feedback->area,
+                $feedback->title,
+                $feedback->message,
+                $feedback->rating,
+                ucfirst($feedback->status),
+                $feedback->is_featured ? 'Yes' : 'No',
+                $feedback->created_at->format('Y-m-d H:i:s'),
+            ];
+        }
 
-            // Data
-            $query->oldest()
-                ->chunk(100, function($feedbacks) use ($handle) {
-                    foreach ($feedbacks as $feedback) {
-                        fputcsv($handle, [
-                            $feedback->id,
-                            $feedback->name,
-                            $feedback->mobile_number,
-                            $feedback->area,
-                            $feedback->title,
-                            $feedback->message,
-                            $feedback->rating,
-                            $feedback->status,
-                            $feedback->is_featured ? 'Yes' : 'No',
-                            $feedback->created_at->format('Y-m-d H:i:s'),
-                        ]);
-                    }
-                });
-
-            fclose($handle);
-        }, 200, [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="approved_feedbacks_' . date('Y-m-d') . '.csv"',
-        ]);
-
-        return $response;
+        return \App\Helpers\ExcelExportHelper::exportToXlsx('feedbacks_export', $headers, $rows, 'Feedbacks');
     }
 }

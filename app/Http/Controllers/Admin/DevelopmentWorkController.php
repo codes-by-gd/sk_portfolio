@@ -159,4 +159,34 @@ class DevelopmentWorkController extends Controller
 
         return back()->with('success', 'Development project deleted successfully.');
     }
+
+    public function export(Request $request)
+    {
+        $works = DevelopmentWork::latest()->get();
+
+        $headers = [
+            'ID', 'Location', 'English Title', 'Gujarati Title', 'Hindi Title', 
+            'English Description', 'Gujarati Description', 'Hindi Description', 
+            'Before Image', 'After Image', 'Created At'
+        ];
+
+        $rows = [];
+        foreach ($works as $work) {
+            $rows[] = [
+                $work->id,
+                $work->location,
+                $work->title_en,
+                $work->title_gu,
+                $work->title_hi,
+                $work->description_en,
+                $work->description_gu,
+                $work->description_hi,
+                $work->before_image ? url($work->before_image) : 'None',
+                $work->after_image ? url($work->after_image) : 'None',
+                $work->created_at->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        return \App\Helpers\ExcelExportHelper::exportToXlsx('development_works_export', $headers, $rows, 'Development Works');
+    }
 }

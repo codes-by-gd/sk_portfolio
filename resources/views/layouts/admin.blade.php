@@ -145,38 +145,91 @@
                     </div>
 
                     <!-- Sidebar navigation -->
-                    <ul class="space-y-1 font-semibold text-sm">
-                        <li>
-                            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.dashboard') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
-                                <i class="fa-solid fa-comments text-lg"></i>
-                                <span>Feedback Management</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.gallery.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.gallery*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
-                                <i class="fa-solid fa-images text-lg"></i>
-                                <span>Gallery</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.development.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.development*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
-                                <i class="fa-solid fa-helmet-safety text-lg"></i>
-                                <span>Development Works</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.cms.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.cms*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
-                                <i class="fa-solid fa-pen-nib text-lg"></i>
-                                <span>CMS Content</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.settings*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
-                                <i class="fa-solid fa-gear text-lg"></i>
-                                <span>Settings</span>
-                            </a>
-                        </li>
-                    </ul>
+                    <div class="space-y-6 text-sm">
+                        <!-- Group 1: Frontend-Connected -->
+                        <div class="space-y-2">
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-primary/75 px-3 block">Frontend-Connected</span>
+                            <ul class="space-y-1 font-semibold">
+                                @can('moderate-content')
+                                <li>
+                                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.dashboard') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                        <i class="fa-solid fa-comments text-lg shrink-0 w-5 text-center"></i>
+                                        <span>Feedback Management</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.complaint.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.complaint*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                        <i class="fa-solid fa-circle-exclamation text-lg shrink-0 w-5 text-center"></i>
+                                        <span>Citizen Grievances</span>
+                                    </a>
+                                </li>
+                                @endcan
+
+                                @can('edit-content')
+                                <li>
+                                    <a href="{{ route('admin.development.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.development*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                        <i class="fa-solid fa-helmet-safety text-lg shrink-0 w-5 text-center"></i>
+                                        <span>Development Works</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.gallery.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.gallery*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                        <i class="fa-solid fa-images text-lg shrink-0 w-5 text-center"></i>
+                                        <span>Gallery</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.cms.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.cms*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                        <i class="fa-solid fa-pen-nib text-lg shrink-0 w-5 text-center"></i>
+                                        <span>CMS Content</span>
+                                    </a>
+                                </li>
+                                @endcan
+                            </ul>
+                        </div>
+
+                        <!-- Divider line -->
+                        <div class="border-t border-white/10 my-4"></div>
+
+                        <!-- Group 2: Admin-Only Features -->
+                        <div class="space-y-2">
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-primary/75 px-3 block">Admin-Only Features</span>
+                            <ul class="space-y-1 font-semibold">
+                                @can('edit-content')
+                                <li>
+                                    <a href="{{ route('admin.timeline.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.timeline*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                        <i class="fa-solid fa-timeline text-lg shrink-0 w-5 text-center"></i>
+                                        <span>Project Timelines</span>
+                                    </a>
+                                </li>
+                                @endcan
+
+                                @can('moderate-content')
+                                <li>
+                                    <a href="{{ route('admin.contact.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.contact*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                        <i class="fa-solid fa-address-book text-lg shrink-0 w-5 text-center"></i>
+                                        <span>Contacts Directory</span>
+                                    </a>
+                                </li>
+                                @endcan
+
+                                @can('super-admin')
+                                <li>
+                                    <a href="{{ route('admin.user.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.user*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                        <i class="fa-solid fa-users-gear text-lg shrink-0 w-5 text-center"></i>
+                                        <span>User Management</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.settings*') ? 'bg-primary text-white shadow-md' : 'hover:bg-white/5 text-neutral-content/85 hover:text-white' }} transition-all">
+                                        <i class="fa-solid fa-gear text-lg shrink-0 w-5 text-center"></i>
+                                        <span>Settings</span>
+                                    </a>
+                                </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </div>
 
                     <!-- Logout pinned to bottom of sidebar -->
                     <div class="mt-auto pt-6 border-t border-white/10">

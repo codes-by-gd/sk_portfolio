@@ -14,6 +14,10 @@
 * 💬 **[4. Citizen Feedback Module](./feedback_system.md)** — Homepage featured carousels, detailed submission forms, photo uploads, and AJAX paginations.
 * 🛡️ **[5. Secure Admin Backend](./admin_backend.md)** — Administrative layout rules, CMS controls, password profiles, and export systems.
 * ⚙️ **[6. Database, Security & SEO](./database_security_seo.md)** — Schema configurations, security constraints, performance criteria, and SEO optimizations.
+* 📞 **[7. Contacts Directory](./contacts.md)** — Admin-only institutional contact address book, CRUD operations, keyword search, and XLSX export.
+* 🚨 **[8. Citizen Grievances Tracker](./complaints.md)** — Admin-only complaint logging, category classification, resolution workflow, and XLSX export.
+* 📅 **[9. Project Timeline Manager](./timelines.md)** — Standalone municipal project schedules, milestone checklists, progress tracking, and XLSX export.
+* 👤 **[10. User Management & Roles](./user_management.md)** — Admin-only account provisioning, role-based access control gates, and lockout protections.
 
 ---
 

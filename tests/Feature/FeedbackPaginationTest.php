@@ -61,7 +61,7 @@ class FeedbackPaginationTest extends TestCase
             ->assertRedirect(route('admin.login'));
 
         // Create and authenticate user
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => 'super_admin']);
         $this->actingAs($user);
 
         // 2. Normal authenticated GET request returns full page

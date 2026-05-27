@@ -4,7 +4,7 @@
 
 This index document coordinates and structures the functional requirements for Sachin Khandelwal's premium, multilingual personal brand and civic engagement website (BJP Ward 7, Vadodara). 
 
-To ensure optimal structural legibility for both developers and AI coding agents, the requirement specifications have been divided into six highly focused functional modules under the `requirements/` directory.
+To ensure optimal structural legibility for both developers and AI coding agents, the requirement specifications have been divided into ten highly focused functional modules under the `requirements/` directory.
 
 ---
 
@@ -41,3 +41,15 @@ All AI coding agents must consult these specific modular files when executing ta
 
 ### ⚙️ [Module 6: Database, Security & SEO Infrastructure](./requirements/database_security_seo.md)
 * **Scope:** Normalized MySQL schemas definitions (`users`, `feedbacks`, `cms_pages`, etc.), security constraints (CSRF, XSS filter, WebP image validations), IP rate limits, performance budget limits (Lighthouse 90+), eager loading configurations, dynamic multilingual Open Graph tags, and sitemaps.
+
+### 📞 [Module 7: Contacts Directory](./requirements/contacts.md)
+* **Scope:** Admin-only institutional contact address book for ward office staff, party workers, contractors, and media contacts. Covers CRUD operations via inline modals, keyword search, `super_admin`-restricted deletion, and styled XLSX export via `ExcelExportHelper`.
+
+### 🚨 [Module 8: Citizen Grievances Tracker](./requirements/complaints.md)
+* **Scope:** Admin-only offline complaint intake register for logging grievances received via visits, telephone, or letters. Covers category classification, a four-step resolution status workflow (`pending` → `under_review` → `resolved`/`rejected`), official action logging, optional WebP evidence photo upload, status-filtered XLSX export, and distinction from the public Feedback module.
+
+### 📅 [Module 9: Project Timeline Manager](./requirements/timelines.md)
+* **Scope:** Admin-only operational planning tool for standalone municipal projects. Covers project records (budget, schedule, phase, status), a child `milestones` table with a cascading foreign key, a computed `progress_percent` Eloquent accessor driving inline progress bars and radial-progress rings, milestone checklist management via a detail page, quick status-toggle forms, and status-filtered XLSX export.
+
+### 👤 [Module 10: User Management & Roles](./requirements/user_management.md)
+* **Scope:** `super_admin`-only account provisioning and access control. Covers three role definitions (`super_admin`, `moderator`, `editor`), a Gate-to-Route permission mapping table, self-modification lockout enforcement at both UI and controller layers, suspended account login rejection middleware, and `is_active` flag session invalidation.

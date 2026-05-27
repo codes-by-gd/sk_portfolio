@@ -23,6 +23,8 @@ class AdminCmsTest extends TestCase
             'last_name' => 'Khandelwal',
             'email' => 'admin@sachinkhandelwal.com',
             'password' => bcrypt('Password@123'),
+            'role' => 'super_admin',
+            'is_active' => true,
         ]);
 
         // Create mock CMS pages required by the admin view

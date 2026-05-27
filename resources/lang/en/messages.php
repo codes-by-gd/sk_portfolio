@@ -87,7 +87,7 @@ return [
         'unfeature' => 'Unfeature',
         'delete' => 'Delete',
         'status' => 'Status',
-        'export' => 'Export Approved',
+        'export' => 'Export',
         'search' => 'Search',
         'profile' => 'Profile',
         'update_profile' => 'Update Profile',

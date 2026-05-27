@@ -12,9 +12,9 @@
         <p class="text-xs text-base-content/50 font-bold uppercase tracking-wider mt-1">Review and manage citizen submissions</p>
     </div>
     
-    <!-- Export Approved Reviews to CSV -->
+    <!-- Export Feedbacks to Excel -->
     <button onclick="document.getElementById('export-feedback-modal').classList.add('modal-open')" class="btn btn-primary text-white font-bold rounded-xl gap-2 shadow-md">
-        <i class="fa-solid fa-file-csv text-lg"></i> {{ __('messages.admin.export') }}
+        <i class="fa-solid fa-file-excel text-lg"></i> {{ __('messages.admin.export') }}
     </button>
 </div>
 
@@ -269,20 +269,33 @@
         </button>
 
         <h3 class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
-            <i class="fa-solid fa-file-csv text-primary"></i> Export Feedbacks to CSV
+            <i class="fa-solid fa-file-excel text-primary"></i> Export Feedbacks to Excel
         </h3>
-        <p class="text-xs text-base-content/50 uppercase tracking-wider font-bold mb-6">Select filters for your report (leave blank to export all)</p>
+        <p class="text-xs text-base-content/50 uppercase tracking-wider font-bold mb-6">Select filters for your Excel report (leave blank to export all)</p>
 
         <form action="{{ route('admin.feedback.export') }}" method="GET" class="space-y-4" onsubmit="closeExportModal()">
-            <!-- Ward Area Filter -->
+            <!-- Status Filter -->
             <div class="form-control">
-                <x-float-input 
-                    type="text" 
-                    name="area" 
-                    id="export-area" 
-                    label="Ward/Area Filter" 
-                />
+                <label class="floating-label w-full block relative">
+                    <span>
+                        Status Filter
+                    </span>
+                    <select 
+                        id="export-status" 
+                        name="status" 
+                        class="select select-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all appearance-none pr-10"
+                    >
+                        <option value="all">All Statuses</option>
+                        <option value="approved" selected>Approved</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </div>
+                </label>
             </div>
+
 
             <!-- Rating Stars Filter -->
             <div class="form-control">
@@ -334,7 +347,7 @@
                     Cancel
                 </button>
                 <button type="submit" class="btn btn-primary text-white font-bold rounded-xl px-6 shadow-md">
-                    <i class="fa-solid fa-download mr-1"></i> Download CSV
+                    <i class="fa-solid fa-file-excel mr-1"></i> Download Excel
                 </button>
             </div>
         </form>
