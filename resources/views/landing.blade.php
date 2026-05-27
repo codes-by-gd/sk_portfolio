@@ -498,14 +498,10 @@
                                         <div class="space-y-4 relative z-10">
                                             <!-- Submitter Avatar & Details -->
                                             <div class="flex items-center gap-3">
-                                                <div class="w-12 h-12 rounded-full overflow-hidden border border-base-300 bg-base-200 shrink-0 shadow-sm">
-                                                    @if($fb->avatar_path)
-                                                        <img src="{{ asset($fb->avatar_path) }}" class="object-cover w-full h-full" alt="{{ $fb->name }}" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed='+encodeURIComponent('{{ $fb->name }}')+'&backgroundColor=ff8a3d&textColor=ffffff'">
-                                                    @else
-                                                        <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/50 font-heading font-extrabold text-xs uppercase">
-                                                            {{ substr($fb->name, 0, 2) }}
-                                                        </div>
-                                                    @endif
+                                                <div class="w-12 h-12 rounded-full overflow-hidden border border-base-300 bg-base-200 shrink-0 shadow-sm flex items-center justify-center">
+                                                    <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/50 font-heading font-extrabold text-xs uppercase">
+                                                        {{ substr($fb->name, 0, 2) }}
+                                                    </div>
                                                 </div>
                                                 <div class="text-left">
                                                     <h4 class="font-bold text-base-content text-sm leading-snug">{{ $fb->name }}</h4>
@@ -520,25 +516,13 @@
                                                 @endfor
                                             </div>
 
-                                            <!-- Title & Message -->
+                                            <!-- Message -->
                                             <div>
-                                                <h5 class="font-bold text-base-content text-sm leading-snug mb-1">{{ $fb->title }}</h5>
                                                 <p class="text-base-content/75 text-xs leading-relaxed line-clamp-4 italic">
                                                     "{!! nl2br(e($fb->message)) !!}"
                                                 </p>
                                             </div>
                                         </div>
-
-                                        <!-- Media Attachments -->
-                                        @if($fb->images->isNotEmpty())
-                                            <div class="flex gap-1.5 flex-wrap pt-2 relative z-10">
-                                                @foreach($fb->images as $img)
-                                                    <a href="{{ asset($img->image_path) }}" target="_blank" class="w-8 h-8 rounded-lg overflow-hidden border border-base-300 hover:scale-105 transition-transform duration-200 block bg-base-300">
-                                                        <img src="{{ asset($img->image_path) }}" class="object-cover w-full h-full" alt="Feedback media" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=Media&backgroundColor=e2e8f0&textColor=1f2937'">
-                                                    </a>
-                                                @endforeach
-                                            </div>
-                                        @endif
                                     </div>
                                 @endforeach
                             </div>
@@ -616,12 +600,12 @@
             <!-- Gallery Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="gallery-grid">
                 @foreach($galleryImages as $index => $image)
-                    <div class="gallery-item relative overflow-hidden rounded-2xl border border-base-300 shadow-md group h-64 bg-base-300 transition-all duration-300 hover:scale-[1.02] cursor-pointer" 
+                    <div class="gallery-item gallery-viewer-item relative overflow-hidden rounded-2xl border border-base-300 shadow-md group h-64 bg-base-300 transition-all duration-300 hover:scale-[1.02] cursor-pointer" 
                          data-category="{{ $image->category }}"
                          data-image="{{ asset($image->image_path) }}"
                          data-caption="{{ $image->caption }}"
                          data-category-label="{{ __('messages.gallery.' . $image->category) }}"
-                         onclick="openLightbox({{ $index }})">
+                         onclick="openGalleryViewer(this)">
                         <!-- Real Image with dynamic high-quality Unsplash fallbacks based on category -->
                         @php
                             $fallback = 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop';
@@ -638,7 +622,7 @@
                              alt="{{ $image->caption }}" 
                              loading="lazy"
                              decoding="async"
-                             onerror="this.onerror=null; this.src='{{ $fallback }}';">
+                             onerror="this.onerror=null; this.src='{{ $fallback }}'; this.closest('.gallery-item').dataset.image='{{ $fallback }}';">
 
                         <!-- Saffron orange & dark gradient luxury overlay on hover -->
                         <div class="absolute inset-0 bg-gradient-to-t from-neutral/95 via-neutral/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 z-10">
@@ -742,15 +726,15 @@
                 </div>
 
                 <!-- Google Map Placeholder Card -->
-                <div class="lg:col-span-7 bg-base-200 rounded-2xl border border-base-300 overflow-hidden relative min-h-[300px] flex items-center justify-center">
+                <a href="https://maps.google.com/?q=GF-4,+Ward+Office+Building,+Subhanpura+Road,+Vadodara,+Gujarat+-+390023" target="_blank" rel="noopener" class="lg:col-span-7 bg-base-200 rounded-2xl border border-base-300 overflow-hidden relative min-h-[300px] flex flex-col justify-center items-center text-center p-8 hover:bg-base-300/40 transition-colors group">
                     <!-- Interactive styled SVG mock map -->
-                    <div class="absolute inset-0 bg-base-300/30 flex flex-col justify-center items-center text-center p-8">
-                        <i class="fa-solid fa-map-location text-5xl text-base-content/30 mb-4 animate-bounce"></i>
-                        <h4 class="font-heading font-bold text-base-content">{{ __('messages.contact.map_title') }}</h4>
+                    <div class="absolute inset-0 bg-base-300/10 flex flex-col justify-center items-center text-center p-8">
+                        <i class="fa-solid fa-map-location text-5xl text-base-content/30 mb-4 group-hover:scale-110 group-hover:text-primary transition-all duration-300"></i>
+                        <h4 class="font-heading font-bold text-base-content group-hover:text-primary transition-colors duration-300">{{ __('messages.contact.map_title') }}</h4>
                         <p class="text-sm text-base-content/65 max-w-sm mt-1">{{ __('messages.contact.map_subtitle') }}</p>
-                        <span class="btn btn-xs btn-outline btn-secondary hover:text-white mt-4 rounded-lg">{{ __('messages.contact.map_open') }}</span>
+                        <span class="btn btn-xs btn-outline btn-secondary group-hover:bg-secondary group-hover:text-white mt-4 rounded-lg transition-all shadow-sm">{{ __('messages.contact.map_open') }}</span>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     <!-- ============================================================ -->
@@ -818,49 +802,8 @@
     </dialog>
 
     <!-- Photo Gallery Lightbox Viewer (DaisyUI <dialog> modal) -->
-    <dialog id="gallery_modal" class="modal modal-middle">
-        <div class="modal-box w-11/12 max-w-4xl p-0 overflow-hidden rounded-3xl shadow-2xl bg-base-100 border border-base-300">
-            <!-- Close button (top-right) -->
-            <form method="dialog">
-                <button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3 z-50 bg-base-300/80 backdrop-blur-sm hover:bg-error hover:text-white transition-all">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </form>
-
-            <!-- Lightbox Main Frame (Image with Navigation Chevrons) -->
-            <div class="relative w-full aspect-[4/3] sm:aspect-[16/10] bg-neutral flex items-center justify-center group/lightbox">
-                <img id="lightbox-img" src="" class="max-w-full max-h-full object-contain select-none" alt="Gallery Lightbox Image">
-                
-                <!-- Left Control Button -->
-                <button onclick="prevGalleryImage(event)" class="absolute left-4 top-1/2 -translate-y-1/2 btn btn-circle btn-ghost bg-black/30 text-white hover:bg-primary border-none shadow-md" aria-label="Previous Photo">
-                    <i class="fa-solid fa-chevron-left text-lg"></i>
-                </button>
-
-                <!-- Right Control Button -->
-                <button onclick="nextGalleryImage(event)" class="absolute right-4 top-1/2 -translate-y-1/2 btn btn-circle btn-ghost bg-black/30 text-white hover:bg-primary border-none shadow-md" aria-label="Next Photo">
-                    <i class="fa-solid fa-chevron-right text-lg"></i>
-                </button>
-            </div>
-
-            <!-- Meta Section underneath the image -->
-            <div class="p-6 bg-base-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-base-300">
-                <div class="space-y-1 flex-1">
-                    <span id="lightbox-category" class="badge badge-primary font-bold uppercase tracking-widest text-[10px]"></span>
-                    <h3 id="lightbox-caption" class="font-heading font-extrabold text-lg text-base-content leading-snug"></h3>
-                </div>
-                <!-- Close Dialog button -->
-                <form method="dialog" class="shrink-0">
-                    <button class="btn btn-sm btn-outline hover:bg-neutral hover:text-white rounded-xl gap-1">
-                        <i class="fa-solid fa-circle-xmark"></i> {{ __('messages.gallery.close') }}
-                    </button>
-                </form>
-            </div>
-        </div>
-        <!-- Backdrop click closes modal -->
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
+    <!-- Photo Gallery Lightbox Viewer (Reusable Component) -->
+    <x-gallery-lightbox />
 
     <!-- Carousel Javascript -->
     <script>
@@ -1147,72 +1090,14 @@
             startDevAutoSlide();
         }
 
-        // ── Photo Gallery Lightbox Viewer Logic ──
-        let currentLightboxIndex = 0;
-
-        function openLightbox(index) {
-            currentLightboxIndex = index;
-            const allItems = Array.from(document.querySelectorAll('.gallery-item'));
-            const item = allItems[index];
-            if (!item) return;
-
-            document.getElementById('lightbox-img').src = item.dataset.image || '';
-            document.getElementById('lightbox-caption').textContent = item.dataset.caption || '';
-            document.getElementById('lightbox-category').textContent = item.dataset.categoryLabel || '';
-
-            const modal = document.getElementById('gallery_modal');
-            if (modal) modal.showModal();
-        }
-
-        function prevGalleryImage(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            navigateLightbox(-1);
-        }
-
-        function nextGalleryImage(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            navigateLightbox(1);
-        }
-
-        function navigateLightbox(direction) {
-            // Find all currently visible (not hidden by category tabs/pagination) gallery items
-            const visibleItems = Array.from(document.querySelectorAll('.gallery-item:not(.hidden)'));
-            if (visibleItems.length === 0) return;
-
-            const allItems = Array.from(document.querySelectorAll('.gallery-item'));
-            const currentItem = allItems[currentLightboxIndex];
-            let visibleIndex = visibleItems.indexOf(currentItem);
-
-            if (visibleIndex === -1) {
-                visibleIndex = 0;
-            }
-
-            // Cycle index
-            visibleIndex = (visibleIndex + direction + visibleItems.length) % visibleItems.length;
-
-            const nextItem = visibleItems[visibleIndex];
-            currentLightboxIndex = allItems.indexOf(nextItem);
-
-            // Update modal fields
-            document.getElementById('lightbox-img').src = nextItem.dataset.image || '';
-            document.getElementById('lightbox-caption').textContent = nextItem.dataset.caption || '';
-            document.getElementById('lightbox-category').textContent = nextItem.dataset.categoryLabel || '';
-        }
-
         // Support Arrow keys for Lightbox navigation
         document.addEventListener('keydown', (e) => {
-            const modal = document.getElementById('gallery_modal');
+            const modal = document.getElementById('gallery_viewer_modal');
             if (modal && modal.open) {
                 if (e.key === 'ArrowLeft') {
-                    prevGalleryImage();
+                    navigateGalleryViewer(-1);
                 } else if (e.key === 'ArrowRight') {
-                    nextGalleryImage();
+                    navigateGalleryViewer(1);
                 }
             }
         });
@@ -1235,6 +1120,29 @@
             if (viewport) {
                 viewport.addEventListener('mouseenter', stopDevAutoSlide);
                 viewport.addEventListener('mouseleave', startDevAutoSlide);
+
+                // Mobile touch swipe gesture support
+                let touchStartX = 0;
+                let touchEndX = 0;
+                
+                viewport.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].clientX;
+                    stopDevAutoSlide();
+                }, { passive: true });
+
+                viewport.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].clientX;
+                    const swipeDistance = touchEndX - touchStartX;
+                    const swipeThreshold = 50; // min 50px swipe to trigger navigation
+                    if (Math.abs(swipeDistance) > swipeThreshold) {
+                        if (swipeDistance < 0) {
+                            nextDevCard(); // Swiped left -> Next
+                        } else {
+                            prevDevCard(); // Swiped right -> Previous
+                        }
+                    }
+                    startDevAutoSlide();
+                }, { passive: true });
             }
 
             // ── Development card click → open compare modal ──

@@ -5,7 +5,6 @@
                 <th class="py-4">Submitter Details</th>
                 <th class="py-4">Feedback Content</th>
                 <th class="py-4 text-center">Rating</th>
-                <th class="py-4">Photos</th>
                 <th class="py-4">{{ __('messages.admin.status') }}</th>
                 <th class="py-4 text-center">{{ __('messages.admin.actions') }}</th>
             </tr>
@@ -16,23 +15,11 @@
                     <!-- Submitter Details -->
                     <td class="py-4 space-y-1 vertical-align-top min-w-[200px]">
                         <div class="flex items-center gap-3">
-                            <!-- Avatar Upload Form -->
-                            <form action="{{ route('admin.feedback.avatar', $feedback) }}" method="POST" enctype="multipart/form-data" class="relative group shrink-0">
-                                @csrf
-                                <label class="cursor-pointer relative block w-11 h-11 rounded-full overflow-hidden border border-base-300 bg-base-200 shadow-sm" title="Upload Avatar">
-                                    @if($feedback->avatar_path)
-                                        <img src="{{ asset($feedback->avatar_path) }}" class="object-cover w-full h-full" alt="Avatar" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed='+encodeURIComponent('{{ $feedback->name }}')+'&backgroundColor=ff8a3d&textColor=ffffff'">
-                                    @else
-                                        <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/50 font-heading font-extrabold text-xs uppercase">
-                                            {{ substr($feedback->name, 0, 2) }}
-                                        </div>
-                                    @endif
-                                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <i class="fa-solid fa-camera text-white text-xs"></i>
-                                    </div>
-                                    <input type="file" name="avatar" class="hidden" accept="image/*" onchange="this.form.submit()">
-                                </label>
-                            </form>
+                            <div class="w-11 h-11 rounded-full overflow-hidden border border-base-300 bg-base-200 shrink-0 shadow-sm flex items-center justify-center">
+                                <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/50 font-heading font-extrabold text-xs uppercase">
+                                    {{ substr($feedback->name, 0, 2) }}
+                                </div>
+                            </div>
                             <div>
                                 <p class="font-bold text-base-content leading-tight">{{ $feedback->name }}</p>
                                 <p class="text-xs text-base-content/70 font-semibold mt-1"><i class="fa-solid fa-phone mr-1 opacity-50 text-[10px]"></i>{{ $feedback->mobile_number }}</p>
@@ -43,7 +30,6 @@
 
                     <!-- Feedback Content -->
                     <td class="py-4 max-w-sm vertical-align-top">
-                        <p class="font-bold text-base-content mb-1 leading-snug">{{ $feedback->title }}</p>
                         <p class="text-xs text-base-content/85 line-clamp-3 leading-relaxed whitespace-pre-line">{{ $feedback->message }}</p>
                         <span class="text-[10px] text-base-content/40 font-bold block mt-1">{{ $feedback->created_at->format('M d, Y h:i A') }}</span>
                     </td>
@@ -55,21 +41,6 @@
                                 <i class="fa-{{ $i <= $feedback->rating ? 'solid' : 'regular' }} fa-star"></i>
                             @endfor
                         </div>
-                    </td>
-
-                    <!-- Uploaded/Captured Photos -->
-                    <td class="py-4 vertical-align-top min-w-[120px]">
-                        @if($feedback->images->isNotEmpty())
-                            <div class="flex gap-1.5 flex-wrap">
-                                @foreach($feedback->images as $img)
-                                    <div onclick="openViewerModal('{{ asset($img->image_path) }}', 'Attachment', 'Submitted citizen image')" class="w-12 h-12 rounded-lg overflow-hidden border border-base-300 hover:scale-105 transition-transform duration-200 block bg-base-300 cursor-zoom-in">
-                                        <img src="{{ asset($img->image_path) }}" class="object-cover w-full h-full" alt="Review Media" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=Media&backgroundColor=e2e8f0&textColor=1f2937'">
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <span class="text-xs text-base-content/40 italic">No Media</span>
-                        @endif
                     </td>
 
                     <!-- Status Badge -->
@@ -145,11 +116,9 @@
                                 data-name="{{ $feedback->name }}"
                                 data-mobile="{{ $feedback->mobile_number }}"
                                 data-area="{{ $feedback->area }}"
-                                data-title="{{ $feedback->title }}"
                                 data-message="{{ $feedback->message }}"
                                 data-rating="{{ $feedback->rating }}"
-                                data-status="{{ $feedback->status }}"
-                                data-images="{{ json_encode($feedback->images->map(fn($img) => ['id' => $img->id, 'path' => asset($img->image_path)])->toArray()) }}">
+                                data-status="{{ $feedback->status }}">
                                 <i class="fa-solid fa-pen-to-square text-xs"></i>
                             </button>
 
@@ -166,7 +135,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center py-12 text-base-content/50 font-medium italic">
+                    <td colspan="5" class="text-center py-12 text-base-content/50 font-medium italic">
                         No feedbacks found matching query criteria.
                     </td>
                 </tr>

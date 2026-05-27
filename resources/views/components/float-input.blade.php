@@ -17,12 +17,6 @@
         'class' => 'floating-label w-full block'
     ]) }}
 >
-    <span>
-        {{ $label }}
-        @if($required)
-            <span class="text-error font-extrabold">*</span>
-        @endif
-    </span>
     <input 
         type="{{ $type }}" 
         name="{{ $name }}" 
@@ -32,4 +26,10 @@
         {{ $required ? 'required' : '' }}
         class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all"
     />
+    <span>
+        {{ $label }}
+        @if($required)
+            <span class="text-error font-extrabold">*</span>
+        @endif
+    </span>
 </label>

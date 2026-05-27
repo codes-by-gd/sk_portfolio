@@ -13,7 +13,7 @@ class FeedbackController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Feedback::with('images');
+        $query = Feedback::query();
 
         // Search filter
         if ($search = $request->input('search')) {
@@ -21,7 +21,6 @@ class FeedbackController extends Controller
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('mobile_number', 'like', "%{$search}%")
                   ->orWhere('area', 'like', "%{$search}%")
-                  ->orWhere('title', 'like', "%{$search}%")
                   ->orWhere('message', 'like', "%{$search}%");
             });
         }
@@ -58,7 +57,6 @@ class FeedbackController extends Controller
             'name' => 'required|string|max:255',
             'mobile_number' => 'required|string|max:20',
             'area' => 'required|string|max:255',
-            'title' => 'required|string|max:255',
             'message' => 'required|string',
             'rating' => 'required|integer|min:1|max:5',
             'status' => 'required|in:pending,approved,rejected',
@@ -94,37 +92,6 @@ class FeedbackController extends Controller
         return back()->with('success', 'Feedback deleted successfully.');
     }
 
-    public function updateAvatar(Request $request, Feedback $feedback)
-    {
-        $validated = $request->validate([
-            'avatar' => 'required|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
-        ]);
-
-        $uploadPath = public_path('uploads/avatars');
-        if (!file_exists($uploadPath)) {
-            mkdir($uploadPath, 0755, true);
-        }
-
-        $file = $request->file('avatar');
-        try {
-            $filename = time() . '_' . \Illuminate\Support\Str::random(10);
-            $webpName = ImageHelper::convertToWebP($file, $uploadPath, $filename);
-
-            // Delete old avatar if exists
-            if ($feedback->avatar_path && file_exists(public_path($feedback->avatar_path))) {
-                @unlink(public_path($feedback->avatar_path));
-            }
-
-            $feedback->update([
-                'avatar_path' => 'uploads/avatars/' . $webpName,
-            ]);
-
-            return back()->with('success', 'Citizen avatar updated successfully.');
-        } catch (\Exception $e) {
-            return back()->withErrors(['avatar' => 'Failed to convert avatar image to WebP: ' . $e->getMessage()]);
-        }
-    }
-
     public function export(Request $request)
     {
         $query = Feedback::query();
@@ -155,7 +122,7 @@ class FeedbackController extends Controller
         $feedbacks = $query->oldest()->get();
 
         $headers = [
-            'ID', 'Name', 'Mobile Number', 'Area', 'Title', 'Message', 'Rating', 'Status', 'Is Featured', 'Submitted At'
+            'ID', 'Name', 'Mobile Number', 'Area', 'Message', 'Rating', 'Status', 'Is Featured', 'Submitted At'
         ];
 
         $rows = [];
@@ -165,7 +132,6 @@ class FeedbackController extends Controller
                 $feedback->name,
                 $feedback->mobile_number,
                 $feedback->area,
-                $feedback->title,
                 $feedback->message,
                 $feedback->rating,
                 ucfirst($feedback->status),

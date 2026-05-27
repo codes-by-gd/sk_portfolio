@@ -120,10 +120,7 @@
                     <i class="swap-off fa-solid fa-moon text-base-content/60 text-base"></i>
                 </label>
 
-                <!-- Give Feedback CTA Button -->
-                <a href="{{ route('feedback.detailed') }}" class="btn btn-sm btn-primary text-white font-bold rounded-lg shadow-sm gap-1.5 hidden md:inline-flex">
-                    <i class="fa-solid fa-comments text-xs"></i> {{ __('messages.nav.give_feedback') }}
-                </a>
+
 
             </div>
         </div>
@@ -210,6 +207,7 @@
                             <li><a href="{{ route('home') }}#development" class="hover:text-white transition-colors">{{ __('messages.nav.development') }}</a></li>
                             <li><a href="{{ route('home') }}#achievements" class="hover:text-white transition-colors">{{ __('messages.nav.achievements') }}</a></li>
                             <li><a href="{{ route('home') }}#gallery" class="hover:text-white transition-colors">{{ __('messages.nav.gallery') }}</a></li>
+                            <li><a href="{{ route('complaint.create') }}" class="hover:text-white transition-colors">{{ __('messages.nav.grievance') }}</a></li>
                         </ul>
                     </div>
 
@@ -334,6 +332,15 @@
                             <i class="fa-solid fa-phone text-sm text-base-content/50 group-hover:text-primary"></i>
                         </span>
                         {{ __('messages.nav.contact') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('complaint.create') }}" onclick="closeMobileDrawer()"
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-base-content hover:bg-primary/8 hover:text-primary transition-all duration-150 group">
+                        <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-base-200 group-hover:bg-primary/15 transition-colors shrink-0">
+                            <i class="fa-solid fa-circle-exclamation text-sm text-base-content/50 group-hover:text-primary"></i>
+                        </span>
+                        {{ __('messages.nav.grievance') }}
                     </a>
                 </li>
             </ul>
@@ -464,5 +471,35 @@
             }
         });
     </script>
+    <!-- Global Stock DaisyUI Dropdown Speed Dial Citizen Interaction Panel -->
+    <div class="dropdown dropdown-top dropdown-end dropdown-hover fixed right-6 bottom-6 z-50 group">
+        <!-- Trigger Button -->
+        <div tabindex="0" role="button" class="btn btn-md sm:btn-lg btn-circle btn-primary shadow-2xl animate-fab-pulse flex items-center justify-center focus:outline-none transition-all duration-300" title="Quick Actions">
+            <i class="fa-solid fa-plus text-base sm:text-lg text-white transition-transform duration-300 group-focus-within:rotate-45"></i>
+        </div>
+
+        <!-- Dropdown Speed Dial Menu (appears above the trigger button, right-aligned) -->
+        <div tabindex="0" class="dropdown-content mb-4 flex flex-col items-end gap-3 pointer-events-auto">
+            <!-- Action 1: File a Grievance -->
+            <div class="flex items-center gap-3">
+                <span class="bg-base-100 border border-base-300 px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-md text-base-content select-none">
+                    {{ __('messages.nav.grievance') }}
+                </span>
+                <a href="{{ route('complaint.create') }}" class="btn btn-circle btn-md btn-secondary shadow-lg hover:scale-105 transition-transform duration-200" title="{{ __('messages.nav.grievance') }}">
+                    <i class="fa-solid fa-circle-exclamation text-sm text-white"></i>
+                </a>
+            </div>
+
+            <!-- Action 2: Give Detailed Feedback -->
+            <div class="flex items-center gap-3">
+                <span class="bg-base-100 border border-base-300 px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-md text-base-content select-none">
+                    {{ __('messages.nav.give_feedback') }}
+                </span>
+                <a href="{{ route('feedback.detailed') }}" class="btn btn-circle btn-md btn-primary shadow-lg hover:scale-105 transition-transform duration-200" title="{{ __('messages.nav.give_feedback') }}">
+                    <i class="fa-solid fa-comments text-sm text-white"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

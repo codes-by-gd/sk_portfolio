@@ -70,94 +70,50 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label class="floating-label w-full block">
-                                        <span>{{ __('messages.form.name') }} <span class="text-error font-extrabold">*</span></span>
                                         <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="{{ __('messages.form.name') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
+                                        <span>{{ __('messages.form.name') }} <span class="text-error font-extrabold">*</span></span>
                                     </label>
                                     <div class="validator-hint text-[10px] font-semibold text-error/90">Please enter your name</div>
                                 </div>
 
                                 <div>
                                     <label class="floating-label w-full block">
-                                        <span>{{ __('messages.form.mobile') }} <span class="text-error font-extrabold">*</span></span>
                                         <input type="tel" name="mobile_number" id="mobile_number" value="{{ old('mobile_number') }}" placeholder="{{ __('messages.form.mobile') }}" required pattern="[0-9]{10}" class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
+                                        <span>{{ __('messages.form.mobile') }} <span class="text-error font-extrabold">*</span></span>
                                     </label>
                                     <div class="validator-hint text-[10px] font-semibold text-error/90">Enter a 10-digit mobile number (e.g. 9876543210)</div>
                                 </div>
                             </div>
 
-                            <!-- Row 2: Ward Area and Feedback Title -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="floating-label w-full block">
-                                        <span>{{ __('messages.form.area') }} <span class="text-error font-extrabold">*</span></span>
-                                        <input type="text" name="area" id="area" value="{{ old('area') }}" placeholder="{{ __('messages.form.area') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
-                                    </label>
-                                    <div class="validator-hint text-[10px] font-semibold text-error/90">Ward Area or Block is required</div>
-                                </div>
-
-                                <div>
-                                    <label class="floating-label w-full block">
-                                        <span>{{ __('messages.form.title') }} <span class="text-error font-extrabold">*</span></span>
-                                        <input type="text" name="title" id="title" value="{{ old('title') }}" placeholder="{{ __('messages.form.title') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
-                                    </label>
-                                    <div class="validator-hint text-[10px] font-semibold text-error/90">A brief title is required</div>
-                                </div>
+                            <!-- Row 2: Ward Area -->
+                            <div>
+                                <label class="floating-label w-full block">
+                                    <input type="text" name="area" id="area" value="{{ old('area') }}" placeholder="{{ __('messages.form.area') }}" required class="input input-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator" />
+                                    <span>{{ __('messages.form.area') }} <span class="text-error font-extrabold">*</span></span>
+                                </label>
+                                <div class="validator-hint text-[10px] font-semibold text-error/90">Ward Area or Block is required</div>
                             </div>
 
                             <!-- DaisyUI Star Rating Input block nested perfectly -->
                             <div class="flex items-center gap-3 bg-base-200 px-4 py-2 border border-base-300 rounded-xl justify-between h-[3.25rem]">
                                 <span class="text-xs font-extrabold text-base-content/65 uppercase tracking-wider">{{ __('messages.form.rating') }}</span>
                                 <div class="rating rating-md gap-0.5">
-                                    <input type="radio" name="rating" value="1" class="mask mask-star-2 bg-warning" />
+                                    <input type="radio" name="rating" value="1" class="mask mask-star-2 bg-warning" required />
                                     <input type="radio" name="rating" value="2" class="mask mask-star-2 bg-warning" />
                                     <input type="radio" name="rating" value="3" class="mask mask-star-2 bg-warning" />
-                                    <input type="radio" name="rating" value="4" class="mask mask-star-2 bg-warning" />
-                                    <input type="radio" name="rating" value="5" class="mask mask-star-2 bg-warning" checked />
+                                    <input type="radio" name="rating" value="4" class="mask mask-star-2 bg-warning" checked />
+                                    <input type="radio" name="rating" value="5" class="mask mask-star-2 bg-warning" />
                                 </div>
                             </div>
 
-                            <!-- Row 3: Feedback Message Area -->
-                            <div class="relative w-full">
-                                <textarea id="message" name="message" required placeholder=" " rows="3" 
-                                    class="peer textarea textarea-bordered w-full pt-5 pb-2 min-h-[5rem] bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-transparent transition-all validator"></textarea>
-                                <label for="message" 
-                                    class="absolute left-4 top-2.5 text-[10px] text-base-content/50 font-extrabold uppercase tracking-wider transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-placeholder-shown:font-medium peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:top-2.5 peer-focus:text-[10px] peer-focus:text-primary peer-focus:font-extrabold peer-focus:uppercase peer-focus:tracking-wider pointer-events-none">
-                                    {{ __('messages.form.message') }}
+                            <!-- Message / Comments Textarea -->
+                            <div class="relative">
+                                <label class="floating-label w-full block">
+                                    <textarea name="message" id="message" placeholder="{{ __('messages.form.message') }}" required class="textarea textarea-bordered textarea-md h-24 w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all validator"></textarea>
+                                    <span>{{ __('messages.form.message') }} <span class="text-error font-extrabold">*</span></span>
                                 </label>
                                 <div class="validator-hint text-[10px] font-semibold text-error/90 font-sans">Please share your feedback details</div>
                             </div>
-
-                            <!-- Unified Media Upload & Live Camera Grid Row -->
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end bg-base-200 p-4 rounded-xl border border-base-300">
-                                <!-- Device Upload file-input -->
-                                <div class="form-control w-full sm:col-span-2">
-                                    <label class="label py-0.5">
-                                        <span class="label-text font-extrabold text-[10px] text-base-content/70 uppercase tracking-wider">Upload Photos</span>
-                                    </label>
-                                    <input type="file" name="photos[]" multiple accept="image/*" class="file-input file-input-bordered file-input-primary file-input-sm w-full rounded-xl bg-base-100 border-base-300 text-xs" />
-                                </div>
-
-                                <!-- Live Camera Button -->
-                                <div class="w-full sm:col-span-1">
-                                    <button type="button" onclick="openCameraModal()" class="btn btn-xs sm:btn-sm btn-outline btn-secondary w-full rounded-xl gap-1.5 font-bold h-8 sm:h-9">
-                                        <i class="fa-solid fa-camera text-[10px]"></i> Live Photo
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Camera photo preview badge (appears if captured) -->
-                            <div id="camera-preview-container" class="hidden flex items-center justify-between bg-success/10 border border-success/30 px-3 py-2 rounded-xl text-success transition-all duration-200">
-                                <div class="flex items-center gap-2">
-                                    <img id="camera-preview-thumbnail" class="w-8 h-8 object-cover rounded-lg border border-success/35" src="" alt="Captured Photo Preview">
-                                    <span class="text-xs font-semibold">Live photo attached!</span>
-                                </div>
-                                <button type="button" onclick="removeCameraPhoto()" class="btn btn-xs btn-circle btn-ghost text-error hover:bg-error/10">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
-                            </div>
-
-                            <!-- Hidden Base64 Field -->
-                            <input type="hidden" name="camera_photo" id="camera-photo-input">
 
                             <!-- Submit Button -->
                             <button type="submit" class="btn btn-primary w-full text-white font-bold h-11 rounded-xl mt-2 hover:shadow-lg transition-all">
@@ -173,164 +129,7 @@
     </div>
 </section>
 
-<!-- DaisyUI Modal for Camera Capture -->
-<dialog id="camera_modal" class="modal modal-bottom sm:modal-middle">
-    <div class="modal-box bg-base-100 border border-base-300 rounded-3xl p-6 relative">
-        <!-- Close button at corner -->
-        <button type="button" onclick="closeCameraModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60"><i class="fa-solid fa-xmark"></i></button>
 
-        <h3 class="font-heading font-extrabold text-lg text-base-content flex items-center gap-2">
-            <i class="fa-solid fa-camera text-primary"></i> Take a Live Photo
-        </h3>
-        <p class="text-xs text-base-content/60 mt-1 mb-4">Allow camera access to capture a dynamic live photo of the ward.</p>
-
-        <!-- Video / Canvas display panel -->
-        <div class="relative w-full aspect-video rounded-2xl bg-base-200 border border-base-300 overflow-hidden flex items-center justify-center">
-            <video id="camera-video" autoplay playsinline class="hidden w-full h-full object-cover"></video>
-            <canvas id="camera-canvas" class="hidden w-full h-full object-cover"></canvas>
-            
-            <!-- Empty state / Initial loading text -->
-            <div id="camera-placeholder" class="text-center p-6 space-y-2">
-                <i class="fa-solid fa-camera-retro text-4xl text-base-content/30 animate-bounce"></i>
-                <p class="text-xs font-bold text-base-content/50">Camera stream starting...</p>
-            </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex items-center justify-end gap-3 mt-6">
-            <button type="button" onclick="closeCameraModal()" class="btn btn-sm btn-ghost rounded-xl">Cancel</button>
-            <button type="button" id="capture-photo-btn" onclick="takeSnapshot()" class="btn btn-sm btn-primary text-white rounded-xl font-bold"><i class="fa-solid fa-circle-dot"></i> Capture Photo</button>
-            <button type="button" id="retake-photo-btn" onclick="resetCamera()" class="btn btn-sm btn-warning rounded-xl hidden font-bold"><i class="fa-solid fa-rotate-left"></i> Retake</button>
-            <button type="button" id="use-photo-btn" onclick="useCapturedPhoto()" class="btn btn-sm btn-success text-white rounded-xl hidden font-bold"><i class="fa-solid fa-check"></i> Use Photo</button>
-        </div>
-    </div>
-    <!-- Backdrop to close on tap outside -->
-    <form method="dialog" class="modal-backdrop">
-        <button onclick="closeCameraModal()">close</button>
-    </form>
-</dialog>
-
-<!-- Camera Javascript handler -->
-<script>
-    let localStream = null;
-    const video = document.getElementById('camera-video');
-    const canvas = document.getElementById('camera-canvas');
-    const placeholder = document.getElementById('camera-placeholder');
-    const captureBtn = document.getElementById('capture-photo-btn');
-    const retakeBtn = document.getElementById('retake-photo-btn');
-    const useBtn = document.getElementById('use-photo-btn');
-    const photoInput = document.getElementById('camera-photo-input');
-    const previewContainer = document.getElementById('camera-preview-container');
-    const previewThumbnail = document.getElementById('camera-preview-thumbnail');
-    const modal = document.getElementById('camera_modal');
-
-    async function openCameraModal() {
-        modal.showModal();
-        
-        // Reset modal layout visibility
-        video.classList.add('hidden');
-        canvas.classList.add('hidden');
-        placeholder.classList.remove('hidden');
-        
-        captureBtn.classList.remove('hidden');
-        retakeBtn.classList.add('hidden');
-        useBtn.classList.add('hidden');
-
-        try {
-            // Request permissions for camera
-            localStream = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: "environment" }, // Prioritize rear camera for ward surveys
-                audio: false 
-            });
-            
-            video.srcObject = localStream;
-            video.classList.remove('hidden');
-            placeholder.classList.add('hidden');
-        } catch (err) {
-            console.error("Camera access failed: ", err);
-            placeholder.innerHTML = `
-                <div class="p-4 text-center space-y-1">
-                    <i class="fa-solid fa-triangle-exclamation text-3xl text-error"></i>
-                    <p class="text-xs font-bold text-base-content/75">Camera access unavailable</p>
-                    <p class="text-[10px] text-base-content/50">Please upload files using the device selector directly instead.</p>
-                </div>
-            `;
-            captureBtn.classList.add('hidden');
-        }
-    }
-
-    function closeCameraModal() {
-        stopCamera();
-        modal.close();
-    }
-
-    function takeSnapshot() {
-        if (!localStream) return;
-
-        const ctx = canvas.getContext('2d');
-        
-        // Match canvas bounds to video frame aspect
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        
-        // Draw frame
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
-        // Toggle visibility
-        video.classList.add('hidden');
-        canvas.classList.remove('hidden');
-        
-        captureBtn.classList.add('hidden');
-        retakeBtn.classList.remove('hidden');
-        useBtn.classList.remove('hidden');
-
-        // Stop camera stream to conserve resources
-        stopCamera();
-    }
-
-    function resetCamera() {
-        // Clear old input
-        canvas.classList.add('hidden');
-        video.classList.add('hidden');
-        placeholder.classList.remove('hidden');
-        
-        // Re-initialize stream
-        openCameraModal();
-    }
-
-    function useCapturedPhoto() {
-        // Convert canvas image to dataUrl base64
-        const dataUrl = canvas.toDataURL('image/jpeg');
-        photoInput.value = dataUrl;
-
-        // Set thumbnail source and make preview badge visible
-        previewThumbnail.src = dataUrl;
-        previewContainer.classList.remove('hidden');
-
-        // Close modal cleanly
-        closeCameraModal();
-    }
-
-    function removeCameraPhoto() {
-        // Purge stored value and hide badge
-        photoInput.value = '';
-        previewThumbnail.src = '';
-        previewContainer.classList.add('hidden');
-    }
-
-    function stopCamera() {
-        if (localStream) {
-            localStream.getTracks().forEach(track => track.stop());
-            localStream = null;
-        }
-        if (video.srcObject) {
-            video.srcObject = null;
-        }
-    }
-
-    // Clean up streams if navigating away
-    window.addEventListener('beforeunload', stopCamera);
-</script>
 
 <!-- AJAX Pagination Handler -->
 <script>
@@ -391,9 +190,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-@if(session('success'))
-<!-- Success Modal Popup -->
-<dialog id="success_modal" class="modal modal-bottom sm:modal-middle modal-open">
+<!-- Success Modal Popup (Standard Dialog Markup) -->
+<dialog id="success_modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-base-300 rounded-3xl p-8 max-w-sm text-center relative overflow-hidden shadow-2xl">
         <!-- Confetti/Glow background shapes -->
         <div class="absolute -top-12 -left-12 w-24 h-24 bg-success/10 rounded-full blur-xl animate-pulse"></div>
@@ -408,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
             Thank You, Citizen!
         </h3>
         <p class="text-xs text-base-content/70 mt-2 leading-relaxed">
-            {{ session('success') }}
+            {{ session('success') ?? 'Your feedback has been submitted successfully.' }}
         </p>
 
         <!-- Dynamic development quote or thank you note -->
@@ -417,23 +215,199 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
 
         <div class="modal-action justify-center mt-6">
-            <button type="button" onclick="closeSuccessModal()" class="btn btn-sm btn-primary text-white rounded-xl font-bold px-6 shadow-md hover:shadow-lg transition-all duration-200">
-                Jai Hind
-            </button>
+            <form method="dialog">
+                <button class="btn btn-sm btn-primary text-white rounded-xl font-bold px-6 shadow-md hover:shadow-lg transition-all duration-200">
+                    Jai Hind
+                </button>
+            </form>
         </div>
     </div>
-    <!-- Backdrop to close on click -->
-    <div class="modal-backdrop bg-black/45 backdrop-blur-sm" onclick="closeSuccessModal()"></div>
+    <!-- Backdrop to close on click natively -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
 </dialog>
 
+<!-- Toaster Alert & AJAX Form Submission Script -->
 <script>
-    function closeSuccessModal() {
-        const modal = document.getElementById('success_modal');
-        if (modal) {
-            modal.classList.remove('modal-open');
-            modal.removeAttribute('open');
+    // Universal DaisyUI Toaster Engine
+    function showToast(message, type = 'success') {
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toast-container';
+            toastContainer.className = 'toast toast-end toast-bottom p-4 z-50';
+            document.body.appendChild(toastContainer);
         }
+
+        const alertEl = document.createElement('div');
+        const alertClass = type === 'success' ? 'alert-success' : (type === 'error' ? 'alert-error' : 'alert-warning');
+        const icon = type === 'success' 
+            ? '<i class="fa-solid fa-circle-check text-xs"></i>' 
+            : (type === 'error' ? '<i class="fa-solid fa-triangle-exclamation text-xs"></i>' : '<i class="fa-solid fa-circle-info text-xs"></i>');
+
+        alertEl.className = `alert ${alertClass} alert-soft shadow-lg rounded-2xl flex items-center gap-2 border-none transition-all duration-300 transform translate-y-4 opacity-0`;
+        alertEl.innerHTML = `
+            <span class="text-white shrink-0">${icon}</span>
+            <span class="text-xs font-bold font-sans text-base-content/90">${message}</span>
+        `;
+
+        toastContainer.appendChild(alertEl);
+
+        // Slide and fade in
+        setTimeout(() => {
+            alertEl.classList.remove('translate-y-4', 'opacity-0');
+        }, 10);
+
+        // Slide/fade out and remove after 4 seconds
+        setTimeout(() => {
+            alertEl.classList.add('translate-y-4', 'opacity-0');
+            setTimeout(() => {
+                alertEl.remove();
+                if (toastContainer.children.length === 0) {
+                    toastContainer.remove();
+                }
+            }, 300);
+        }, 4000);
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Trigger success dialog on redirect load if session exists
+        @if(session('success'))
+            const successModal = document.getElementById('success_modal');
+            if (successModal) {
+                successModal.showModal();
+            }
+        @endif
+
+        const form = document.getElementById('detailed-feedback-form');
+        const successModal = document.getElementById('success_modal');
+
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Client-side validations
+                const name = document.getElementById('name').value.trim();
+                const mobile = document.getElementById('mobile_number').value.trim();
+                const area = document.getElementById('area').value.trim();
+                const message = document.getElementById('message').value.trim();
+
+                if (!name) {
+                    showToast('Please enter your name.', 'error');
+                    return;
+                }
+                if (!mobile || !/^[0-9]{10}$/.test(mobile)) {
+                    showToast('Please enter a valid 10-digit mobile number.', 'error');
+                    return;
+                }
+                if (!area) {
+                    showToast('Please enter your block/area.', 'error');
+                    return;
+                }
+                if (!message) {
+                    showToast('Please enter your feedback details.', 'error');
+                    return;
+                }
+
+                // Show submitting loading state
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnContent = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<span class="loading loading-spinner loading-xs mr-2"></span> Submitting...`;
+
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err; });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnContent;
+
+                    if (data.success) {
+                        showToast(data.message || 'Feedback submitted successfully!', 'success');
+
+                        // Show success modal natively
+                        if (successModal) {
+                            const descEl = successModal.querySelector('.modal-box p');
+                            if (descEl) {
+                                descEl.textContent = data.message || 'Your feedback has been submitted successfully.';
+                            }
+                            successModal.showModal();
+                        }
+
+                        // Reset form
+                        form.reset();
+
+                        // Reload feedback list asynchronously using the listing fetcher
+                        const container = document.getElementById('feedback-listing-container');
+                        if (container) {
+                            const activePageLink = container.querySelector('.join-item.btn-primary');
+                            const url = activePageLink ? activePageLink.getAttribute('href') : window.location.href;
+                            
+                            // Re-fetch using internal AJAX function
+                            container.classList.add('relative');
+                            const oldOverlay = container.querySelector('.feedback-loader-overlay');
+                            if (oldOverlay) oldOverlay.remove();
+                            
+                            const loader = document.createElement('div');
+                            loader.className = 'feedback-loader-overlay absolute inset-0 bg-base-100/75 backdrop-blur-[2px] flex items-center justify-center z-50 min-h-[300px] transition-opacity duration-300';
+                            loader.innerHTML = `
+                                <div class="flex flex-col items-center gap-3 bg-base-100 border border-base-300 shadow-2xl px-6 py-4 rounded-3xl animate-pulse">
+                                    <span class="loading loading-spinner loading-md text-primary"></span>
+                                    <span class="text-[10px] font-extrabold text-base-content/75 uppercase tracking-wider">Refreshing listing...</span>
+                                </div>
+                            `;
+                            container.appendChild(loader);
+
+                            fetch(url, {
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                container.innerHTML = data.html;
+                            })
+                            .catch(error => {
+                                console.error('Error refreshing listing:', error);
+                                const overlay = container.querySelector('.feedback-loader-overlay');
+                                if (overlay) overlay.remove();
+                            });
+                        }
+                    } else {
+                        showToast(data.message || 'Failed to submit. Please try again.', 'error');
+                    }
+                })
+                .catch(error => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnContent;
+                    console.error('Submission error:', error);
+
+                    if (error && error.errors) {
+                        const firstKey = Object.keys(error.errors)[0];
+                        const firstErrorMsg = error.errors[firstKey][0];
+                        showToast(firstErrorMsg, 'error');
+                    } else if (error && error.message) {
+                        showToast(error.message, 'error');
+                    } else {
+                        showToast('A network error occurred. Please try again.', 'error');
+                    }
+                });
+            });
+        }
+    });
 </script>
-@endif
 @endsection

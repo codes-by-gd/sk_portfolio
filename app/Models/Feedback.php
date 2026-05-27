@@ -12,16 +12,9 @@ class Feedback extends Model
         'name',
         'mobile_number',
         'area',
-        'title',
         'message',
         'rating',
         'status',
         'is_featured',
-        'avatar_path',
     ];
-
-    public function images()
-    {
-        return $this->hasMany(FeedbackImage::class, 'feedback_id');
-    }
 }

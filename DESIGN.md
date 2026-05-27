@@ -170,7 +170,6 @@ The homepage is a single-page scrolling interface with a sticky navigation bar.
 ### A. Sticky Navbar
 - Uses daisyUI `navbar`.
 - Contains: Name/Designation logo, scroll links (Home, About, Development Work, Achievements, Gallery, Contact), and the native language switcher dropdown (English, ગુજરાતી, हिन्दी).
-- **CTA Button:** A prominent Call-to-Action button ("Give Feedback") is aligned on the right side of the navbar, linking directly to the standalone detailed feedback page.
 
 ### B. Hero Section
 - **Layout:** Two-column grid (large screen) or stack (mobile).
@@ -191,7 +190,7 @@ The homepage is a single-page scrolling interface with a sticky navigation bar.
 ### F. Public Feedback Section (Single Page Home)
 - **Featured Carousel:** Uses daisyUI `carousel` displaying only featured feedback entries (`is_featured = true` and `status = 'approved'`).
   - **Listing Density:** Displays multiple feedback cards next to each other on larger viewports (e.g. 3 cards per slide/grid) to show more content together.
-  - **User Image:** Displays the optional user avatar (`avatar_path`) uploaded from the admin dashboard.
+  - **User Avatar:** Displays elegant visual fallback initials based on the user's name.
 - **Detailed feedback CTA:** A centered, prominent button ("Submit Detailed Review") directing users to the standalone detailed feedback page.
 - **No Quick Form:** The inline quick feedback form is completely removed.
 
@@ -199,7 +198,7 @@ The homepage is a single-page scrolling interface with a sticky navigation bar.
 
 ## 5. Detailed Feedback Page (Separate Page Layout)
 
-A standalone webpage optimized for mobile sharing via messaging links. It has two priority areas:
+As standalone webpage optimized for mobile sharing via messaging links. It has two priority areas:
 
 ### A. Detailed Feedback Form (Primary Focus)
 - Centered detailed card layout (`card w-full max-w-xl bg-base-100 shadow-xl border border-base-200`) positioned at the top of the page.
@@ -213,11 +212,10 @@ A standalone webpage optimized for mobile sharing via messaging links. It has tw
   <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" value="5" />
 </div>
 ```
-- **Mobile Photo Capture Button:** Stylized upload block. On mobile devices, clicking this button triggers the native device camera for quick snaps of local development or issues.
 
 ### B. Approved Feedbacks Listing (Secondary Focus)
 - Placed below the form section to keep it clean.
-- Displays a grid/list of all approved feedbacks (`status = 'approved'`) with star ratings, name, ward area, feedback title, date, and user-uploaded feedback images. Mobile numbers are omitted in this list for privacy, and dynamic citizen avatars are rendered using DaisyUI avatar layout (falling back to initials if no custom photo is present).
+- Displays a grid/list of all approved feedbacks (`status = 'approved'`) with star ratings, name, ward area, and date. Mobile numbers are omitted in this list for privacy, and dynamic initials-based avatars are rendered.
 
 ---
 
@@ -256,8 +254,6 @@ To keep the codebase cleanly organized and prevent generic template overlaps:
     This order ensures that the core modification utilities (Edit and Delete) remain perfectly aligned side-by-side on the rightmost edge of every list item.
   - **Unified Same-Page Lightbox Viewer for Images & Attachments:**
     All admin-side image previews (both within list tables and modal detail sheets) must not open in new browser tabs (`target="_blank"`). Instead, clicking any preview must open a high-resolution version inside a premium, native HTML5 same-page Lightbox Dialog (`<dialog id="viewer-modal">`) featuring an overlay blur, quick close operations, and category/caption text.
-  - **Attachments Preview within Edit Modals:**
-    Any detail sheet/edit modal for submissions containing uploaded attachments must display a prominent, dedicated thumbnail section ("Submitted Attachments") immediately below the content inputs. Individual thumbnails must be highly interactive (hover scales, magnifying glass indicators) and trigger the same-page Lightbox Dialog on click.
 
 ### Sidebar User Profile Link
 - The username container in the sidebar under "Logged In As" is converted to a premium menu-like interactive block targeting the profile page.
@@ -530,7 +526,7 @@ To maintain a premium, ultra-responsive feel (Lighthouse score of 95+), the impl
 - **SVG over Icon Fonts:** For branding elements, custom lotus designs, and dividers, use inline SVGs instead of loading heavy external icon sets.
 
 ### B. Image & Media Optimization
-- **Modern File Formats:** All user-uploaded media (portraits, gallery images, before/after development works, citizen feedback snaps) must be converted and saved in **WebP or AVIF** format with an 80% compression threshold on upload.
+- **Modern File Formats:** All user-uploaded media (portraits, gallery images, before/after development works) must be converted and saved in **WebP or AVIF** format with an 80% compression threshold on upload.
 - **Image Scaling & Srcset:** Implement explicit `width` and `height` dimensions on all standard images to avoid layout shifts (Cumulative Layout Shift - CLS). Render responsive sizes using standard Tailwind responsive utility tags.
 
 ### C. CSS & DOM Size Reduction
@@ -538,9 +534,9 @@ To maintain a premium, ultra-responsive feel (Lighthouse score of 95+), the impl
 - **GPU-Accelerated Animations:** All transitions, hover lifts, and modal animations must utilize GPU-accelerated attributes (`transform`, `opacity`, `translate`). Avoid animating layout properties (`height`, `width`, `top`, `margin`) to prevent constant page reflows.
 
 ### D. Backend Database & Caching Optimization
-- **Avoid N+1 Queries:** When displaying listings (such as the citizen reviews, achievements, or works list), ensure all database relations (e.g., image paths, tags, creator profiles) are eager-loaded:
+- **Avoid N+1 Queries:** When displaying listings (such as the citizen reviews, achievements, or works list), ensure all database relations (e.g., tags, creator profiles) are eager-loaded:
   ```php
-  $feedbacks = Feedback::with('media')->where('status', 'approved')->paginate(12);
+  $feedbacks = Feedback::where('status', 'approved')->paginate(12);
   ```
 - **Indexed Fields:** Maintain database indexes on frequently filtered or ordered fields, including `status`, `is_featured`, `created_at`, and `category_id`.
 - **Production Caching Pipeline:** In the production environment, always trigger Laravel's compiler caches:

@@ -11,14 +11,10 @@
                     <!-- Top: Submitter Details -->
                     <div class="flex items-center justify-between gap-3">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full overflow-hidden border border-base-300 bg-base-200 shrink-0 shadow-xs">
-                                @if($fb->avatar_path)
-                                    <img src="{{ asset($fb->avatar_path) }}" class="object-cover w-full h-full" alt="{{ $fb->name }}" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed='+encodeURIComponent('{{ $fb->name }}')+'&backgroundColor=ff8a3d&textColor=ffffff'">
-                                @else
-                                    <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/50 font-heading font-extrabold text-xs uppercase">
-                                        {{ substr($fb->name, 0, 2) }}
-                                    </div>
-                                @endif
+                            <div class="w-10 h-10 rounded-full overflow-hidden border border-base-300 bg-base-200 shrink-0 shadow-xs flex items-center justify-center">
+                                <div class="w-full h-full bg-base-300 flex items-center justify-center text-base-content/50 font-heading font-extrabold text-xs uppercase">
+                                    {{ substr($fb->name, 0, 2) }}
+                                </div>
                             </div>
                             <div>
                                 <h4 class="font-bold text-base-content text-sm leading-snug">{{ $fb->name }}</h4>
@@ -35,25 +31,13 @@
                         @endfor
                     </div>
 
-                    <!-- Feedback Title and Content -->
+                    <!-- Feedback Content -->
                     <div class="space-y-1">
-                        <h5 class="font-bold text-base-content text-sm leading-snug">{{ $fb->title }}</h5>
                         <p class="text-base-content/70 text-xs sm:text-sm leading-relaxed whitespace-pre-line">
                             "{!! nl2br(e($fb->message)) !!}"
                         </p>
                     </div>
                 </div>
-
-                <!-- Media Uploads if any -->
-                @if($fb->images->isNotEmpty())
-                    <div class="flex gap-2 flex-wrap pt-2 border-t border-base-200">
-                        @foreach($fb->images as $img)
-                            <a href="{{ asset($img->image_path) }}" target="_blank" class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl overflow-hidden border border-base-300 hover:scale-105 transition-transform duration-200 block bg-base-300">
-                                <img src="{{ asset($img->image_path) }}" class="object-cover w-full h-full" alt="Citizen Review Image" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=Media&backgroundColor=e2e8f0&textColor=1f2937'">
-                            </a>
-                        @endforeach
-                    </div>
-                @endif
             </div>
         @endforeach
     </div>

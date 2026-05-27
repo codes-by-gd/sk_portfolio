@@ -139,11 +139,16 @@
 </div>
 
 {{-- ========== ADD CONTACT MODAL ========== --}}
-<div id="contact-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50">
+<dialog id="contact-modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-lg p-6 relative">
         <button type="button" onclick="closeContactModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+        <!-- ESC shortcut label -->
+        <div class="absolute right-14 top-5 text-[9px] opacity-40 font-bold hidden sm:block">
+            <kbd class="kbd kbd-sm bg-base-200">ESC</kbd>
+        </div>
+
         <h3 id="contact-modal-title" class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
             <i class="fa-solid fa-address-book text-primary"></i> Add Contact
         </h3>
@@ -177,17 +182,17 @@
 
             <div class="form-control">
                 <label class="floating-label w-full block">
-                    <span>Postal / Office Address</span>
                     <textarea id="contact-address" name="address" rows="2" placeholder="Postal / Office Address"
                         class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-20"></textarea>
+                    <span>Postal / Office Address</span>
                 </label>
             </div>
 
             <div class="form-control">
                 <label class="floating-label w-full block">
-                    <span>Notes</span>
                     <textarea id="contact-notes" name="notes" rows="2" placeholder="Notes"
                         class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-20"></textarea>
+                    <span>Notes</span>
                 </label>
             </div>
 
@@ -199,14 +204,23 @@
             </div>
         </form>
     </div>
-</div>
+    <!-- Backdrop to close natively on click -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
+</dialog>
 
 {{-- ========== EXPORT MODAL ========== --}}
-<div id="export-contact-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50">
+<dialog id="export-contact-modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-sm p-6 relative">
         <button type="button" onclick="closeExportModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+        <!-- ESC shortcut label -->
+        <div class="absolute right-14 top-5 text-[9px] opacity-40 font-bold hidden sm:block">
+            <kbd class="kbd kbd-sm bg-base-200">ESC</kbd>
+        </div>
+
         <h3 class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
             <i class="fa-solid fa-file-excel text-success"></i> Export Contacts to XLSX
         </h3>
@@ -224,7 +238,11 @@
             </div>
         </form>
     </div>
-</div>
+    <!-- Backdrop to close natively on click -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
+</dialog>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -237,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ['contact-first-name','contact-last-name','contact-mobile','contact-designation','contact-email','contact-address','contact-notes']
             .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
 
-        document.getElementById('contact-modal').classList.add('modal-open');
+        document.getElementById('contact-modal').showModal();
     };
 
     window.openEditModal = function (contact) {
@@ -254,19 +272,19 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('contact-address').value = contact.address || '';
         document.getElementById('contact-notes').value = contact.notes || '';
 
-        document.getElementById('contact-modal').classList.add('modal-open');
+        document.getElementById('contact-modal').showModal();
     };
 
     window.closeContactModal = function () {
-        document.getElementById('contact-modal').classList.remove('modal-open');
+        document.getElementById('contact-modal').close();
     };
 
     window.openExportModal = function () {
-        document.getElementById('export-contact-modal').classList.add('modal-open');
+        document.getElementById('export-contact-modal').showModal();
     };
 
     window.closeExportModal = function () {
-        document.getElementById('export-contact-modal').classList.remove('modal-open');
+        document.getElementById('export-contact-modal').close();
     };
 });
 </script>

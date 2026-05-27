@@ -18,6 +18,15 @@ class GalleryController extends Controller
             $query->where('category', $category);
         }
 
+        if ($search = $request->input('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('caption_en', 'like', '%' . $search . '%')
+                  ->orWhere('caption_gu', 'like', '%' . $search . '%')
+                  ->orWhere('caption_hi', 'like', '%' . $search . '%')
+                  ->orWhere('category', 'like', '%' . $search . '%');
+            });
+        }
+
         $images = $query->paginate(12)->withQueryString();
 
         if ($request->ajax()) {

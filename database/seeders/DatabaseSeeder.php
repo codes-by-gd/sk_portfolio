@@ -223,7 +223,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Rajesh Patel',
                 'area' => 'Gorwa',
-                'title' => 'Excellent work on road repair',
                 'message' => 'The new VIP road laying has resolved our traffic and monsoon flooding issues completely. Thank you Sachinbhai!',
                 'rating' => 5,
                 'status' => 'approved',
@@ -236,7 +235,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Meenaben Shah',
                 'area' => 'Subhanpura',
-                'title' => 'Safe street lights',
                 'message' => 'The new LED streetlights make walking late at night very safe for ladies and children. Great effort by our Corporator.',
                 'rating' => 5,
                 'status' => 'approved',
@@ -249,7 +247,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Amit Trivedi',
                 'area' => 'VIP Road',
-                'title' => 'Clean drinking water access',
                 'message' => 'Water pressure has improved and we now get clear, clean water without interruptions. Appreciate the swift action.',
                 'rating' => 4,
                 'status' => 'approved',
@@ -262,7 +259,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Vikram Rathore',
                 'area' => 'Gorwa',
-                'title' => 'Garbage Collection Feedback',
                 'message' => 'Regular garbage collection van arrives on time every morning. Excellent hygienic initiative.',
                 'rating' => 5,
                 'status' => 'approved',
@@ -275,7 +271,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Sanjay Mehta',
                 'area' => 'Subhanpura',
-                'title' => 'Tree Plantation Drive',
                 'message' => 'Loved the new green canopy initiative in our area. Makes the environment fresh and clean.',
                 'rating' => 5,
                 'status' => 'pending',
@@ -288,7 +283,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Kirti Patel',
                 'area' => 'VIP Road',
-                'title' => 'Pothole repairs needed',
                 'message' => 'A small pothole is developing near the main junction. Requesting prompt repairs before monsoons.',
                 'rating' => 3,
                 'status' => 'pending',
@@ -301,7 +295,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Harish Shah',
                 'area' => 'Gorwa',
-                'title' => 'Public Parks Maintenance',
                 'message' => 'The local park is beautifully maintained with kids play area. Great place for morning walks.',
                 'rating' => 4,
                 'status' => 'approved',
@@ -318,13 +311,6 @@ class DatabaseSeeder extends Seeder
         ];
         
         $areas = ['Gorwa', 'Subhanpura', 'VIP Road', 'Samta', 'Hari Nagar', 'Gotri'];
-        
-        $titles = [
-            'Pothole fixed promptly', 'Water supply pressure is good', 'LED street lights are brilliant',
-            'Excellent clean ward campaign', 'Regular sanitization drive', 'New park facility is awesome',
-            'Quick response on water leakage', 'Need street clean-up in sector 3', 'Happy with public welfare camps',
-            'Very helpful ward office staff'
-        ];
         
         $messages = [
             'We are extremely satisfied with the swift road repair work done here. The corporator personally visited and resolved our query within days.',
@@ -344,7 +330,6 @@ class DatabaseSeeder extends Seeder
                 [
                     'name' => $names[($i % count($names))] . ' ' . chr(65 + ($i % 26)),
                     'area' => $areas[($i % count($areas))],
-                    'title' => $titles[($i % count($titles))] . " (#$i)",
                     'message' => $messages[($i % count($messages))] . " We truly appreciate the continuous support from the corporator team.",
                     'rating' => ($i % 3 === 0) ? 4 : 5,
                     'status' => ($i % 10 === 0) ? 'pending' : (($i % 15 === 0) ? 'rejected' : 'approved'),

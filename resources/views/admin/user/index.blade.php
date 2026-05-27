@@ -126,11 +126,16 @@
 </div>
 
 {{-- ========== ADD USER MODAL ========== --}}
-<div id="add-user-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50">
+<dialog id="add-user-modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-lg p-6 relative">
         <button type="button" onclick="closeAddUserModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+        <!-- ESC shortcut label -->
+        <div class="absolute right-14 top-5 text-[9px] opacity-40 font-bold hidden sm:block">
+            <kbd class="kbd kbd-sm bg-base-200">ESC</kbd>
+        </div>
+
         <h3 class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
             <i class="fa-solid fa-user-plus text-primary"></i> Register Administrator
         </h3>
@@ -159,12 +164,12 @@
             </div>
             <div class="form-control">
                 <label class="floating-label w-full block relative">
-                    <span>Access Role <span class="text-error font-extrabold">*</span></span>
                     <select name="role" required class="select select-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all appearance-none pr-10">
                         <option value="moderator" selected>Content Moderator (Feedbacks &amp; Grievances)</option>
                         <option value="editor">Content Editor (Works, CMS, Gallery)</option>
                         <option value="super_admin">Super Admin (Full Access)</option>
                     </select>
+                    <span>Access Role <span class="text-error font-extrabold">*</span></span>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
                         <i class="fa-solid fa-chevron-down text-xs"></i>
                     </div>
@@ -178,14 +183,23 @@
             </div>
         </form>
     </div>
-</div>
+    <!-- Backdrop to close natively on click -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
+</dialog>
 
 {{-- ========== EDIT USER MODAL ========== --}}
-<div id="edit-user-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50">
+<dialog id="edit-user-modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-lg p-6 relative">
         <button type="button" onclick="closeEditUserModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+        <!-- ESC shortcut label -->
+        <div class="absolute right-14 top-5 text-[9px] opacity-40 font-bold hidden sm:block">
+            <kbd class="kbd kbd-sm bg-base-200">ESC</kbd>
+        </div>
+
         <h3 class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
             <i class="fa-solid fa-pen-to-square text-primary"></i> Edit Administrator
         </h3>
@@ -208,12 +222,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="form-control">
                     <label class="floating-label w-full block relative">
-                        <span>Access Role <span class="text-error font-extrabold">*</span></span>
                         <select id="edit-role" name="role" required class="select select-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all appearance-none pr-10">
                             <option value="moderator">Content Moderator</option>
                             <option value="editor">Content Editor</option>
                             <option value="super_admin">Super Admin</option>
                         </select>
+                        <span>Access Role <span class="text-error font-extrabold">*</span></span>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
                             <i class="fa-solid fa-chevron-down text-xs"></i>
                         </div>
@@ -221,11 +235,11 @@
                 </div>
                 <div class="form-control">
                     <label class="floating-label w-full block relative">
-                        <span>Account Status <span class="text-error font-extrabold">*</span></span>
                         <select id="edit-is-active" name="is_active" required class="select select-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all appearance-none pr-10">
                             <option value="1">Active</option>
                             <option value="0">Suspended</option>
                         </select>
+                        <span>Account Status <span class="text-error font-extrabold">*</span></span>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
                             <i class="fa-solid fa-chevron-down text-xs"></i>
                         </div>
@@ -240,15 +254,19 @@
             </div>
         </form>
     </div>
-</div>
+    <!-- Backdrop to close natively on click -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
+</dialog>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     window.openAddUserModal = function () {
-        document.getElementById('add-user-modal').classList.add('modal-open');
+        document.getElementById('add-user-modal').showModal();
     };
     window.closeAddUserModal = function () {
-        document.getElementById('add-user-modal').classList.remove('modal-open');
+        document.getElementById('add-user-modal').close();
     };
 
     window.openEditUserModal = function (user) {
@@ -265,10 +283,10 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('edit-role').disabled = isSelf;
         document.getElementById('edit-is-active').disabled = isSelf;
 
-        document.getElementById('edit-user-modal').classList.add('modal-open');
+        document.getElementById('edit-user-modal').showModal();
     };
     window.closeEditUserModal = function () {
-        document.getElementById('edit-user-modal').classList.remove('modal-open');
+        document.getElementById('edit-user-modal').close();
     };
 });
 </script>

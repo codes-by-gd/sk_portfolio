@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('mobile_number');
             $table->string('area');
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->text('message');
             $table->tinyInteger('rating')->default(5);
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');

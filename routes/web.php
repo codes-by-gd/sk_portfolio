@@ -24,6 +24,11 @@ Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.s
 Route::get('/feedback/detailed', [FeedbackController::class, 'createDetailed'])->name('feedback.detailed');
 Route::post('/feedback/detailed', [FeedbackController::class, 'storeDetailed'])->name('feedback.detailed.store');
 
+// Citizen Grievances
+Route::get('/grievance', [App\Http\Controllers\ComplaintController::class, 'create'])->name('complaint.create');
+Route::post('/grievance', [App\Http\Controllers\ComplaintController::class, 'store'])->name('complaint.store');
+Route::get('/grievance/track', [App\Http\Controllers\ComplaintController::class, 'track'])->name('complaint.track');
+
 // Admin Auth Routes
 Route::get('/admin/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.login.submit');
@@ -69,7 +74,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/admin/feedback/{feedback}', [AdminFeedbackController::class, 'update'])->name('admin.feedback.update');
         Route::post('/admin/feedback/{feedback}/status', [AdminFeedbackController::class, 'updateStatus'])->name('admin.feedback.status');
         Route::post('/admin/feedback/{feedback}/featured', [AdminFeedbackController::class, 'toggleFeatured'])->name('admin.feedback.featured');
-        Route::post('/admin/feedback/{feedback}/avatar', [AdminFeedbackController::class, 'updateAvatar'])->name('admin.feedback.avatar');
         Route::get('/admin/feedback/export', [AdminFeedbackController::class, 'export'])->name('admin.feedback.export');
 
         // Contacts Address Book

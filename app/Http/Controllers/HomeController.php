@@ -35,8 +35,7 @@ class HomeController extends Controller
         $developmentWorks = DevelopmentWork::latest()->get();
 
         // Fetch approved & featured feedbacks for the carousel
-        $feedbacks = Feedback::with('images')
-            ->where('status', 'approved')
+        $feedbacks = Feedback::where('status', 'approved')
             ->where('is_featured', true)
             ->latest()
             ->get();

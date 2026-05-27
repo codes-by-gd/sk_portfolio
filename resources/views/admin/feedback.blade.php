@@ -13,7 +13,7 @@
     </div>
     
     <!-- Export Feedbacks to Excel -->
-    <button onclick="document.getElementById('export-feedback-modal').classList.add('modal-open')" class="btn btn-primary text-white font-bold rounded-xl gap-2 shadow-md">
+    <button onclick="document.getElementById('export-feedback-modal').showModal()" class="btn btn-primary text-white font-bold rounded-xl gap-2 shadow-md">
         <i class="fa-solid fa-file-excel text-lg"></i> {{ __('messages.admin.export') }}
     </button>
 </div>
@@ -114,11 +114,16 @@
 </div>
 
 <!-- Edit Feedback Modal -->
-<div id="edit-feedback-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50" style="max-height: 100vh; overflow-y: auto;">
+<!-- Edit Feedback Modal -->
+<dialog id="edit-feedback-modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-lg p-6 relative">
         <button type="button" onclick="closeEditModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+        <!-- ESC shortcut label -->
+        <div class="absolute right-14 top-5 text-[9px] opacity-40 font-bold hidden sm:block">
+            <kbd class="kbd kbd-sm bg-base-200">ESC</kbd>
+        </div>
 
         <h3 class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
             <i class="fa-solid fa-pen-to-square text-primary"></i> Edit Feedback Submission
@@ -164,10 +169,6 @@
                 </div>
                 <div class="form-control">
                     <label class="floating-label w-full block relative">
-                        <span>
-                            Status
-                            <span class="text-error font-extrabold">*</span>
-                        </span>
                         <select 
                             id="edit-status" 
                             name="status" 
@@ -178,6 +179,10 @@
                             <option value="approved">Approved</option>
                             <option value="rejected">Rejected</option>
                         </select>
+                        <span>
+                            Status
+                            <span class="text-error font-extrabold">*</span>
+                        </span>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
                             <i class="fa-solid fa-chevron-down text-xs"></i>
                         </div>
@@ -185,48 +190,33 @@
                 </div>
             </div>
 
-            <!-- Rating & Title Group -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
-                <div class="form-control sm:col-span-1">
-                    <label class="floating-label w-full block group relative">
-                        <span class="group-focus-within:text-primary transition-colors duration-200">
-                            Rating <span class="text-error font-extrabold">*</span>
-                        </span>
-                        <input 
-                            type="text" 
-                            placeholder="Rating"
-                            class="input input-md w-full bg-base-100 border border-base-300 rounded-xl pointer-events-none select-none text-transparent transition-all duration-200 group-hover:border-base-content/30 group-focus-within:border-primary group-focus-within:ring-1 group-focus-within:ring-primary"
-                            style="color: transparent; caret-color: transparent;"
-                            readonly
-                            value="Rating"
-                        />
-                        <div class="absolute inset-x-0 bottom-0 h-12 flex items-center justify-center rating rating-md gap-0.5 pointer-events-auto z-20">
-                            <input type="radio" name="rating" value="1" class="mask mask-star-2 bg-warning transition-transform hover:scale-110 cursor-pointer" required />
-                            <input type="radio" name="rating" value="2" class="mask mask-star-2 bg-warning transition-transform hover:scale-110 cursor-pointer" required />
-                            <input type="radio" name="rating" value="3" class="mask mask-star-2 bg-warning transition-transform hover:scale-110 cursor-pointer" required />
-                            <input type="radio" name="rating" value="4" class="mask mask-star-2 bg-warning transition-transform hover:scale-110 cursor-pointer" required />
-                            <input type="radio" name="rating" value="5" class="mask mask-star-2 bg-warning transition-transform hover:scale-110 cursor-pointer" required />
-                        </div>
-                    </label>
-                </div>
-                <div class="form-control sm:col-span-2">
-                    <x-float-input 
+            <!-- Rating Group -->
+            <div class="form-control">
+                <label class="floating-label w-full block group relative">
+                    <input 
                         type="text" 
-                        name="title" 
-                        id="edit-title" 
-                        label="Feedback Title" 
-                        required="true"
+                        placeholder="Rating"
+                        class="input input-md w-full bg-base-100 border border-base-300 rounded-xl pointer-events-none select-none text-transparent transition-all duration-200 group-hover:border-base-content/30 group-focus-within:border-primary group-focus-within:ring-1 group-focus-within:ring-primary"
+                        style="color: transparent; caret-color: transparent;"
+                        readonly
+                        value="Rating"
                     />
-                </div>
+                    <span class="group-focus-within:text-primary transition-colors duration-200">
+                        Rating <span class="text-error font-extrabold">*</span>
+                    </span>
+                    <div class="absolute inset-x-0 bottom-0 h-12 flex items-center justify-center rating rating-md gap-0.5 pointer-events-auto z-20">
+                        <input type="radio" name="rating" value="1" class="mask mask-star-2 bg-warning transition-transform hover:scale-110 cursor-pointer" required />
+                        <input type="radio" name="rating" value="2" class="mask mask-star-2 bg-warning transition-transform hover:scale-110 cursor-pointer" required />
+                        <input type="radio" name="rating" value="3" class="mask mask-star-2 bg-warning transition-transform hover:scale-110 cursor-pointer" required />
+                        <input type="radio" name="rating" value="4" class="mask mask-star-2 bg-warning transition-transform hover:scale-110 cursor-pointer" required />
+                        <input type="radio" name="rating" value="5" class="mask mask-star-2 bg-warning transition-transform hover:scale-110 cursor-pointer" required />
+                    </div>
+                </label>
             </div>
 
             <!-- Message Textarea -->
             <div class="form-control">
                 <label class="floating-label w-full block">
-                    <span>
-                        Detailed Message
-                        <span class="text-error font-extrabold">*</span>
-                    </span>
                     <textarea 
                         id="edit-message" 
                         name="message" 
@@ -235,17 +225,11 @@
                         placeholder="Detailed Message"
                         class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-32"
                     ></textarea>
+                    <span>
+                        Detailed Message
+                        <span class="text-error font-extrabold">*</span>
+                    </span>
                 </label>
-            </div>
-
-            <!-- Submitted Attachments Section -->
-            <div id="edit-attachments-section" class="form-control hidden">
-                <span class="text-xs font-extrabold text-base-content/65 uppercase tracking-wider mb-2">
-                    Submitted Attachments
-                </span>
-                <div id="edit-attachments-container" class="flex flex-wrap gap-2.5 p-3.5 bg-base-200 border border-base-300 rounded-xl min-h-[4.5rem] items-center">
-                    <!-- Dynamic attachment preview cards injected here -->
-                </div>
             </div>
 
             <!-- Form Actions -->
@@ -259,14 +243,22 @@
             </div>
         </form>
     </div>
-</div>
+    <!-- Backdrop to close natively on click -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
+</dialog>
 
 <!-- Export Feedback Modal -->
-<div id="export-feedback-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50" style="max-height: 100vh; overflow-y: auto;">
+<dialog id="export-feedback-modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-md p-6 relative">
         <button type="button" onclick="closeExportModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+        <!-- ESC shortcut label -->
+        <div class="absolute right-14 top-5 text-[9px] opacity-40 font-bold hidden sm:block">
+            <kbd class="kbd kbd-sm bg-base-200">ESC</kbd>
+        </div>
 
         <h3 class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
             <i class="fa-solid fa-file-excel text-primary"></i> Export Feedbacks to Excel
@@ -277,9 +269,6 @@
             <!-- Status Filter -->
             <div class="form-control">
                 <label class="floating-label w-full block relative">
-                    <span>
-                        Status Filter
-                    </span>
                     <select 
                         id="export-status" 
                         name="status" 
@@ -290,6 +279,9 @@
                         <option value="pending">Pending</option>
                         <option value="rejected">Rejected</option>
                     </select>
+                    <span>
+                        Status Filter
+                    </span>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
                         <i class="fa-solid fa-chevron-down text-xs"></i>
                     </div>
@@ -300,9 +292,6 @@
             <!-- Rating Stars Filter -->
             <div class="form-control">
                 <label class="floating-label w-full block relative">
-                    <span>
-                        Rating Stars
-                    </span>
                     <select 
                         id="export-rating" 
                         name="rating" 
@@ -315,6 +304,9 @@
                         <option value="4">4 Stars</option>
                         <option value="5">5 Stars</option>
                     </select>
+                    <span>
+                        Rating Stars
+                    </span>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
                         <i class="fa-solid fa-chevron-down text-xs"></i>
                     </div>
@@ -352,7 +344,11 @@
             </div>
         </form>
     </div>
-</div>
+    <!-- Backdrop to close natively on click -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
+</dialog>
 
 <!-- Dashboard Scripts -->
 <script>
@@ -403,11 +399,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 name: editBtn.getAttribute('data-name'),
                 mobileNumber: editBtn.getAttribute('data-mobile'),
                 area: editBtn.getAttribute('data-area'),
-                title: editBtn.getAttribute('data-title'),
                 message: editBtn.getAttribute('data-message'),
                 rating: editBtn.getAttribute('data-rating'),
                 status: editBtn.getAttribute('data-status'),
-                images: editBtn.getAttribute('data-images') || '[]',
             };
             openEditModal(feedback);
         }
@@ -424,7 +418,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('edit-name').value = feedback.name;
         document.getElementById('edit-mobile').value = feedback.mobileNumber;
         document.getElementById('edit-area').value = feedback.area;
-        document.getElementById('edit-title').value = feedback.title;
         document.getElementById('edit-message').value = feedback.message;
         
         // Select corresponding star rating radio button
@@ -436,103 +429,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         document.getElementById('edit-status').value = feedback.status;
-
-        // Render attachments previews inside modal
-        const attachmentsSection = document.getElementById('edit-attachments-section');
-        const attachmentsContainer = document.getElementById('edit-attachments-container');
-        if (attachmentsSection && attachmentsContainer) {
-            attachmentsContainer.innerHTML = '';
-            let images = [];
-            try {
-                images = JSON.parse(feedback.images);
-            } catch (e) {
-                console.error("Failed to parse feedback images JSON:", e);
-            }
-
-            if (images && images.length > 0) {
-                attachmentsSection.classList.remove('hidden');
-                images.forEach(img => {
-                    const imgCard = document.createElement('div');
-                    imgCard.className = 'relative group w-16 h-16 rounded-lg overflow-hidden border border-base-300 bg-base-300 cursor-zoom-in hover:scale-105 transition-transform duration-200';
-                    imgCard.onclick = () => openViewerModal(img.path, 'Attachment', 'Submitted feedback image');
-                    imgCard.innerHTML = `
-                        <img src="${img.path}" class="object-cover w-full h-full" alt="Attachment" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=Media&backgroundColor=e2e8f0&textColor=1f2937'">
-                        <div class="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                            <i class="fa-solid fa-magnifying-glass-plus text-white text-xs"></i>
-                        </div>
-                    `;
-                    attachmentsContainer.appendChild(imgCard);
-                });
-            } else {
-                attachmentsSection.classList.add('hidden');
-            }
-        }
         
-        modal.classList.add('modal-open');
+        modal.showModal();
     };
 
     window.closeEditModal = function() {
         const modal = document.getElementById('edit-feedback-modal');
         if (modal) {
-            modal.classList.remove('modal-open');
+            modal.close();
         }
     };
 
     window.closeExportModal = function() {
         const modal = document.getElementById('export-feedback-modal');
         if (modal) {
-            modal.classList.remove('modal-open');
+            modal.close();
         }
     };
 
-    // Lightbox modal functions
+    // Lightbox modal functions mapping to unified component
     window.openViewerModal = function(imageSrc, category, caption) {
-        const viewerModal = document.getElementById('viewer-modal');
-        const viewerImg = document.getElementById('viewer-image');
-        const captionBox = document.getElementById('viewer-caption-box');
-        const categorySpan = document.getElementById('viewer-category');
-        const captionSpan = document.getElementById('viewer-caption');
-
-        if (!viewerModal || !viewerImg) return;
-
-        viewerImg.src = imageSrc;
-
-        if (category || caption) {
-            if (categorySpan) categorySpan.textContent = category;
-            if (captionSpan) captionSpan.textContent = caption || '';
-            if (captionBox) captionBox.classList.remove('hidden');
-        } else {
-            if (captionBox) captionBox.classList.add('hidden');
-        }
-
-        viewerModal.showModal();
-    };
-
-    window.closeViewerModal = function() {
-        const viewerModal = document.getElementById('viewer-modal');
-        if (viewerModal) {
-            viewerModal.close();
-        }
+        openGalleryViewerDirect(imageSrc, category, caption);
     };
 });
 </script>
 
-<!-- Native Lightbox Viewer Modal -->
-<dialog id="viewer-modal" class="modal bg-black/85 backdrop-blur-sm cursor-zoom-out" onclick="closeViewerModal()">
-    <div class="modal-box max-w-4xl max-h-[85vh] p-0 bg-transparent shadow-none border-none relative flex flex-col items-center justify-center cursor-default" onclick="event.stopPropagation()">
-        <!-- Close floating button -->
-        <button type="button" onclick="closeViewerModal()" class="btn btn-sm btn-circle btn-neutral absolute top-4 right-4 z-50 text-white bg-black/40 border-none hover:bg-black/60 shadow-lg animate-fade-in">
-            <i class="fa-solid fa-xmark text-sm"></i>
-        </button>
-        
-        <!-- Viewer Image -->
-        <img id="viewer-image" src="" alt="Feedback Attachment" class="max-w-full max-h-[75vh] rounded-2xl object-contain border border-white/10 shadow-2xl select-none">
-        
-        <!-- Info Overlay details -->
-        <div id="viewer-caption-box" class="w-full bg-black/70 backdrop-blur-md text-white text-xs text-center py-3 px-5 rounded-2xl mt-4 max-w-2xl border border-white/10 hidden">
-            <span id="viewer-category" class="badge badge-primary badge-sm font-bold uppercase mr-2.5 py-2"></span>
-            <span id="viewer-caption" class="font-medium text-white/95"></span>
-        </div>
-    </div>
-</dialog>
+<!-- Reusable Lightbox Viewer Modal -->
+<x-gallery-lightbox />
 @endsection

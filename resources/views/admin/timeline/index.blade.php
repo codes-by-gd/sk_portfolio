@@ -148,11 +148,16 @@
 </div>
 
 {{-- ========== EXPORT MODAL ========== --}}
-<div id="export-timeline-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50">
+<dialog id="export-timeline-modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-sm p-6 relative">
         <button type="button" onclick="closeExportModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+        <!-- ESC shortcut label -->
+        <div class="absolute right-14 top-5 text-[9px] opacity-40 font-bold hidden sm:block">
+            <kbd class="kbd kbd-sm bg-base-200">ESC</kbd>
+        </div>
+
         <h3 class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
             <i class="fa-solid fa-file-excel text-success"></i> Export Timelines to XLSX
         </h3>
@@ -160,7 +165,6 @@
         <form action="{{ route('admin.timeline.export') }}" method="GET" onsubmit="closeExportModal()" class="space-y-4">
             <div class="form-control">
                 <label class="floating-label w-full block relative">
-                    <span>Status Filter</span>
                     <select name="status" class="select select-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all appearance-none pr-10">
                         <option value="all">All Statuses</option>
                         <option value="pending">Planning</option>
@@ -168,6 +172,7 @@
                         <option value="completed">Completed</option>
                         <option value="delayed">Delayed</option>
                     </select>
+                    <span>Status Filter</span>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
                         <i class="fa-solid fa-chevron-down text-xs"></i>
                     </div>
@@ -181,15 +186,19 @@
             </div>
         </form>
     </div>
-</div>
+    <!-- Backdrop to close natively on click -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
+</dialog>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     window.openExportModal = function () {
-        document.getElementById('export-timeline-modal').classList.add('modal-open');
+        document.getElementById('export-timeline-modal').showModal();
     };
     window.closeExportModal = function () {
-        document.getElementById('export-timeline-modal').classList.remove('modal-open');
+        document.getElementById('export-timeline-modal').close();
     };
 });
 </script>

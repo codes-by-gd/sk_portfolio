@@ -186,3 +186,27 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Global FAB Attention-Getter Animation
+   ═══════════════════════════════════════════════════════════════ */
+@keyframes fab-attention-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 10px 25px -5px rgba(255, 138, 61, 0.5);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 15px 30px -3px rgba(255, 138, 61, 0.7), 0 0 0 10px rgba(255, 138, 61, 0.25);
+  }
+}
+
+.animate-fab-pulse {
+  animation: fab-attention-pulse 2.2s infinite ease-in-out;
+}
+
+/* Pause attention pulse during active interaction */
+.dropdown:focus-within .animate-fab-pulse,
+.dropdown:hover .animate-fab-pulse {
+  animation: none;
+}

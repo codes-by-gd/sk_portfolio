@@ -30,13 +30,50 @@
     </div>
 @endif
 
+<!-- Search and Filters Row -->
+<div class="bg-base-100 card-base border border-base-300 rounded-2xl p-3.5 shadow-sm mt-6">
+    <form action="{{ route('admin.gallery.index') }}" method="GET" class="flex flex-col sm:flex-row gap-2.5 w-full items-center">
+        <!-- Search input -->
+        <div class="relative w-full sm:flex-grow">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search gallery by caption or category..."
+                class="input input-sm input-bordered w-full pl-8 rounded-xl bg-transparent border-base-300 focus:outline-none focus:border-primary text-xs text-base-content" />
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+        </div>
+
+        <!-- Category Filter -->
+        <select name="category" class="select select-sm select-bordered rounded-xl bg-base-100 border-base-300 focus:outline-none focus:border-primary text-xs text-base-content w-full sm:w-[160px] shrink-0">
+            <option value="">All Categories</option>
+            <option value="visits" {{ request('category') === 'visits' ? 'selected' : '' }}>Ward Visits</option>
+            <option value="events" {{ request('category') === 'events' ? 'selected' : '' }}>BJP Events</option>
+            <option value="works" {{ request('category') === 'works' ? 'selected' : '' }}>Development Works</option>
+            <option value="community" {{ request('category') === 'community' ? 'selected' : '' }}>Community Programs</option>
+        </select>
+
+        <!-- Action buttons -->
+        <div class="flex gap-1.5 w-full sm:w-auto shrink-0">
+            <button type="submit" class="btn btn-sm btn-secondary text-white font-bold rounded-xl px-4 text-xs w-full sm:w-auto">
+                Filter
+            </button>
+            @if(request()->anyFilled(['search', 'category']))
+                <a href="{{ route('admin.gallery.index') }}" class="btn btn-sm btn-ghost border border-base-300 hover:bg-base-200 rounded-xl px-3 text-xs w-full sm:w-auto flex items-center justify-center">
+                    Clear
+                </a>
+            @endif
+        </div>
+    </form>
+</div>
+
 <!-- Gallery Modal -->
-<div id="gallery-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50">
+<dialog id="gallery-modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-2xl p-6 relative">
         <!-- Close Button -->
         <button type="button" onclick="closeGalleryModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+        <!-- ESC shortcut label -->
+        <div class="absolute right-14 top-5 text-[9px] opacity-40 font-bold hidden sm:block">
+            <kbd class="kbd kbd-sm bg-base-200">ESC</kbd>
+        </div>
 
         <h3 id="modal-title" class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
             <i class="fa-solid fa-images text-primary"></i> Upload New Image
@@ -78,10 +115,6 @@
                     <!-- Category -->
                     <div class="form-control w-full">
                         <label class="floating-label w-full block relative">
-                            <span>
-                                Category
-                                <span class="text-error font-extrabold">*</span>
-                            </span>
                             <select 
                                 id="gallery-category"
                                 name="category" 
@@ -94,6 +127,10 @@
                                 <option value="works">Development Works</option>
                                 <option value="community">Community Programs</option>
                             </select>
+                            <span>
+                                Category
+                                <span class="text-error font-extrabold">*</span>
+                            </span>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-1.5 text-base-content/50">
                                 <i class="fa-solid fa-chevron-down text-xs"></i>
                             </div>
@@ -152,7 +189,11 @@
             </div>
         </form>
     </div>
-</div>
+    <!-- Backdrop to close natively on click -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
+</dialog>
 
 <!-- Gallery Grid -->
 <div class="bg-base-100 card-base border border-base-300 rounded-2xl shadow-sm p-6 mt-6">
@@ -175,24 +216,8 @@
     @endif
 </div>
 
-<!-- Native Lightbox Viewer Modal -->
-<dialog id="viewer-modal" class="modal bg-black/85 backdrop-blur-sm cursor-zoom-out" onclick="closeViewerModal()">
-    <div class="modal-box max-w-4xl max-h-[85vh] p-0 bg-transparent shadow-none border-none relative flex flex-col items-center justify-center cursor-default" onclick="event.stopPropagation()">
-        <!-- Close floating button -->
-        <button type="button" onclick="closeViewerModal()" class="btn btn-sm btn-circle btn-neutral absolute top-4 right-4 z-50 text-white bg-black/40 border-none hover:bg-black/60 shadow-lg">
-            <i class="fa-solid fa-xmark text-sm"></i>
-        </button>
-        
-        <!-- Viewer Image -->
-        <img id="viewer-image" src="" alt="Gallery Image" class="max-w-full max-h-[75vh] rounded-2xl object-contain border border-white/10 shadow-2xl select-none">
-        
-        <!-- Info Overlay details -->
-        <div id="viewer-caption-box" class="w-full bg-black/70 backdrop-blur-md text-white text-xs text-center py-3 px-5 rounded-2xl mt-4 max-w-2xl border border-white/10 hidden">
-            <span id="viewer-category" class="badge badge-primary badge-sm font-bold uppercase mr-2.5 py-2"></span>
-            <span id="viewer-caption" class="font-medium text-white/95"></span>
-        </div>
-    </div>
-</dialog>
+<!-- Reusable Lightbox Viewer Modal -->
+<x-gallery-lightbox />
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -281,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
         container.classList.add('border-dashed');
         container.classList.remove('border-solid');
 
-        modal.classList.add('modal-open');
+        modal.showModal();
     };
 
     // Open Modal for Edit
@@ -317,12 +342,12 @@ document.addEventListener('DOMContentLoaded', function() {
         container.classList.remove('border-dashed');
         container.classList.add('border-solid');
 
-        modal.classList.add('modal-open');
+        modal.showModal();
     };
 
     // Close Modal
     window.closeGalleryModal = function() {
-        modal.classList.remove('modal-open');
+        modal.close();
     };
 
     // Event delegation for Edit buttons inside hover overlays
@@ -392,44 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
         noMoreMsg.classList.remove('hidden');
     }
 
-    // Lightbox Image Viewer Handlers
-    window.openViewerModal = function(src, category, caption) {
-        const viewer = document.getElementById('viewer-modal');
-        const img = document.getElementById('viewer-image');
-        const capBox = document.getElementById('viewer-caption-box');
-        const catBadge = document.getElementById('viewer-category');
-        const capText = document.getElementById('viewer-caption');
 
-        if (!viewer || !img) return;
-
-        img.src = src;
-
-        if (category) {
-            catBadge.textContent = category;
-            catBadge.classList.remove('hidden');
-        } else {
-            catBadge.classList.add('hidden');
-        }
-
-        if (caption && caption.trim() && caption !== 'null') {
-            capText.textContent = caption;
-            capBox.classList.remove('hidden');
-        } else if (category) {
-            capText.textContent = '';
-            capBox.classList.remove('hidden');
-        } else {
-            capBox.classList.add('hidden');
-        }
-
-        viewer.showModal();
-    };
-
-    window.closeViewerModal = function() {
-        const viewer = document.getElementById('viewer-modal');
-        if (viewer) {
-            viewer.close();
-        }
-    };
 });
 </script>
 @endsection

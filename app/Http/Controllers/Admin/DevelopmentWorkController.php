@@ -18,7 +18,7 @@ class DevelopmentWorkController extends Controller
 
     public function create()
     {
-        return view('admin.development.create');
+        return redirect()->route('admin.development.index');
     }
 
     public function store(Request $request)
@@ -79,7 +79,7 @@ class DevelopmentWorkController extends Controller
 
     public function edit(DevelopmentWork $development)
     {
-        return view('admin.development.edit', compact('development'));
+        return redirect()->route('admin.development.index');
     }
 
     public function update(Request $request, DevelopmentWork $development)
@@ -157,7 +157,7 @@ class DevelopmentWorkController extends Controller
 
         $development->delete();
 
-        return back()->with('success', 'Development project deleted successfully.');
+        return redirect()->route('admin.development.index')->with('success', 'Development project deleted successfully.');
     }
 
     public function export(Request $request)

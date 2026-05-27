@@ -1,5 +1,20 @@
 @foreach($images as $img)
-    <div class="relative group rounded-2xl overflow-hidden border border-base-300 bg-base-200 aspect-square card-base">
+    @php
+        $fallback = 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop';
+        if ($img->category === 'events') {
+            $fallback = 'https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=600&auto=format&fit=crop';
+        } elseif ($img->category === 'visits') {
+            $fallback = 'https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=600&auto=format&fit=crop';
+        } elseif ($img->category === 'community') {
+            $fallback = 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=600&auto=format&fit=crop';
+        }
+    @endphp
+    <div class="gallery-viewer-item relative group rounded-2xl overflow-hidden border border-base-300 bg-base-200 aspect-square card-base"
+         data-image="{{ asset($img->image_path) }}"
+         data-category="{{ $img->category }}"
+         data-category-label="{{ ucfirst($img->category) }}"
+         data-caption="{{ $img->caption ?: 'No caption provided.' }}">
+         
         <!-- Category Badge (Top-Left - Always Visible) -->
         <span class="absolute top-2.5 left-2.5 z-20 badge badge-xs bg-primary border-primary text-white font-bold uppercase py-2.5 px-3 shadow-md shadow-primary/20 select-none">
             {{ $img->category }}
@@ -30,16 +45,16 @@
 
         <!-- Image Container (Clickable to View Full Size) -->
         <div class="relative w-full h-full bg-base-300/40 cursor-zoom-in"
-             onclick="openViewerModal('{{ asset($img->image_path) }}', '{{ $img->category }}', '{{ $img->caption }}')">
+             onclick="openGalleryViewer(this.closest('.gallery-viewer-item'))">
             
             <img src="{{ asset($img->image_path) }}" 
                  alt="{{ $img->caption }}" 
                  class="object-cover w-full h-full transition-opacity duration-300 opacity-0" 
                  loading="lazy"
                  onload="this.classList.remove('opacity-0')"
-                 onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+                 onerror="this.onerror=null; this.src='{{ $fallback }}'; this.closest('.gallery-viewer-item').dataset.image='{{ $fallback }}'; this.classList.remove('opacity-0');"
             >
-            <!-- Native Premium Fallback Placeholder -->
+            <!-- Native Premium Fallback Placeholder (Used only if offline and unsplash fails) -->
             <div class="hidden absolute inset-0 bg-base-300 flex flex-col items-center justify-center text-base-content/30 gap-1.5 p-2">
                 <i class="fa-regular fa-image text-2xl text-base-content/40 animate-pulse"></i>
                 <span class="text-[9px] font-bold uppercase tracking-wider text-center">Image Error</span>

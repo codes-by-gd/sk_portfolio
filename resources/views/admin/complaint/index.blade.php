@@ -36,28 +36,89 @@
     </div>
 @endif
 
-{{-- Filters Row --}}
-<div class="bg-base-100 card-base border border-base-300 rounded-2xl p-3.5 shadow-sm flex items-center">
-    <form action="{{ route('admin.complaint.index') }}" method="GET" class="flex flex-col sm:flex-row gap-2.5 w-full items-center">
-        <div class="relative w-full sm:flex-grow">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, mobile, description..."
-                class="input input-sm input-bordered w-full pl-8 rounded-xl bg-transparent border-base-300 focus:outline-none focus:border-primary text-xs text-base-content" />
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+{{-- Stats and Filters Unified Row --}}
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">
+    <!-- Stats Cards (Left 8 Columns on XL, Full width on smaller) -->
+    <div class="xl:col-span-8 grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <!-- Metric 1: Total -->
+        <div class="bg-base-100 card-base border border-base-300 p-3.5 rounded-2xl shadow-sm flex items-center gap-3 border-l-4 border-l-primary">
+            <div class="bg-primary/10 text-primary w-9 h-9 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-file-invoice text-base"></i>
+            </div>
+            <div class="flex flex-col min-w-0">
+                <span class="text-[10px] font-extrabold text-base-content/50 uppercase tracking-wider leading-none">Total Grievances</span>
+                <span class="font-heading font-extrabold text-lg text-base-content mt-1.5 leading-none">{{ $counts['total'] }}</span>
+            </div>
         </div>
-        <select name="status" class="select select-sm select-bordered rounded-xl bg-base-100 border-base-300 focus:outline-none focus:border-primary text-xs text-base-content w-full sm:w-[145px] shrink-0">
-            <option value="">All Statuses</option>
-            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-            <option value="under_review" {{ request('status') === 'under_review' ? 'selected' : '' }}>Under Review</option>
-            <option value="resolved" {{ request('status') === 'resolved' ? 'selected' : '' }}>Resolved</option>
-            <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
-        </select>
-        <div class="flex gap-1.5 w-full sm:w-auto shrink-0">
-            <button type="submit" class="btn btn-sm btn-secondary text-white font-bold rounded-xl px-4 text-xs w-full sm:w-auto">Filter</button>
-            @if(request()->anyFilled(['search','status']))
-                <a href="{{ route('admin.complaint.index') }}" class="btn btn-sm btn-ghost border border-base-300 hover:bg-base-200 rounded-xl px-3 text-xs w-full sm:w-auto flex items-center justify-center">Clear</a>
-            @endif
+
+        <!-- Metric 2: Pending -->
+        <div class="bg-base-100 card-base border border-base-300 p-3.5 rounded-2xl shadow-sm flex items-center gap-3 border-l-4 border-l-warning">
+            <div class="bg-warning/10 text-warning w-9 h-9 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-clock text-base"></i>
+            </div>
+            <div class="flex flex-col min-w-0">
+                <span class="text-[10px] font-extrabold text-base-content/50 uppercase tracking-wider leading-none">Pending Action</span>
+                <span class="font-heading font-extrabold text-lg text-warning mt-1.5 leading-none">{{ $counts['pending'] }}</span>
+            </div>
         </div>
-    </form>
+
+        <!-- Metric 3: Under Review -->
+        <div class="bg-base-100 card-base border border-base-300 p-3.5 rounded-2xl shadow-sm flex items-center gap-3 border-l-4 border-l-info">
+            <div class="bg-info/10 text-info w-9 h-9 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-magnifying-glass-location text-base"></i>
+            </div>
+            <div class="flex flex-col min-w-0">
+                <span class="text-[10px] font-extrabold text-base-content/50 uppercase tracking-wider leading-none">Under Review</span>
+                <span class="font-heading font-extrabold text-lg text-info mt-1.5 leading-none">{{ $counts['under_review'] }}</span>
+            </div>
+        </div>
+
+        <!-- Metric 4: Resolved -->
+        <div class="bg-base-100 card-base border border-base-300 p-3.5 rounded-2xl shadow-sm flex items-center gap-3 border-l-4 border-l-success">
+            <div class="bg-success/10 text-success w-9 h-9 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-circle-check text-base"></i>
+            </div>
+            <div class="flex flex-col min-w-0">
+                <span class="text-[10px] font-extrabold text-base-content/50 uppercase tracking-wider leading-none">Resolved</span>
+                <span class="font-heading font-extrabold text-lg text-success mt-1.5 leading-none">{{ $counts['resolved'] }}</span>
+            </div>
+        </div>
+
+        <!-- Metric 5: Rejected -->
+        <div class="bg-base-100 card-base border border-base-300 p-3.5 rounded-2xl shadow-sm flex items-center gap-3 border-l-4 border-l-error">
+            <div class="bg-error/10 text-error w-9 h-9 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-circle-xmark text-base"></i>
+            </div>
+            <div class="flex flex-col min-w-0">
+                <span class="text-[10px] font-extrabold text-base-content/50 uppercase tracking-wider leading-none">Rejected</span>
+                <span class="font-heading font-extrabold text-lg text-error mt-1.5 leading-none">{{ $counts['rejected'] }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Card (Right 4 Columns on XL, Full width on smaller) -->
+    <div class="xl:col-span-4 bg-base-100 card-base border border-base-300 rounded-2xl p-3.5 shadow-sm flex items-center">
+        <form action="{{ route('admin.complaint.index') }}" method="GET" class="flex flex-col sm:flex-row gap-2.5 w-full items-center">
+            <div class="relative w-full sm:flex-grow">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search grievances..."
+                    class="input input-sm input-bordered w-full pl-8 rounded-xl bg-transparent border-base-300 focus:outline-none focus:border-primary text-xs text-base-content" />
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+            </div>
+            <select name="status" class="select select-sm select-bordered rounded-xl bg-base-100 border-base-300 focus:outline-none focus:border-primary text-xs text-base-content w-full sm:w-[130px] shrink-0">
+                <option value="">All Statuses</option>
+                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                <option value="under_review" {{ request('status') === 'under_review' ? 'selected' : '' }}>Under Review</option>
+                <option value="resolved" {{ request('status') === 'resolved' ? 'selected' : '' }}>Resolved</option>
+                <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
+            </select>
+            <div class="flex gap-1.5 w-full sm:w-auto shrink-0">
+                <button type="submit" class="btn btn-sm btn-secondary text-white font-bold rounded-xl px-4 text-xs w-full sm:w-auto">Filter</button>
+                @if(request()->anyFilled(['search','status']))
+                    <a href="{{ route('admin.complaint.index') }}" class="btn btn-sm btn-ghost border border-base-300 hover:bg-base-200 rounded-xl px-3 text-xs w-full sm:w-auto flex items-center justify-center">Clear</a>
+                @endif
+            </div>
+        </form>
+    </div>
 </div>
 
 {{-- Complaints Table --}}
@@ -69,6 +130,7 @@
                     <th class="py-4">Complainant</th>
                     <th class="py-4">Area / Category</th>
                     <th class="py-4">Description</th>
+                    <th class="py-4">Status</th>
                     <th class="py-4">Official Action Log</th>
                     <th class="py-4">Attachment</th>
                     <th class="py-4 text-center">Actions</th>
@@ -79,20 +141,15 @@
                     <tr class="hover:bg-base-200/50 transition-colors">
                         <td class="py-4 min-w-[150px]">
                             <p class="font-bold text-base-content leading-tight">{{ $complaint->complainant_name }}</p>
+                            <div class="my-1.5">
+                                <span class="inline-flex items-center gap-1 text-[10px] font-mono font-black px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 tracking-wider shadow-sm uppercase">
+                                    <i class="fa-solid fa-hashtag text-[9px] opacity-70"></i>
+                                    {{ $complaint->complaint_number ?? 'CMP-NEW' }}
+                                </span>
+                            </div>
                             <a href="tel:{{ $complaint->complainant_mobile }}" class="text-xs text-primary hover:underline mt-0.5 flex items-center gap-1">
                                 <i class="fa-solid fa-phone text-[9px]"></i> {{ $complaint->complainant_mobile }}
                             </a>
-                            <div class="mt-1.5">
-                                @if($complaint->isPending())
-                                    <span class="badge badge-warning badge-sm font-bold text-[9px] uppercase">Pending</span>
-                                @elseif($complaint->isUnderReview())
-                                    <span class="badge badge-info badge-sm font-bold text-[9px] uppercase">Under Review</span>
-                                @elseif($complaint->isResolved())
-                                    <span class="badge badge-success badge-sm font-bold text-[9px] uppercase">Resolved</span>
-                                @else
-                                    <span class="badge badge-error badge-sm font-bold text-[9px] uppercase">Rejected</span>
-                                @endif
-                            </div>
                         </td>
                         <td class="py-4 min-w-[130px]">
                             <p class="text-xs text-secondary font-extrabold"><i class="fa-solid fa-location-dot mr-1 opacity-60"></i>{{ $complaint->area }}</p>
@@ -101,6 +158,17 @@
                         <td class="py-4 max-w-xs">
                             <p class="text-xs text-base-content/75 line-clamp-3 leading-relaxed">{{ $complaint->description }}</p>
                             <span class="text-[10px] text-base-content/40 font-semibold mt-1 block">{{ $complaint->created_at->format('d M Y') }}</span>
+                        </td>
+                        <td class="py-4 min-w-[110px]">
+                            @if($complaint->isPending())
+                                <span class="badge badge-warning badge-sm font-bold text-[9px] uppercase tracking-wide">Pending</span>
+                            @elseif($complaint->isUnderReview())
+                                <span class="badge badge-info badge-sm font-bold text-[9px] uppercase tracking-wide">Under Review</span>
+                            @elseif($complaint->isResolved())
+                                <span class="badge badge-success badge-sm font-bold text-[9px] uppercase tracking-wide">Resolved</span>
+                            @else
+                                <span class="badge badge-error badge-sm font-bold text-[9px] uppercase tracking-wide">Rejected</span>
+                            @endif
                         </td>
                         <td class="py-4 max-w-xs">
                             @if($complaint->official_action)
@@ -145,7 +213,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center py-12 text-base-content/50 font-medium italic">
+                        <td colspan="7" class="text-center py-12 text-base-content/50 font-medium italic">
                             No grievances logged. <button type="button" onclick="openAddModal()" class="text-primary underline font-bold">Log your first complaint</button>.
                         </td>
                     </tr>
@@ -161,11 +229,16 @@
 </div>
 
 {{-- ========== ADD COMPLAINT MODAL ========== --}}
-<div id="complaint-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50">
+<dialog id="complaint-modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-xl p-6 relative">
         <button type="button" onclick="closeComplaintModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+        <!-- ESC shortcut label -->
+        <div class="absolute right-14 top-5 text-[9px] opacity-40 font-bold hidden sm:block">
+            <kbd class="kbd kbd-sm bg-base-200">ESC</kbd>
+        </div>
+
         <h3 class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
             <i class="fa-solid fa-circle-exclamation text-primary"></i> Log Citizen Grievance
         </h3>
@@ -187,7 +260,6 @@
                 </div>
                 <div class="form-control">
                     <label class="floating-label w-full block relative">
-                        <span>Category <span class="text-error font-extrabold">*</span></span>
                         <select name="category" required class="select select-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all appearance-none pr-10">
                             <option value="water">Water Supply Issues</option>
                             <option value="sanitation">Drainage & Sanitation</option>
@@ -196,6 +268,7 @@
                             <option value="street_light">Street Light Faults</option>
                             <option value="other">Other Grievances</option>
                         </select>
+                        <span>Category <span class="text-error font-extrabold">*</span></span>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
                             <i class="fa-solid fa-chevron-down text-xs"></i>
                         </div>
@@ -204,9 +277,9 @@
             </div>
             <div class="form-control">
                 <label class="floating-label w-full block">
-                    <span>Description <span class="text-error font-extrabold">*</span></span>
                     <textarea name="description" required rows="3" placeholder="Description"
                         class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-24"></textarea>
+                    <span>Description <span class="text-error font-extrabold">*</span></span>
                 </label>
             </div>
             <div class="form-control">
@@ -224,57 +297,89 @@
             </div>
         </form>
     </div>
-</div>
+    <!-- Backdrop to close natively on click -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
+</dialog>
 
 {{-- ========== RESOLVE MODAL ========== --}}
-<div id="resolve-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50">
-    <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-md p-6 relative">
+<dialog id="resolve-modal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-2xl p-6 relative">
         <button type="button" onclick="closeResolveModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+        <!-- ESC shortcut label -->
+        <div class="absolute right-14 top-5 text-[9px] opacity-40 font-bold hidden sm:block">
+            <kbd class="kbd kbd-sm bg-base-200">ESC</kbd>
+        </div>
+
         <h3 class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
             <i class="fa-solid fa-file-signature text-primary"></i> Log Action & Resolution
         </h3>
         <p class="text-xs text-base-content/50 uppercase tracking-wider font-bold mb-6">Update status and record official action details</p>
 
-        <form id="resolve-form" method="POST" class="space-y-4">
-            @csrf
-            @method('PUT')
-            <div class="form-control">
-                <label class="floating-label w-full block relative">
-                    <span>Grievance Status <span class="text-error font-extrabold">*</span></span>
-                    <select id="res-status" name="status" required class="select select-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all appearance-none pr-10">
-                        <option value="pending">Pending Action</option>
-                        <option value="under_review">Under Review / Investigation</option>
-                        <option value="resolved">Resolved / Action Completed</option>
-                        <option value="rejected">Dismissed / Rejected</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
-                        <i class="fa-solid fa-chevron-down text-xs"></i>
-                    </div>
-                </label>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {{-- Form Column --}}
+            <form id="resolve-form" method="POST" class="space-y-4">
+                @csrf
+                @method('PUT')
+                <div class="form-control">
+                    <label class="floating-label w-full block relative">
+                        <select id="res-status" name="status" required class="select select-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all appearance-none pr-10">
+                            <option value="pending">Pending Action</option>
+                            <option value="under_review">Under Review / Investigation</option>
+                            <option value="resolved">Resolved / Action Completed</option>
+                            <option value="rejected">Dismissed / Rejected</option>
+                        </select>
+                        <span>Grievance Status <span class="text-error font-extrabold">*</span></span>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
+                    </label>
+                </div>
+                <div class="form-control">
+                    <label class="floating-label w-full block">
+                        <textarea id="res-action" name="official_action" rows="4" placeholder="Log next action comment..."
+                            class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-32"></textarea>
+                        <span>Action Log Comment</span>
+                    </label>
+                    <span class="text-[9px] text-base-content/40 font-semibold mt-1">Leave blank to log standard status update message.</span>
+                </div>
+                <div class="flex justify-end gap-2.5 pt-4 border-t border-base-300 mt-6">
+                    <button type="button" onclick="closeResolveModal()" class="btn btn-ghost hover:bg-base-200 rounded-xl px-5 text-sm font-semibold">Cancel</button>
+                    <button type="submit" class="btn btn-primary text-white font-bold rounded-xl px-6 shadow-md">Save Action</button>
+                </div>
+            </form>
+
+            {{-- History Timeline Column --}}
+            <div class="border-t md:border-t-0 md:border-l border-base-300 pt-4 md:pt-0 md:pl-6 space-y-4">
+                <h4 class="text-xs font-extrabold uppercase tracking-wider text-base-content/60 flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock-rotate-left text-secondary"></i> Action Tracking History
+                </h4>
+                <div id="resolve-logs-timeline" class="space-y-3 max-h-[260px] overflow-y-auto pr-1 relative pl-5 before:absolute before:left-1.5 before:top-2 before:bottom-2 before:w-[1.5px] before:bg-base-300">
+                    {{-- Dynamically loaded --}}
+                </div>
             </div>
-            <div class="form-control">
-                <label class="floating-label w-full block">
-                    <span>Official Action Log & Resolution Comments</span>
-                    <textarea id="res-action" name="official_action" rows="4" placeholder="Official Action Log & Resolution Comments"
-                        class="textarea textarea-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all h-32"></textarea>
-                </label>
-            </div>
-            <div class="flex justify-end gap-2.5 pt-4 border-t border-base-300 mt-6">
-                <button type="button" onclick="closeResolveModal()" class="btn btn-ghost hover:bg-base-200 rounded-xl px-5 text-sm font-semibold">Cancel</button>
-                <button type="submit" class="btn btn-primary text-white font-bold rounded-xl px-6 shadow-md">Save Resolution</button>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+    <!-- Backdrop to close natively on click -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
+</dialog>
 
 {{-- ========== EXPORT MODAL ========== --}}
-<div id="export-complaint-modal" class="modal modal-bottom sm:modal-middle transition-all duration-300 z-50">
+<dialog id="export-complaint-modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-base-100 border border-base-300 rounded-2xl shadow-xl max-w-sm p-6 relative">
         <button type="button" onclick="closeExportModal()" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-base-content/60 hover:text-base-content">
             <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+        <!-- ESC shortcut label -->
+        <div class="absolute right-14 top-5 text-[9px] opacity-40 font-bold hidden sm:block">
+            <kbd class="kbd kbd-sm bg-base-200">ESC</kbd>
+        </div>
+
         <h3 class="font-heading font-extrabold text-xl text-base-content mb-1 flex items-center gap-2">
             <i class="fa-solid fa-file-excel text-success"></i> Export Grievances to XLSX
         </h3>
@@ -282,7 +387,6 @@
         <form action="{{ route('admin.complaint.export') }}" method="GET" onsubmit="closeExportModal()" class="space-y-4">
             <div class="form-control">
                 <label class="floating-label w-full block relative">
-                    <span>Status Filter</span>
                     <select name="status" class="select select-md w-full bg-base-100 text-base-content border border-base-300 rounded-xl focus:outline-none focus:border-primary transition-all appearance-none pr-10">
                         <option value="all">All Statuses</option>
                         <option value="pending">Pending</option>
@@ -290,6 +394,7 @@
                         <option value="resolved">Resolved</option>
                         <option value="rejected">Rejected</option>
                     </select>
+                    <span>Status Filter</span>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-3 text-base-content/50">
                         <i class="fa-solid fa-chevron-down text-xs"></i>
                     </div>
@@ -303,62 +408,86 @@
             </div>
         </form>
     </div>
-</div>
-
-{{-- Lightbox Viewer --}}
-<dialog id="viewer-modal" class="modal bg-black/85 backdrop-blur-sm cursor-zoom-out" onclick="closeViewerModal()">
-    <div class="modal-box max-w-4xl max-h-[85vh] p-0 bg-transparent shadow-none border-none relative flex flex-col items-center justify-center cursor-default" onclick="event.stopPropagation()">
-        <button type="button" onclick="closeViewerModal()" class="btn btn-sm btn-circle btn-neutral absolute top-4 right-4 z-50 text-white bg-black/40 border-none hover:bg-black/60 shadow-lg">
-            <i class="fa-solid fa-xmark text-sm"></i>
-        </button>
-        <img id="viewer-image" src="" alt="Attachment" class="max-w-full max-h-[75vh] rounded-2xl object-contain border border-white/10 shadow-2xl select-none">
-        <div id="viewer-caption-box" class="w-full bg-black/70 backdrop-blur-md text-white text-xs text-center py-3 px-5 rounded-2xl mt-4 max-w-2xl border border-white/10 hidden">
-            <span id="viewer-category" class="badge badge-primary badge-sm font-bold uppercase mr-2.5 py-2"></span>
-            <span id="viewer-caption" class="font-medium text-white/95"></span>
-        </div>
-    </div>
+    <!-- Backdrop to close natively on click -->
+    <form method="dialog" class="modal-backdrop bg-black/45 backdrop-blur-sm">
+        <button>close</button>
+    </form>
 </dialog>
+
+{{-- Reusable Lightbox Viewer --}}
+<x-gallery-lightbox />
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     window.openAddModal = function () {
-        document.getElementById('complaint-modal').classList.add('modal-open');
+        document.getElementById('complaint-modal').showModal();
     };
     window.closeComplaintModal = function () {
-        document.getElementById('complaint-modal').classList.remove('modal-open');
+        document.getElementById('complaint-modal').close();
     };
 
     window.openResolveModal = function (complaint) {
         document.getElementById('resolve-form').action = `/admin/complaints/${complaint.id}`;
         document.getElementById('res-status').value = complaint.status;
-        document.getElementById('res-action').value = complaint.official_action || '';
-        document.getElementById('resolve-modal').classList.add('modal-open');
+        document.getElementById('res-action').value = ''; // clear input for new log comment
+
+        // Render history logs
+        const timeline = document.getElementById('resolve-logs-timeline');
+        timeline.innerHTML = '';
+
+        if (complaint.logs && complaint.logs.length > 0) {
+            // Sort logs latest first
+            const sortedLogs = [...complaint.logs].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            sortedLogs.forEach((log, index) => {
+                const activeStep = index === 0;
+                const stepDotBg = activeStep 
+                    ? (log.status === 'resolved' ? 'bg-success' : (log.status === 'rejected' ? 'bg-error' : (log.status === 'under_review' ? 'bg-info' : 'bg-warning')))
+                    : 'bg-base-300';
+                
+                const formattedDate = new Date(log.created_at).toLocaleString('en-US', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+
+                const label = log.status.replace('_', ' ');
+
+                const logEl = document.createElement('div');
+                logEl.className = 'relative text-left';
+                logEl.innerHTML = `
+                    <div class="absolute -left-[19px] top-1 w-2.5 h-2.5 rounded-full ${stepDotBg} border border-base-100 z-10"></div>
+                    <div class="bg-base-200/50 p-2 rounded-lg border border-base-300/40 text-xs">
+                        <div class="flex justify-between items-center gap-1.5">
+                            <span class="font-extrabold uppercase text-[9px] text-base-content/80">${label}</span>
+                            <span class="text-[9px] text-base-content/40 font-semibold">${formattedDate}</span>
+                        </div>
+                        <p class="text-[10px] text-base-content/70 mt-0.5 leading-relaxed">${log.message}</p>
+                    </div>
+                `;
+                timeline.appendChild(logEl);
+            });
+        } else {
+            timeline.innerHTML = '<p class="text-xs italic text-base-content/40">No logs found.</p>';
+        }
+
+        document.getElementById('resolve-modal').showModal();
     };
     window.closeResolveModal = function () {
-        document.getElementById('resolve-modal').classList.remove('modal-open');
+        document.getElementById('resolve-modal').close();
     };
 
     window.openExportModal = function () {
-        document.getElementById('export-complaint-modal').classList.add('modal-open');
+        document.getElementById('export-complaint-modal').showModal();
     };
     window.closeExportModal = function () {
-        document.getElementById('export-complaint-modal').classList.remove('modal-open');
+        document.getElementById('export-complaint-modal').close();
     };
 
     window.openViewerModal = function (src, category, caption) {
-        const modal = document.getElementById('viewer-modal');
-        document.getElementById('viewer-image').src = src;
-        if (category || caption) {
-            document.getElementById('viewer-category').textContent = category || '';
-            document.getElementById('viewer-caption').textContent = caption || '';
-            document.getElementById('viewer-caption-box').classList.remove('hidden');
-        } else {
-            document.getElementById('viewer-caption-box').classList.add('hidden');
-        }
-        modal.showModal();
-    };
-    window.closeViewerModal = function () {
-        document.getElementById('viewer-modal').close();
+        openGalleryViewerDirect(src, category, caption);
     };
 });
 </script>

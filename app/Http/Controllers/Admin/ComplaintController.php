@@ -14,13 +14,23 @@ class ComplaintController extends Controller
     {
         $query = Complaint::query();
 
+        // Calculate count metrics for widgets
+        $counts = [
+            'total' => Complaint::count(),
+            'pending' => Complaint::where('status', 'pending')->count(),
+            'under_review' => Complaint::where('status', 'under_review')->count(),
+            'resolved' => Complaint::where('status', 'resolved')->count(),
+            'rejected' => Complaint::where('status', 'rejected')->count(),
+        ];
+
         // Search filter
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('complainant_name', 'like', "%{$search}%")
                   ->orWhere('complainant_mobile', 'like', "%{$search}%")
                   ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhere('official_action', 'like', "%{$search}%");
+                  ->orWhere('official_action', 'like', "%{$search}%")
+                  ->orWhere('complaint_number', 'like', "%{$search}%");
             });
         }
 
@@ -38,9 +48,10 @@ class ComplaintController extends Controller
             }
         }
 
-        $complaints = $query->latest()->paginate(10)->withQueryString();
+        // Eager load logs for immediate access in modals
+        $complaints = $query->with('logs')->latest()->paginate(10)->withQueryString();
 
-        return view('admin.complaint.index', compact('complaints'));
+        return view('admin.complaint.index', compact('complaints', 'counts'));
     }
 
     public function store(Request $request)
@@ -92,6 +103,13 @@ class ComplaintController extends Controller
         ]);
 
         $complaint->update($validated);
+
+        // Create status update log entry
+        $comment = $validated['official_action'] ?: 'Status updated to ' . ucfirst(str_replace('_', ' ', $validated['status']));
+        $complaint->logs()->create([
+            'status' => $validated['status'],
+            'message' => $comment,
+        ]);
 
         return back()->with('success', 'Complaint status and resolution details updated.');
     }
