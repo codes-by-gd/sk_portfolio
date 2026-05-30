@@ -155,62 +155,69 @@
                 </div>
             </div>
 
-            <!-- Before / After Images -->
+            <!-- Before / After Images — Large & Clean Grid Layout -->
             <div class="space-y-3">
                 <h3 class="font-heading font-bold text-xs text-base-content/75 uppercase tracking-wider border-b border-base-300 pb-2">
                     <i class="fa-solid fa-images text-primary mr-1"></i> Before / After Images
                 </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Before Image Input & Preview -->
-                    <div class="space-y-3">
-                        <label class="label py-0 pb-1">
-                            <span class="label-text font-bold text-[10px] text-base-content/70 uppercase tracking-wider">Before Image</span>
-                        </label>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Before Image Card -->
+                    <div class="space-y-1.5">
+                        <div class="text-[10px] font-bold uppercase tracking-wider text-base-content/60">
+                            <span class="badge badge-xs bg-warning/15 border-warning/20 text-warning font-bold mr-1">Before Image</span>
+                        </div>
                         
-                        <!-- Premium Preview Card -->
-                        <div id="before-preview-container" class="relative group aspect-video w-full rounded-xl overflow-hidden border border-dashed border-base-300 bg-base-200/40 flex flex-col items-center justify-center transition-all duration-300 hover:border-primary/40">
+                        <!-- Clickable Preview Card -->
+                        <div id="before-preview-container" class="relative group h-32 w-full rounded-xl overflow-hidden border border-dashed border-base-300 bg-base-200/40 flex flex-col items-center justify-center transition-all duration-300 hover:border-warning/50 cursor-pointer" onclick="document.getElementById('before_image').click()">
                             <!-- Default empty state -->
-                            <div id="before-empty-state" class="flex flex-col items-center gap-1.5 p-4 text-center text-base-content/40 transition-opacity">
-                                <i class="fa-solid fa-cloud-arrow-up text-2xl text-primary/60"></i>
-                                <div class="text-[10px] font-semibold">No before image selected</div>
-                                <div class="text-[8px]">JPEG, PNG, JPG, WEBP up to 5MB</div>
+                            <div id="before-empty-state" class="flex flex-col items-center gap-1 p-4 text-center text-base-content/40 transition-opacity">
+                                <i class="fa-solid fa-cloud-arrow-up text-2xl text-warning/60"></i>
+                                <span class="text-[10px] font-semibold">Upload Before Image</span>
+                                <span class="text-[8px] opacity-70">JPEG, PNG, WEBP (Max 5MB)</span>
                             </div>
                             <!-- Preview Image Tag -->
                             <img id="before-preview-img" class="hidden w-full h-full object-cover rounded-xl" alt="Before Preview">
                             <span id="before-current-badge" class="hidden absolute bottom-2 left-2 z-10 badge badge-xs bg-neutral/80 text-white font-semibold backdrop-blur-sm border-none">Current Image</span>
+                            <!-- Hover overlay -->
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold pointer-events-none">
+                                <i class="fa-solid fa-pen mr-1"></i> Change Image
+                            </div>
                             <!-- Floating clear button if selected -->
-                            <button type="button" id="before-clear-btn" class="hidden absolute top-2 right-2 btn btn-circle btn-xs btn-error text-white shadow-md hover:scale-105 transition-all w-5 h-5 min-h-0">
+                            <button type="button" id="before-clear-btn" class="hidden absolute top-2 right-2 btn btn-circle btn-xs btn-error text-white shadow-md hover:scale-105 transition-all w-5 h-5 min-h-0 z-20" onclick="event.stopPropagation()">
                                 <i class="fa-solid fa-xmark text-[9px]"></i>
                             </button>
                         </div>
-
-                        <input type="file" name="before_image" id="before_image" accept="image/*" class="file-input file-input-bordered file-input-warning file-input-sm w-full rounded-xl bg-transparent border-base-300">
+                        <input type="file" name="before_image" id="before_image" accept="image/*" class="hidden">
                     </div>
 
-                    <!-- After Image Input & Preview -->
-                    <div class="space-y-3">
-                        <label class="label py-0 pb-1">
-                            <span class="label-text font-bold text-[10px] text-base-content/70 uppercase tracking-wider">After Image</span>
-                        </label>
+                    <!-- After Image Card -->
+                    <div class="space-y-1.5">
+                        <div class="text-[10px] font-bold uppercase tracking-wider text-base-content/60">
+                            <span class="badge badge-xs bg-success/15 border-success/20 text-success font-bold mr-1">After Image</span>
+                        </div>
 
-                        <!-- Premium Preview Card -->
-                        <div id="after-preview-container" class="relative group aspect-video w-full rounded-xl overflow-hidden border border-dashed border-base-300 bg-base-200/40 flex flex-col items-center justify-center transition-all duration-300 hover:border-primary/40">
+                        <!-- Clickable Preview Card -->
+                        <div id="after-preview-container" class="relative group h-32 w-full rounded-xl overflow-hidden border border-dashed border-base-300 bg-base-200/40 flex flex-col items-center justify-center transition-all duration-300 hover:border-success/50 cursor-pointer" onclick="document.getElementById('after_image').click()">
                             <!-- Default empty state -->
-                            <div id="after-empty-state" class="flex flex-col items-center gap-1.5 p-4 text-center text-base-content/40 transition-opacity">
+                            <div id="after-empty-state" class="flex flex-col items-center gap-1 p-4 text-center text-base-content/40 transition-opacity">
                                 <i class="fa-solid fa-cloud-arrow-up text-2xl text-success/60"></i>
-                                <div class="text-[10px] font-semibold">No after image selected</div>
-                                <div class="text-[8px]">JPEG, PNG, JPG, WEBP up to 5MB</div>
+                                <span class="text-[10px] font-semibold">Upload After Image</span>
+                                <span class="text-[8px] opacity-70">JPEG, PNG, WEBP (Max 5MB)</span>
                             </div>
                             <!-- Preview Image Tag -->
                             <img id="after-preview-img" class="hidden w-full h-full object-cover rounded-xl" alt="After Preview">
                             <span id="after-current-badge" class="hidden absolute bottom-2 left-2 z-10 badge badge-xs bg-neutral/80 text-white font-semibold backdrop-blur-sm border-none">Current Image</span>
+                            <!-- Hover overlay -->
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold pointer-events-none">
+                                <i class="fa-solid fa-pen mr-1"></i> Change Image
+                            </div>
                             <!-- Floating clear button if selected -->
-                            <button type="button" id="after-clear-btn" class="hidden absolute top-2 right-2 btn btn-circle btn-xs btn-error text-white shadow-md hover:scale-105 transition-all w-5 h-5 min-h-0">
+                            <button type="button" id="after-clear-btn" class="hidden absolute top-2 right-2 btn btn-circle btn-xs btn-error text-white shadow-md hover:scale-105 transition-all w-5 h-5 min-h-0 z-20" onclick="event.stopPropagation()">
                                 <i class="fa-solid fa-xmark text-[9px]"></i>
                             </button>
                         </div>
-
-                        <input type="file" name="after_image" id="after_image" accept="image/*" class="file-input file-input-bordered file-input-success file-input-sm w-full rounded-xl bg-transparent border-base-300">
+                        <input type="file" name="after_image" id="after_image" accept="image/*" class="hidden">
                     </div>
                 </div>
             </div>
@@ -231,6 +238,30 @@
         <button>close</button>
     </form>
 </dialog>
+
+<!-- Search and Filters Row -->
+<div class="bg-base-100 card-base border border-base-300 rounded-2xl p-3.5 shadow-sm mt-6">
+    <form action="{{ route('admin.development.index') }}" method="GET" class="flex flex-col sm:flex-row gap-2.5 w-full items-center">
+        <!-- Search input -->
+        <div class="relative w-full sm:flex-grow">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search projects by title, description, or location..."
+                class="input input-sm input-bordered w-full pl-8 rounded-xl bg-transparent border-base-300 focus:outline-none focus:border-primary text-xs text-base-content" />
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex gap-1.5 w-full sm:w-auto shrink-0">
+            <button type="submit" class="btn btn-sm btn-secondary text-white font-bold rounded-xl px-4 text-xs w-full sm:w-auto">
+                Filter
+            </button>
+            @if(request()->anyFilled(['search']))
+                <a href="{{ route('admin.development.index') }}" class="btn btn-sm btn-ghost border border-base-300 hover:bg-base-200 rounded-xl px-3 text-xs w-full sm:w-auto flex items-center justify-center">
+                    Clear
+                </a>
+            @endif
+        </div>
+    </form>
+</div>
 
 <!-- Works Table -->
 <div class="bg-base-100 card-base border border-base-300 rounded-2xl overflow-hidden shadow-sm mt-6">

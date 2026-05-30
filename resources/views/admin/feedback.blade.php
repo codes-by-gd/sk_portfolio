@@ -13,8 +13,8 @@
     </div>
     
     <!-- Export Feedbacks to Excel -->
-    <button onclick="document.getElementById('export-feedback-modal').showModal()" class="btn btn-primary text-white font-bold rounded-xl gap-2 shadow-md">
-        <i class="fa-solid fa-file-excel text-lg"></i> {{ __('messages.admin.export') }}
+    <button onclick="document.getElementById('export-feedback-modal').showModal()" class="btn btn-ghost border border-base-300 hover:bg-base-200 rounded-xl gap-1.5 text-sm font-semibold">
+        <i class="fa-solid fa-file-excel text-success"></i> {{ __('messages.admin.export') }}
     </button>
 </div>
 

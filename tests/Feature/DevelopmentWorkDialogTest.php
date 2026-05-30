@@ -155,4 +155,45 @@ class DevelopmentWorkDialogTest extends TestCase
             'id' => $this->project->id,
         ]);
     }
+
+    /**
+     * Test admin can filter development works by keyword search.
+     */
+    public function test_admin_can_filter_development_projects_by_keyword()
+    {
+        // Create second development project with different values
+        $parkProject = DevelopmentWork::create([
+            'title_en' => 'Central Park Renovation',
+            'title_gu' => 'સેન્ટ્રલ પાર્ક નવીનીકરણ',
+            'title_hi' => 'सेंट्रल पार्क नवीनीकरण',
+            'description_en' => 'Planted 500 new local green trees.',
+            'description_gu' => '500 નવા સ્થાનિક લીલા વૃક્ષો વાવ્યા.',
+            'description_hi' => '500 नए स्थानीय हरे पेड़ लगाए।',
+            'location' => 'Central Ground, Ward 7',
+        ]);
+
+        // Search for 'Pipeline'
+        $response = $this->actingAs($this->admin)
+            ->get(route('admin.development.index', ['search' => 'Pipeline']));
+
+        $response->assertStatus(200);
+        $response->assertSee('Water Pipeline Repair');
+        $response->assertDontSee('Central Park Renovation');
+
+        // Search for 'Central Park'
+        $response = $this->actingAs($this->admin)
+            ->get(route('admin.development.index', ['search' => 'Central Park']));
+
+        $response->assertStatus(200);
+        $response->assertSee('Central Park Renovation');
+        $response->assertDontSee('Water Pipeline Repair');
+
+        // Search in Gujarati translation 'વૃક્ષો' (trees)
+        $response = $this->actingAs($this->admin)
+            ->get(route('admin.development.index', ['search' => 'વૃક્ષો']));
+
+        $response->assertStatus(200);
+        $response->assertSee('Central Park Renovation');
+        $response->assertDontSee('Water Pipeline Repair');
+    }
 }

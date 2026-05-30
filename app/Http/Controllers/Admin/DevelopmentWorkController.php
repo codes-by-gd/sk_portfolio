@@ -10,9 +10,25 @@ use App\Helpers\ImageHelper;
 
 class DevelopmentWorkController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $works = DevelopmentWork::latest()->paginate(10);
+        $query = DevelopmentWork::latest();
+
+        if ($request->filled('search')) {
+            $search = '%' . $request->input('search') . '%';
+            $query->where(function($q) use ($search) {
+                $q->where('title_en', 'like', $search)
+                  ->orWhere('title_gu', 'like', $search)
+                  ->orWhere('title_hi', 'like', $search)
+                  ->orWhere('description_en', 'like', $search)
+                  ->orWhere('description_gu', 'like', $search)
+                  ->orWhere('description_hi', 'like', $search)
+                  ->orWhere('location', 'like', $search);
+            });
+        }
+
+        $works = $query->paginate(10)->withQueryString();
+
         return view('admin.development.index', compact('works'));
     }
 
